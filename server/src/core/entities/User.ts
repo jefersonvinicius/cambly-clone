@@ -1,4 +1,7 @@
+import { v4 as uuidV4 } from 'uuid';
+
 export default abstract class User {
+  private id: string;
   private name: string;
   private email: string;
   private password: string;
@@ -6,15 +9,26 @@ export default abstract class User {
   private updatedAt: Date;
   private type: UserTypes;
 
-  constructor(name: string, email: string, password: string, createdAt: Date, updatedAt: Date, type: UserTypes) {
-    this.name = name;
-    this.email = email;
-    this.password = password;
-    this.createdAt = createdAt;
-    this.updatedAt = updatedAt;
-    this.type = type;
+  constructor(data: UserConstructorData) {
+    this.id = data.id ?? uuidV4();
+    this.name = data.name;
+    this.email = data.email;
+    this.password = data.password;
+    this.createdAt = data.createdAt ?? new Date();
+    this.updatedAt = data.updatedAt ?? new Date();
+    this.type = data.type;
   }
 }
+
+type UserConstructorData = {
+  id?: string;
+  name: string;
+  email: string;
+  password: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  type: UserTypes;
+};
 
 export enum UserTypes {
   Teacher = 'teacher',
