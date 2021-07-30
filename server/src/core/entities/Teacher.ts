@@ -1,7 +1,18 @@
-import User, { UserTypes } from './User';
+import User, { UserConstructorData, UserTypes } from './User';
 
 export default class Teacher extends User {
-  constructor(name: string, email: string, password: string, createdAt: Date, updatedAt: Date) {
-    super({ name, email, password, createdAt, updatedAt, type: UserTypes.Teacher });
+  private busy: boolean;
+
+  constructor(data: TeacherConstructorData) {
+    super({ ...data, type: UserTypes.Teacher });
+    this.busy = data.busy ?? false;
+  }
+
+  get isBusy() {
+    return this.busy;
   }
 }
+
+export type TeacherConstructorData = Omit<UserConstructorData, 'type'> & {
+  busy?: boolean;
+};

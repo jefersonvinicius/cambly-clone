@@ -1,7 +1,7 @@
 import { v4 as uuidV4 } from 'uuid';
 
 export default abstract class User {
-  private id: string;
+  public readonly id: string;
   private name: string;
   private email: string;
   private password: string;
@@ -20,7 +20,7 @@ export default abstract class User {
   }
 }
 
-type UserConstructorData = {
+export type UserConstructorData = {
   id?: string;
   name: string;
   email: string;
