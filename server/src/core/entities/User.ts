@@ -1,34 +1,27 @@
 import { v4 as uuidV4 } from 'uuid';
+import BaseEntity, { BaseEntityData } from './Base';
 
-export default abstract class User {
-  public readonly id: string;
+export default abstract class User extends BaseEntity {
   private name: string;
   private email: string;
   private password: string;
-  private createdAt: Date;
-  private updatedAt: Date;
   private type: UserTypes;
 
   constructor(data: UserConstructorData) {
-    this.id = data.id ?? uuidV4();
+    super(data);
     this.name = data.name;
     this.email = data.email;
     this.password = data.password;
-    this.createdAt = data.createdAt ?? new Date();
-    this.updatedAt = data.updatedAt ?? new Date();
     this.type = data.type;
   }
 }
 
 export type UserConstructorData = {
-  id?: string;
   name: string;
   email: string;
   password: string;
-  createdAt?: Date;
-  updatedAt?: Date;
   type: UserTypes;
-};
+} & BaseEntityData;
 
 export enum UserTypes {
   Teacher = 'teacher',

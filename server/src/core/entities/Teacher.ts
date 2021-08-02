@@ -1,3 +1,4 @@
+import { BaseEntityData } from './Base';
 import User, { UserConstructorData, UserTypes } from './User';
 
 export default class Teacher extends User {
@@ -8,6 +9,10 @@ export default class Teacher extends User {
     this.busy = data.busy ?? false;
   }
 
+  setBusy(value: boolean) {
+    this.busy = value;
+  }
+
   get isBusy() {
     return this.busy;
   }
@@ -15,4 +20,4 @@ export default class Teacher extends User {
 
 export type TeacherConstructorData = Omit<UserConstructorData, 'type'> & {
   busy?: boolean;
-};
+} & BaseEntityData;

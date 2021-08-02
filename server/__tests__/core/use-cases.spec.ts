@@ -32,7 +32,18 @@ describe('Use cases suite tests', () => {
     await expect(performPromise).rejects.toThrowError(TeacherIsBusy);
   });
 
-  it.todo('Student must be able request teacher lesson successfully');
+  it('Student must be able request teacher lesson successfully', async () => {
+    const studentRequestLessonUseCase = new StudentRequestLesson(fakeSocketServer);
+    const lesson = await studentRequestLessonUseCase.perform({
+      studentId: 'student_id',
+      teacherId: 'teacher-1',
+    });
+
+    expect(lesson.studentId).toBe('student_id');
+    expect(lesson.teacherId).toBe('teacher-1');
+    expect(lesson.code).toHaveLength(7);
+    expect(await fakeSocketServer.teacherIsBusy('teacher-1')).toBeTruthy();
+  });
 });
 
 class FakeSocketServer implements SocketServer {
@@ -44,5 +55,15 @@ class FakeSocketServer implements SocketServer {
 
   async teacherIsBusy(teacherId: string): Promise<boolean> {
     return this.teachers.find((t) => t.id === teacherId)?.isBusy ?? false;
+  }
+
+  async setTeacherAsBusy(teacherId: string) {
+    this.teachers = this.teachers.map((t) => {
+      if (t.id === teacherId) {
+        t.setBusy(true);
+        return t;
+      }
+      return t;
+    });
   }
 }
