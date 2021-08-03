@@ -1,9 +1,8 @@
-import { v4 as uuidV4 } from 'uuid';
 import BaseEntity, { BaseEntityData } from './Base';
 
-export default abstract class User extends BaseEntity {
+export default class User extends BaseEntity {
   private name: string;
-  private email: string;
+  readonly email: string;
   private password: string;
   private type: UserTypes;
 
@@ -12,7 +11,21 @@ export default abstract class User extends BaseEntity {
     this.name = data.name;
     this.email = data.email;
     this.password = data.password;
+
+    if (!this.isValidType(data.type)) throw new InvalidUserType(data.type);
+
     this.type = data.type;
+  }
+
+  private isValidType(typeToValidate: string) {
+    return Object.values(UserTypes).includes(typeToValidate as UserTypes);
+  }
+}
+
+export class InvalidUserType extends Error {
+  constructor(type: string) {
+    super(`Invalid user type, expected [${Object.values(UserTypes).join(',')}]. But got ${type}`);
+    this.name = 'InvalidUserType';
   }
 }
 

@@ -1,7 +1,6 @@
-import Teacher from '../entities/Teacher';
+import User from '../entities/User';
 
-export interface TeacherRepository {
-  findAll(): Promise<Teacher[]>;
-  findById(): Promise<Teacher>;
-  save(): Promise<void>;
+export interface UserRepository {
+  insert(user: User): Promise<void>;
+  findByEmail(email: string): Promise<User | null>;
 }
