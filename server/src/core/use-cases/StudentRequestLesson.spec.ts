@@ -1,7 +1,7 @@
 import RequestLesson from '@app/core/entities/RequestLesson';
 import Teacher from '@app/core/entities/Teacher';
 import { TeacherIsBusy, TeacherOffline } from '@app/core/errors';
-import { SocketServer, StudentRequestLesson } from '@app/core/use-cases/StudentRequestLesson';
+import { SocketServer, StudentRequestLesson } from './StudentRequestLesson';
 import { createFakeTeacher } from '@tests/_helpers';
 
 describe('Use cases suite tests', () => {

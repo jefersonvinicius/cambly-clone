@@ -1,6 +1,6 @@
 import { UseCase } from '.';
-import { TeacherIsBusy, TeacherOffline } from '../errors';
-import RequestLesson from '../entities/RequestLesson';
+import { TeacherIsBusy, TeacherOffline } from '@app/core/errors';
+import RequestLesson from '@app/core/entities/RequestLesson';
 
 type Params = {
   teacherId: string;
