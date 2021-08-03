@@ -1,3 +1,4 @@
+import RequestLesson from '@app/core/entities/RequestLesson';
 import Teacher from '@app/core/entities/Teacher';
 import { TeacherIsBusy, TeacherOffline } from '@app/core/errors';
 import { SocketServer, StudentRequestLesson } from '@app/core/use-cases/StudentRequestLesson';
@@ -34,19 +35,20 @@ describe('Use cases suite tests', () => {
 
   it('Student must be able request teacher lesson successfully', async () => {
     const studentRequestLessonUseCase = new StudentRequestLesson(fakeSocketServer);
-    const lesson = await studentRequestLessonUseCase.perform({
+    const request = await studentRequestLessonUseCase.perform({
       studentId: 'student_id',
       teacherId: 'teacher-1',
     });
 
-    expect(lesson.studentId).toBe('student_id');
-    expect(lesson.teacherId).toBe('teacher-1');
-    expect(lesson.code).toHaveLength(7);
-    expect(await fakeSocketServer.teacherIsBusy('teacher-1')).toBeTruthy();
+    expect(request.studentId).toBe('student_id');
+    expect(request.teacherId).toBe('teacher-1');
+    expect(await fakeSocketServer.hasRequest(request.id)).toBeTruthy();
   });
 });
 
 class FakeSocketServer implements SocketServer {
+  private requests: RequestLesson[] = [];
+
   constructor(private teachers: Teacher[]) {}
 
   async hasTeacher(teacherId: string): Promise<boolean> {
@@ -58,12 +60,20 @@ class FakeSocketServer implements SocketServer {
   }
 
   async setTeacherAsBusy(teacherId: string) {
-    this.teachers = this.teachers.map((t) => {
-      if (t.id === teacherId) {
-        t.setBusy(true);
-        return t;
+    this.teachers = this.teachers.map((teacher) => {
+      if (teacher.id === teacherId) {
+        teacher.setBusy(true);
+        return teacher;
       }
-      return t;
+      return teacher;
     });
+  }
+
+  async requestTeacher(request: RequestLesson) {
+    this.requests.push(request);
+  }
+
+  async hasRequest(requestId: string) {
+    return !!this.requests.find((r) => r.id === requestId);
   }
 }

@@ -1,13 +1,13 @@
 import { UseCase } from '.';
-import Lesson from '@app/core/entities/Lesson';
 import { TeacherIsBusy, TeacherOffline } from '../errors';
+import RequestLesson from '../entities/RequestLesson';
 
 type Params = {
   teacherId: string;
   studentId: string;
 };
 
-type Return = Lesson;
+type Return = RequestLesson;
 
 export interface SocketServer {
   hasTeacher(teacherId: string): Promise<boolean>;
@@ -15,6 +15,8 @@ export interface SocketServer {
   teacherIsBusy(teacherId: string): Promise<boolean>;
 
   setTeacherAsBusy(teacherId: string): Promise<void>;
+
+  requestTeacher(request: RequestLesson): Promise<void>;
 }
 
 export class StudentRequestLesson implements UseCase<Params, Return> {
@@ -31,11 +33,13 @@ export class StudentRequestLesson implements UseCase<Params, Return> {
       throw new TeacherIsBusy(teacherId);
     }
 
-    this.socketServer.setTeacherAsBusy(teacherId);
-
-    return new Lesson({
+    const request = new RequestLesson({
       studentId,
       teacherId,
     });
+
+    this.socketServer.requestTeacher(request);
+
+    return request;
   }
 }
