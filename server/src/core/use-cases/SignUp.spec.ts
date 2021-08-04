@@ -1,4 +1,3 @@
-import { BcryptHashing } from '@app/shared/Hashing';
 import { createFakeUser } from '@tests/helpers';
 import User, { InvalidUserType, UserTypes } from '../entities/User';
 import { EmailAlreadyExists, ParamNotProvided } from '../errors';
@@ -96,8 +95,7 @@ describe('SignUp use case suite tests', () => {
 
 function createSignupUseCase() {
   const userRepositoryInMemory = new UserRepositoryInMemory();
-  const bcryptHashing = new BcryptHashing();
-  const sut = new SignUp(userRepositoryInMemory, bcryptHashing);
+  const sut = new SignUp(userRepositoryInMemory);
   return { sut, userRepositoryInMemory };
 }
 

@@ -25,3 +25,17 @@ export class EmailAlreadyExists extends Error {
     this.name = 'EmailAlreadyExists';
   }
 }
+
+export class UserWithEmailNotExists extends Error {
+  constructor(email: string) {
+    super(`The user with email ${email} not exists`);
+    this.name = 'UserWithEmailNotExists';
+  }
+}
+
+export class PasswordNotMatch extends Error {
+  constructor() {
+    super(`Passwords not match`);
+    this.name = 'PasswordNotMatch';
+  }
+}
