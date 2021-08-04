@@ -18,3 +18,10 @@ export class ParamNotProvided extends Error {
     this.name = 'ParamNotProvided';
   }
 }
+
+export class EmailAlreadyExists extends Error {
+  constructor(email: string) {
+    super(`The email ${email} already exists`);
+    this.name = 'EmailAlreadyExists';
+  }
+}

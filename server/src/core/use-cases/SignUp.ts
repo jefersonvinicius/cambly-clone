@@ -1,16 +1,20 @@
+import { Hashing } from '@app/shared/Hashing';
 import { UseCase } from '.';
 import User, { UserTypes } from '../entities/User';
-import { ParamNotProvided } from '../errors';
+import { EmailAlreadyExists, ParamNotProvided } from '../errors';
 import { UserRepository } from '../shared/repositories';
 
 export default class SignUp implements UseCase<SignUpPayload, void> {
-  constructor(private usersRepository: UserRepository) {}
+  constructor(private usersRepository: UserRepository, private hashing: Hashing) {}
 
   async perform(params: SignUpPayload): Promise<void> {
     if (!params.email) throw new ParamNotProvided('email');
     if (!params.password) throw new ParamNotProvided('password');
     if (!params.name) throw new ParamNotProvided('name');
     if (!params.type) throw new ParamNotProvided('type');
+
+    const userAlreadyExists = await this.usersRepository.findByEmail(params.email);
+    if (userAlreadyExists) throw new EmailAlreadyExists(params.email);
 
     const user = new User({
       email: params.email,

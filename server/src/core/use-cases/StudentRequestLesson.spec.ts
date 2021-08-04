@@ -2,7 +2,7 @@ import RequestLesson from '@app/core/entities/RequestLesson';
 import Teacher from '@app/core/entities/Teacher';
 import { TeacherIsBusy, TeacherOffline } from '@app/core/errors';
 import { SocketServer, StudentRequestLesson } from './StudentRequestLesson';
-import { createFakeTeacher } from '@tests/_helpers';
+import { createFakeTeacher } from '@tests/helpers';
 
 describe('Use cases suite tests', () => {
   let teachers: Teacher[] = [];

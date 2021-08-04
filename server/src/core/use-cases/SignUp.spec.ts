@@ -1,5 +1,7 @@
+import { BcryptHashing } from '@app/shared/Hashing';
+import { createFakeUser } from '@tests/helpers';
 import User, { InvalidUserType, UserTypes } from '../entities/User';
-import { ParamNotProvided } from '../errors';
+import { EmailAlreadyExists, ParamNotProvided } from '../errors';
 import { UserRepository } from '../shared/repositories';
 import SignUp, { SignUpPayload } from './SignUp';
 
@@ -13,7 +15,7 @@ describe('SignUp use case suite tests', () => {
     };
     const { sut, userRepositoryInMemory } = createSignupUseCase();
     await expect(sut.perform(payload)).resolves.not.toThrowError();
-    expect(userRepositoryInMemory.findByEmail('any_email@gmail.com')).toBeTruthy();
+    expect(await userRepositoryInMemory.findByEmail('any_email@gmail.com')).toBeTruthy();
   });
 
   it('Should not be able sing up when email is not provided', async () => {
@@ -65,16 +67,29 @@ describe('SignUp use case suite tests', () => {
     const { sut } = createSignupUseCase();
     return expect(sut.perform(payload)).rejects.toThrowError(new InvalidUserType('invalid_type'));
   });
+
+  it('Should not be able sing up email already exists', async () => {
+    const payload: SignUpPayload = {
+      email: 'repeated@gmail.com',
+      name: 'any_name',
+      password: '1a2b3c',
+      type: UserTypes.Student,
+    };
+    const { sut, userRepositoryInMemory } = createSignupUseCase();
+    await userRepositoryInMemory.insert(await createFakeUser({ email: 'repeated@gmail.com' }));
+    return expect(sut.perform(payload)).rejects.toThrowError(new EmailAlreadyExists('repeated@gmail.com'));
+  });
 });
 
 function createSignupUseCase() {
   const userRepositoryInMemory = new UserRepositoryInMemory();
-  const sut = new SignUp(userRepositoryInMemory);
+  const bcryptHashing = new BcryptHashing();
+  const sut = new SignUp(userRepositoryInMemory, bcryptHashing);
   return { sut, userRepositoryInMemory };
 }
 
 class UserRepositoryInMemory implements UserRepository {
-  public users: User[] = [];
+  private users: User[] = [];
 
   async insert(user: User): Promise<void> {
     this.users.push(user);
