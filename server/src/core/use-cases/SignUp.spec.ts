@@ -69,15 +69,28 @@ describe('SignUp use case suite tests', () => {
   });
 
   it('Should not be able sing up email already exists', async () => {
+    const { sut, userRepositoryInMemory } = createSignupUseCase();
+    await userRepositoryInMemory.insert(await createFakeUser({ email: 'repeated@gmail.com' }));
     const payload: SignUpPayload = {
       email: 'repeated@gmail.com',
       name: 'any_name',
       password: '1a2b3c',
       type: UserTypes.Student,
     };
-    const { sut, userRepositoryInMemory } = createSignupUseCase();
-    await userRepositoryInMemory.insert(await createFakeUser({ email: 'repeated@gmail.com' }));
     return expect(sut.perform(payload)).rejects.toThrowError(new EmailAlreadyExists('repeated@gmail.com'));
+  });
+
+  it('Should hashing the password', async () => {
+    const { sut, userRepositoryInMemory } = createSignupUseCase();
+    const payload: SignUpPayload = {
+      email: 'any_email@gmail.com',
+      name: 'any_name',
+      password: '1a2b3c',
+      type: UserTypes.Student,
+    };
+    await expect(sut.perform(payload)).resolves.not.toThrowError();
+    const user = await userRepositoryInMemory.findByEmail('any_email@gmail.com');
+    expect(user?.password).not.toBe('1a2b3c');
   });
 });
 

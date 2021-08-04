@@ -19,7 +19,7 @@ export default class SignUp implements UseCase<SignUpPayload, void> {
     const user = new User({
       email: params.email,
       name: params.name,
-      password: params.password,
+      password: await this.hashing.hash(params.password),
       type: params.type as UserTypes,
     });
 

@@ -3,7 +3,7 @@ import BaseEntity, { BaseEntityData } from './Base';
 export default class User extends BaseEntity {
   private name: string;
   readonly email: string;
-  private password: string;
+  readonly password: string;
   private type: UserTypes;
 
   constructor(data: UserConstructorData) {
