@@ -1,7 +1,7 @@
 import { createFakeUser } from '@tests/helpers';
 import User, { InvalidUserType, UserTypes } from '../entities/User';
 import { EmailAlreadyExists, ParamNotProvided } from '../errors';
-import { UserRepository } from '../shared/repositories';
+import { UserRepository } from '../repositories/UserRepository';
 import SignUp, { SignUpPayload } from './SignUp';
 
 describe('SignUp use case suite tests', () => {

@@ -2,7 +2,7 @@ import { JWT } from '@app/shared/JWT';
 import { createFakeUser } from '@tests/helpers';
 import User from '../entities/User';
 import { PasswordNotMatch, UserWithEmailNotExists } from '../errors';
-import { UserRepository } from '../shared/repositories';
+import { UserRepository } from '../repositories/UserRepository';
 import LogIn, { LogInPayload } from './LogIn';
 
 type UserJWT = {

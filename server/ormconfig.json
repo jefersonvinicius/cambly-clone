@@ -1,18 +1,18 @@
 {
-  "type": "mysql",
+  "type": "postgres",
   "host": "localhost",
-  "port": 3306,
+  "port": 5432,
   "username": "postgres",
   "password": "cambly",
   "database": "cambly_clone",
   "logging": false,
   "entities": [
-    "src/entity/**/*.ts"
+    "src/infra/database/schemes/**/*.ts"
   ],
   "migrations": [
-    "src/database/migration/**/*.ts"
+    "src/infra/database/migrations/**/*.ts"
   ],
   "cli": {
-    "migrationsDir": "src/database/migration"
+    "migrationsDir": "src/infra/database/migrations"
   }
 }

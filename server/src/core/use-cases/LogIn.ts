@@ -2,7 +2,7 @@ import { Hashing } from '@app/shared/Hashing';
 import { JWT } from '@app/shared/JWT';
 import { UseCase } from '.';
 import { PasswordNotMatch, UserWithEmailNotExists } from '../errors';
-import { UserRepository } from '../shared/repositories';
+import { UserRepository } from '../repositories/UserRepository';
 
 export default class LogIn implements UseCase<LogInPayload, Return> {
   constructor(private usersRepository: UserRepository) {}

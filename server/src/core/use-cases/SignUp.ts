@@ -2,7 +2,7 @@ import { Hashing } from '@app/shared/Hashing';
 import { UseCase } from '.';
 import User, { UserTypes } from '../entities/User';
 import { EmailAlreadyExists, ParamNotProvided } from '../errors';
-import { UserRepository } from '../shared/repositories';
+import { UserRepository } from '../repositories/UserRepository';
 
 export default class SignUp implements UseCase<SignUpPayload, void> {
   constructor(private usersRepository: UserRepository) {}
