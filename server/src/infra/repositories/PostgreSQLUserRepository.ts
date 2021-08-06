@@ -1,22 +1,32 @@
 import User, { UserTypes } from '@app/core/entities/User';
 import { UserRepository } from '@app/core/repositories/UserRepository';
-import { Connection } from 'typeorm';
+import { Connection, Repository } from 'typeorm';
 import { UserScheme, UserSchemeProperties } from '../database/schemes/UserScheme';
 
 export class PostgreSQLUserRepository implements UserRepository {
-  constructor(private connection: Connection) {}
+  private userRepository: Repository<UserSchemeProperties>;
 
-  insert(user: User): Promise<void> {
-    throw new Error('Method not implemented.');
+  constructor(private connection: Connection) {
+    this.userRepository = this.connection.getRepository(UserScheme);
   }
+
+  async insert(user: User): Promise<void> {
+    const userToSave = this.userRepository.create({ ...user });
+    await this.userRepository.save(userToSave);
+  }
+
   async findByEmail(email: string): Promise<User | null> {
-    const userRepository = this.connection.getRepository(UserScheme);
-    const user = (await userRepository.findOne({ where: { email } })) ?? null;
+    const user = (await this.userRepository.findOne({ where: { email } })) ?? null;
     return user ? createUserFromUserScheme(user) : null;
+  }
+
+  async deleteById(id: string) {
+    const { affected } = await this.userRepository.delete(id);
+    return !!affected;
   }
 }
 
-export function createUserFromUserScheme(userSchemeProperties: UserSchemeProperties) {
+function createUserFromUserScheme(userSchemeProperties: UserSchemeProperties) {
   return new User({
     ...userSchemeProperties,
     type: userSchemeProperties.type as UserTypes,

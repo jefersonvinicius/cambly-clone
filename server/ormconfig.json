@@ -5,7 +5,7 @@
   "username": "postgres",
   "password": "cambly",
   "database": "cambly_clone",
-  "logging": false,
+  "logging": true,
   "entities": [
     "src/infra/database/schemes/**/*.ts"
   ],

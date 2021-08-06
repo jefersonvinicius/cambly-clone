@@ -4,7 +4,6 @@ export const schemesBaseColumns = {
   id: {
     type: String,
     primary: true,
-    generated: true,
   } as EntitySchemaColumnOptions,
   createdAt: {
     name: 'created_at',
