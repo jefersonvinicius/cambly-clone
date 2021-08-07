@@ -2,6 +2,7 @@ export class TeacherOffline extends Error {
   constructor(teacherId: string) {
     super(`The teacher ${teacherId} is offline`);
     this.name = 'TeacherOffline';
+    Object.setPrototypeOf(this, TeacherOffline.prototype);
   }
 }
 
@@ -16,6 +17,7 @@ export class ParamNotProvided extends Error {
   constructor(paramName: string) {
     super(`The parameter not provided: ${paramName}`);
     this.name = 'ParamNotProvided';
+    Object.setPrototypeOf(this, ParamNotProvided.prototype);
   }
 }
 
@@ -23,6 +25,7 @@ export class EmailAlreadyExists extends Error {
   constructor(email: string) {
     super(`The email ${email} already exists`);
     this.name = 'EmailAlreadyExists';
+    Object.setPrototypeOf(this, EmailAlreadyExists.prototype);
   }
 }
 
@@ -30,6 +33,7 @@ export class UserWithEmailNotExists extends Error {
   constructor(email: string) {
     super(`The user with email ${email} not exists`);
     this.name = 'UserWithEmailNotExists';
+    Object.setPrototypeOf(this, UserWithEmailNotExists.prototype);
   }
 }
 

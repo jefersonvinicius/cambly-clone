@@ -1,3 +1,4 @@
 {
-    "exec": "yarn ts-node -r tsconfig-paths/register src/index.ts"
+    "exec": "yarn ts-node -r tsconfig-paths/register src/infra/http/server.ts",
+    "ext": "js, json, ts"
 }

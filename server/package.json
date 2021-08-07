@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon",
+    "serve:dev": "nodemon",
     "test": "jest",
     "typeorm": "ts-node ./node_modules/typeorm/cli.js"
   },

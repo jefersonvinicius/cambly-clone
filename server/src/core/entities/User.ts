@@ -24,8 +24,9 @@ export default class User extends BaseEntity {
 
 export class InvalidUserType extends Error {
   constructor(type: string) {
-    super(`Invalid user type, expected [${Object.values(UserTypes).join(',')}]. But got ${type}`);
+    super(`Invalid user type, expected [${Object.values(UserTypes).join(', ')}]. But got ${type}`);
     this.name = 'InvalidUserType';
+    Object.setPrototypeOf(this, InvalidUserType.prototype);
   }
 }
 
