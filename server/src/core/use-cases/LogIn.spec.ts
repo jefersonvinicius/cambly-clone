@@ -1,8 +1,7 @@
 import { JWT } from '@app/shared/JWT';
 import { createFakeUser } from '@tests/helpers';
-import User from '../entities/User';
+import { UserRepositoryInMemory } from '@tests/UserRepositoryInMemory';
 import { PasswordNotMatch, UserWithEmailNotExists } from '../errors';
-import { UserRepository } from '../repositories/UserRepository';
 import LogIn, { LogInPayload } from './LogIn';
 
 type UserJWT = {
@@ -19,9 +18,9 @@ describe('SignUp use case suite tests', () => {
       email: 'correct_email@gmail.com',
       password: '1a2b3c',
     };
-    const { tokenAccess } = await sut.perform(payload);
-    expect(tokenAccess).toEqual(expect.any(String));
-    expect(JWT.decode<UserJWT>(tokenAccess)?.userId).toBe(user.id);
+    const { accessToken } = await sut.perform(payload);
+    expect(accessToken).toEqual(expect.any(String));
+    expect(JWT.decode<UserJWT>(accessToken)?.userId).toBe(user.id);
   });
 
   it('Should not be able sing up when email not exists', async () => {
@@ -50,16 +49,4 @@ function createLoginUseCase() {
   const userRepositoryInMemory = new UserRepositoryInMemory();
   const sut = new LogIn(userRepositoryInMemory);
   return { sut, userRepositoryInMemory };
-}
-
-class UserRepositoryInMemory implements UserRepository {
-  private users: User[] = [];
-
-  async insert(user: User): Promise<void> {
-    this.users.push(user);
-  }
-
-  async findByEmail(email: string): Promise<User | null> {
-    return this.users.find((u) => u.email === email) ?? null;
-  }
 }

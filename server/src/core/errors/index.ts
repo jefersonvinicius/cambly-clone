@@ -41,5 +41,6 @@ export class PasswordNotMatch extends Error {
   constructor() {
     super(`Passwords not match`);
     this.name = 'PasswordNotMatch';
+    Object.setPrototypeOf(this, PasswordNotMatch.prototype);
   }
 }

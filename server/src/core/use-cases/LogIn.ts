@@ -15,12 +15,12 @@ export default class LogIn implements UseCase<LogInPayload, Return> {
       throw new PasswordNotMatch();
     }
 
-    return { tokenAccess: JWT.create({ userId: user.id }) };
+    return { accessToken: JWT.create({ userId: user.id }) };
   }
 }
 
 export type Return = {
-  tokenAccess: string;
+  accessToken: string;
 };
 
 export type LogInPayload = {

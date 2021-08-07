@@ -1,7 +1,7 @@
 import { createFakeUser } from '@tests/helpers';
-import User, { InvalidUserType, UserTypes } from '../entities/User';
+import { UserRepositoryInMemory } from '@tests/UserRepositoryInMemory';
+import { InvalidUserType, UserTypes } from '../entities/User';
 import { EmailAlreadyExists, ParamNotProvided } from '../errors';
-import { UserRepository } from '../repositories/UserRepository';
 import SignUp, { SignUpPayload } from './SignUp';
 
 describe('SignUp use case suite tests', () => {
@@ -97,16 +97,4 @@ function createSignupUseCase() {
   const userRepositoryInMemory = new UserRepositoryInMemory();
   const sut = new SignUp(userRepositoryInMemory);
   return { sut, userRepositoryInMemory };
-}
-
-class UserRepositoryInMemory implements UserRepository {
-  private users: User[] = [];
-
-  async insert(user: User): Promise<void> {
-    this.users.push(user);
-  }
-
-  async findByEmail(email: string): Promise<User | null> {
-    return this.users.find((u) => u.email === email) ?? null;
-  }
 }

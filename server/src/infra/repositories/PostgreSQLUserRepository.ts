@@ -1,6 +1,7 @@
 import User, { UserTypes } from '@app/core/entities/User';
 import { UserRepository } from '@app/core/repositories/UserRepository';
 import { Connection, Repository } from 'typeorm';
+import { Database } from '../database';
 import { UserScheme, UserSchemeProperties } from '../database/schemes/UserScheme';
 
 export class PostgreSQLUserRepository implements UserRepository {
@@ -23,6 +24,11 @@ export class PostgreSQLUserRepository implements UserRepository {
   async deleteById(id: string) {
     const { affected } = await this.userRepository.delete(id);
     return !!affected;
+  }
+
+  static async create() {
+    const connection = await Database.getInstance();
+    return new PostgreSQLUserRepository(connection);
   }
 }
 

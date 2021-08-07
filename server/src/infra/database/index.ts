@@ -1,4 +1,3 @@
-import { ConnectionOptions } from 'tls';
 import { Connection, createConnection, getConnectionOptions } from 'typeorm';
 
 export class Database {
@@ -24,5 +23,9 @@ export class Database {
   static async disconnectTestInstance() {
     await this.testConnection?.close();
     this.testConnection = null;
+  }
+
+  static async connect() {
+    await this.getInstance();
   }
 }
