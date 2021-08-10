@@ -47,6 +47,30 @@ describe('StudentViewOnlineTeachersUseCase suite test', () => {
       ])
     );
   });
+
+  it('Should return teachers online and not busy', async () => {
+    const teachers = [
+      await createFakeTeacher({ id: 'teacher1', busy: true }),
+      await createFakeTeacher({ id: 'teacher2' }),
+    ];
+    const socketServer = new FakeSocketServer(teachers);
+    const teacherRepository = new TeacherRepositoryInMemory();
+    await teacherRepository.insert(teachers[0]);
+    await teacherRepository.insert(teachers[1]);
+
+    const sut = new StudentViewOnlineTeachersUseCase(socketServer, teacherRepository);
+
+    const teachersOnline = await sut.perform({});
+    expect(teachersOnline.length).toBe(1);
+    expect(teachersOnline).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: 'teacher2',
+          busy: false,
+        }),
+      ])
+    );
+  });
 });
 
 class TeacherRepositoryChecker implements TeacherRepository {
@@ -65,6 +89,11 @@ class TeacherRepositoryChecker implements TeacherRepository {
 class SocketServerToVerifyMethodCall implements SocketServer {
   calledTeachersIdsMethods = false;
 
+  async teachersIdsNotBusy(): Promise<string[]> {
+    this.calledTeachersIdsMethods = true;
+    return [];
+  }
+
   hasTeacher(teacherId: string): Promise<boolean> {
     throw new Error('Method not implemented.');
   }
@@ -78,7 +107,6 @@ class SocketServerToVerifyMethodCall implements SocketServer {
     throw new Error('Method not implemented.');
   }
   async teachersIds(): Promise<string[]> {
-    this.calledTeachersIdsMethods = true;
-    return [];
+    throw new Error('Method not implemented.');
   }
 }

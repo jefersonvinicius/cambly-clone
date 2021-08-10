@@ -11,4 +11,6 @@ export interface SocketServer {
   requestTeacher(request: RequestLesson): Promise<void>;
 
   teachersIds(): Promise<string[]>;
+
+  teachersIdsNotBusy(): Promise<string[]>;
 }
