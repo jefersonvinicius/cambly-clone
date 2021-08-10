@@ -2,7 +2,7 @@ import { JWT } from '@app/shared/JWT';
 import { createFakeUser } from '@tests/helpers';
 import { UserRepositoryInMemory } from '@tests/UserRepositoryInMemory';
 import { PasswordNotMatch, UserWithEmailNotExists } from '../errors';
-import LogIn, { LogInPayload } from './LogIn';
+import LogInUseCase, { LogInPayload } from './LogIn';
 
 type UserJWT = {
   userId: string;
@@ -47,6 +47,6 @@ describe('SignUp use case suite tests', () => {
 
 function createLoginUseCase() {
   const userRepositoryInMemory = new UserRepositoryInMemory();
-  const sut = new LogIn(userRepositoryInMemory);
+  const sut = new LogInUseCase(userRepositoryInMemory);
   return { sut, userRepositoryInMemory };
 }

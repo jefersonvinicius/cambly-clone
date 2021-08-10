@@ -1,9 +1,9 @@
-import LogIn, { LogInPayload } from '@app/core/use-cases/LogIn';
+import LogInUseCase, { LogInPayload } from '@app/core/use-cases/LogIn';
 import { getStatusCodeOf, StatusCode } from '../helpers';
 import { HttpRequest, HttpResponse, Route } from './Route';
 
 export class LogInRoute implements Route {
-  constructor(private logInUseCase: LogIn) {}
+  constructor(private logInUseCase: LogInUseCase) {}
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse<any>> {
     try {

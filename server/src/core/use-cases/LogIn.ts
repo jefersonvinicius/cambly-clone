@@ -4,7 +4,7 @@ import { UseCase } from '.';
 import { PasswordNotMatch, UserWithEmailNotExists } from '../errors';
 import { UserRepository } from '../repositories/UserRepository';
 
-export default class LogIn implements UseCase<LogInPayload, Return> {
+export default class LogInUseCase implements UseCase<LogInPayload, Return> {
   constructor(private usersRepository: UserRepository) {}
 
   async perform(params: LogInPayload): Promise<Return> {

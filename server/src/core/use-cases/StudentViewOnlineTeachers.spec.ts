@@ -17,8 +17,7 @@ describe('StudentViewOnlineTeachersUseCase suite test', () => {
   });
 
   it('Should use TeacherRepository to fetch teacher data by id', async () => {
-    const teachers = [];
-    teachers.push(await createFakeTeacher({ id: 'teacher1' }));
+    const teachers = [await createFakeTeacher({ id: 'teacher1' })];
     const socketServer = new FakeSocketServer(teachers);
     const teacherRepository = new TeacherRepositoryChecker();
     const sut = new StudentViewOnlineTeachersUseCase(socketServer, teacherRepository);

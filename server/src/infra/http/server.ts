@@ -7,6 +7,7 @@ const app = express();
 app.use(express.json());
 app.post('/signup', ExpressRoutes.singUp);
 app.post('/login', ExpressRoutes.logIn);
+app.get('/teachers/online', ExpressRoutes.viewTeachersOnline);
 
 async function bootstrap() {
   await Database.connect();
