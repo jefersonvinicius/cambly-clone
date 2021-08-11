@@ -1,9 +1,9 @@
 import User, { UserTypes } from '@app/core/entities/User';
 import { Connection } from 'typeorm';
 import { Database } from '../database';
-import { PostgreSQLUserRepository } from './PostgreSQLUserRepository';
+import { TypeORMUserRepository } from './TypeORMUserRepository';
 
-describe('PostgreSQLUserRepository suite tests', () => {
+describe('TypeORMUserRepository suite tests', () => {
   let connection: Connection;
 
   beforeAll(async () => {
@@ -16,13 +16,13 @@ describe('PostgreSQLUserRepository suite tests', () => {
   });
 
   it('Should return null when not found user by email', async () => {
-    const userRepository = new PostgreSQLUserRepository(connection);
+    const userRepository = new TypeORMUserRepository(connection);
     const user = await userRepository.findByEmail('email_not_exists@gmail.com');
     expect(user).toBeNull();
   });
 
   it('Should return user by email successfully', async () => {
-    const userRepository = new PostgreSQLUserRepository(connection);
+    const userRepository = new TypeORMUserRepository(connection);
     const user = new User({
       email: 'any_email@gmail.com',
       name: 'Any',

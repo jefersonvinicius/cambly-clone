@@ -5,7 +5,7 @@ import { createFakeTeacher } from '@tests/helpers';
 import { FakeSocketServer } from '@tests/SocketServerFake';
 import { TeacherRepositoryInMemory } from '@tests/TeacherRepositoryInMemory';
 import { Request, Response } from 'express';
-import { PostgreSQLUserRepository } from '../repositories/PostgreSQLUserRepository';
+import { TypeORMUserRepository } from '../repositories/TypeORMUserRepository';
 import { LogInRoute } from './routes/LogInRoute';
 import { HttpRequest } from './routes/Route';
 import { SignUpRoute } from './routes/SignUpRoute';
@@ -13,7 +13,7 @@ import { StudentViewOnlineTeachersRoute } from './routes/StudentViewTeachersOnli
 
 export class ExpressRoutes {
   static async singUp(request: Request, response: Response) {
-    const userRepository = await PostgreSQLUserRepository.create();
+    const userRepository = await TypeORMUserRepository.create();
     const signupUseCase = new SignUp(userRepository);
     const signupRoute = new SignUpRoute(signupUseCase);
     const result = await signupRoute.handle(new HttpRequest(request.body));
@@ -21,7 +21,7 @@ export class ExpressRoutes {
   }
 
   static async logIn(request: Request, response: Response) {
-    const userRepository = await PostgreSQLUserRepository.create();
+    const userRepository = await TypeORMUserRepository.create();
     const loginUseCase = new LogInUseCase(userRepository);
     const loginRoute = new LogInRoute(loginUseCase);
     const result = await loginRoute.handle(new HttpRequest(request.body));

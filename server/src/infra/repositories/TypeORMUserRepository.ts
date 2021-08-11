@@ -4,7 +4,7 @@ import { Connection, Repository } from 'typeorm';
 import { Database } from '../database';
 import { UserScheme, UserSchemeProperties } from '../database/schemes/UserScheme';
 
-export class PostgreSQLUserRepository implements UserRepository {
+export class TypeORMUserRepository implements UserRepository {
   private userRepository: Repository<UserSchemeProperties>;
 
   constructor(private connection: Connection) {
@@ -28,7 +28,7 @@ export class PostgreSQLUserRepository implements UserRepository {
 
   static async create() {
     const connection = await Database.getInstance();
-    return new PostgreSQLUserRepository(connection);
+    return new TypeORMUserRepository(connection);
   }
 }
 
