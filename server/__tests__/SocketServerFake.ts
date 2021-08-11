@@ -7,6 +7,10 @@ export class FakeSocketServer implements SocketServer {
 
   constructor(private teachers: Teacher[]) {}
 
+  async connectTeacher(teacher: Teacher): Promise<void> {
+    this.teachers.push(teacher);
+  }
+
   async teachersIdsNotBusy(): Promise<string[]> {
     return this.teachers.filter((t) => !t.isBusy).map((t) => t.id);
   }

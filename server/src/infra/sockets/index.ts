@@ -13,4 +13,6 @@ export interface SocketServer {
   teachersIds(): Promise<string[]>;
 
   teachersIdsNotBusy(): Promise<string[]>;
+
+  connectTeacher(teacher: Teacher): Promise<void>;
 }

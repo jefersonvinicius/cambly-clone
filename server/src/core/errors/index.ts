@@ -44,3 +44,11 @@ export class PasswordNotMatch extends Error {
     Object.setPrototypeOf(this, PasswordNotMatch.prototype);
   }
 }
+
+export class TeacherNotFound extends Error {
+  constructor(teacherId: string) {
+    super(`Teacher ${teacherId} not found`);
+    this.name = 'TeacherNotFound';
+    Object.setPrototypeOf(this, TeacherNotFound.prototype);
+  }
+}
