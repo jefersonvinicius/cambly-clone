@@ -2,7 +2,7 @@ import Teacher from '@app/core/entities/Teacher';
 import { TeacherRepository } from '@app/core/repositories/TeacherRepository';
 import { Connection, Repository } from 'typeorm';
 import { UserScheme, UserSchemeProperties } from '../database/schemes/UserScheme';
-import { TeacherMapper } from '../mappers/TeacherMapper';
+import { UserMapper } from '../mappers/UserMapper';
 
 export class TypeORMTeacherRepository implements TeacherRepository {
   private userRepository: Repository<UserSchemeProperties>;
@@ -17,7 +17,7 @@ export class TypeORMTeacherRepository implements TeacherRepository {
   }
 
   async insert(teacher: Teacher): Promise<void> {
-    const scheme = TeacherMapper.toUserScheme(teacher);
-    await this.userRepository.insert(scheme);
+    const scheme = this.userRepository.create(UserMapper.toUserScheme(teacher));
+    await this.userRepository.save(scheme);
   }
 }

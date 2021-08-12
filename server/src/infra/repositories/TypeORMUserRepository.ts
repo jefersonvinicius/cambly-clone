@@ -3,6 +3,7 @@ import { UserRepository } from '@app/core/repositories/UserRepository';
 import { Connection, Repository } from 'typeorm';
 import { Database } from '../database';
 import { UserScheme, UserSchemeProperties } from '../database/schemes/UserScheme';
+import { UserMapper } from '../mappers/UserMapper';
 
 export class TypeORMUserRepository implements UserRepository {
   private userRepository: Repository<UserSchemeProperties>;
@@ -12,7 +13,7 @@ export class TypeORMUserRepository implements UserRepository {
   }
 
   async insert(user: User): Promise<void> {
-    const userToSave = this.userRepository.create({ ...user });
+    const userToSave = this.userRepository.create(UserMapper.toUserScheme(user));
     await this.userRepository.save(userToSave);
   }
 
