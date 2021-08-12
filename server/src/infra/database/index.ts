@@ -25,6 +25,14 @@ export class Database {
     this.testConnection = null;
   }
 
+  static async cleanTestDatabase() {
+    const c = await this.getTestInstance();
+    const entities = c.entityMetadatas;
+    for await (const entity of entities) {
+      await c.query(`DELETE FROM ${entity.tableName}`);
+    }
+  }
+
   static async connect() {
     await this.getInstance();
   }

@@ -1,10 +1,10 @@
 import BaseEntity, { BaseEntityData } from './Base';
 
 export default class User extends BaseEntity {
-  private name: string;
+  readonly name: string;
   readonly email: string;
   readonly password: string;
-  private type: UserTypes;
+  readonly type: UserTypes;
 
   constructor(data: UserConstructorData) {
     super(data);

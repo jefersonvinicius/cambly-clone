@@ -2,8 +2,8 @@ import UUID from '@app/shared/UUID';
 
 export default class BaseEntity {
   readonly id: string;
-  protected createdAt: Date;
-  protected updatedAt: Date;
+  readonly createdAt: Date;
+  readonly updatedAt: Date;
 
   constructor(data?: BaseEntityData) {
     this.id = data?.id ?? UUID.v4();
