@@ -1,4 +1,4 @@
-import { SocketServer } from '@app/infra/sockets';
+import { SocketServer } from '@app/infra/web-sockets';
 import { createFakeTeacher } from '@tests/helpers';
 import { FakeSocketServer } from '@tests/SocketServerFake';
 import { TeacherRepositoryInMemory } from '@tests/TeacherRepositoryInMemory';
@@ -107,6 +107,10 @@ class SocketServerToVerifyMethodCall implements SocketServer {
     throw new Error('Method not implemented.');
   }
   async teachersIds(): Promise<string[]> {
+    throw new Error('Method not implemented.');
+  }
+
+  connectTeacher(teacher: Teacher): Promise<void> {
     throw new Error('Method not implemented.');
   }
 }

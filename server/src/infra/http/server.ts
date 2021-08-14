@@ -1,6 +1,7 @@
 import express from 'express';
-import { Database } from '../database';
 import { ExpressRoutes } from './ExpressRoutes';
+import http from 'http';
+import { setupSocketIO } from '../web-sockets/SocketIOEvents';
 
 const app = express();
 
@@ -9,11 +10,17 @@ app.post('/signup', ExpressRoutes.singUp);
 app.post('/login', ExpressRoutes.logIn);
 app.get('/teachers/online', ExpressRoutes.viewTeachersOnline);
 
-async function bootstrap() {
-  await Database.connect();
-  app.listen(3333, () => {
-    console.log('Serving on http://localhost:3333');
+export const httpServer = http.createServer(app);
+
+export async function startHttpServer() {
+  await new Promise<void>((resolve) => {
+    httpServer.listen(3333, () => {
+      console.log('Serving on http://localhost:3333');
+      resolve();
+    });
   });
 }
 
-bootstrap();
+export function stopHttpServer() {
+  httpServer.close();
+}

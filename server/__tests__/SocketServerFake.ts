@@ -1,6 +1,6 @@
 import RequestLesson from '@app/core/entities/RequestLesson';
 import Teacher from '@app/core/entities/Teacher';
-import { SocketServer } from '@app/infra/sockets';
+import { SocketServer } from '@app/infra/web-sockets';
 
 export class FakeSocketServer implements SocketServer {
   private requests: RequestLesson[] = [];

@@ -1,7 +1,7 @@
 import { UseCase } from '.';
 import { TeacherIsBusy, TeacherOffline } from '@app/core/errors';
 import RequestLesson from '@app/core/entities/RequestLesson';
-import { SocketServer } from '@app/infra/sockets';
+import { SocketServer } from '@app/infra/web-sockets';
 
 type Params = {
   teacherId: string;

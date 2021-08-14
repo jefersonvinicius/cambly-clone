@@ -3,7 +3,6 @@ import SignUp from '@app/core/use-cases/SignUp';
 import { StudentViewOnlineTeachersUseCase } from '@app/core/use-cases/StudentViewOnlineTeachers';
 import { createFakeTeacher } from '@tests/helpers';
 import { FakeSocketServer } from '@tests/SocketServerFake';
-import { TeacherRepositoryInMemory } from '@tests/TeacherRepositoryInMemory';
 import { Request, Response } from 'express';
 import { Database } from '../database';
 import { TypeORMTeacherRepository } from '../repositories/TypeORMTeacherRepository';

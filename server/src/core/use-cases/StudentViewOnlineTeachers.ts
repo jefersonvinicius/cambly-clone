@@ -1,4 +1,4 @@
-import { SocketServer } from '@app/infra/sockets';
+import { SocketServer } from '@app/infra/web-sockets';
 import { UseCase } from '.';
 import Teacher from '../entities/Teacher';
 import { TeacherRepository } from '../repositories/TeacherRepository';
