@@ -1,5 +1,7 @@
 import Teacher, { TeacherConstructorData } from '@app/core/entities/Teacher';
 import User, { UserConstructorData, UserTypes } from '@app/core/entities/User';
+import { startHttpServer } from '@app/infra/http/server';
+import { setupSocketIO } from '@app/infra/web-sockets/SocketIOEvents';
 import { Hashing } from '@app/shared/Hashing';
 import faker from 'faker';
 
@@ -26,4 +28,9 @@ export async function createFakeUser(data?: Partial<UserConstructorData>) {
     updatedAt: data?.updatedAt,
     type: data?.type ?? UserTypes.Student,
   });
+}
+
+export async function setupHttpServerAndSocket() {
+  setupSocketIO();
+  await startHttpServer();
 }

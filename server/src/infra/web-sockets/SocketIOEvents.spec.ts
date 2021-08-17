@@ -1,12 +1,10 @@
-import { startHttpServer, stopHttpServer } from '../http/server';
-
+import { setupHttpServerAndSocket } from '@tests/helpers';
 import { io } from 'socket.io-client';
-import { setupSocketIO } from './SocketIOEvents';
+import { stopHttpServer } from '../http/server';
 
 describe('SocketIOEvents', () => {
   beforeAll(async () => {
-    await startHttpServer();
-    setupSocketIO();
+    await setupHttpServerAndSocket();
   });
 
   afterAll(async () => {
@@ -15,10 +13,9 @@ describe('SocketIOEvents', () => {
 
   it('Should be able connect to socket server', (done) => {
     const client = io('http://localhost:3333');
-    console.log(client.connected);
 
-    client.on('test', ({ message }) => {
-      expect(message).toBe('test');
+    client.on('ping', () => {
+      expect(true).toBe(true);
       client.close();
       done();
     });
