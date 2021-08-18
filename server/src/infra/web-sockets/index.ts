@@ -16,3 +16,8 @@ export interface SocketServer {
 
   connectTeacher(teacher: Teacher): Promise<void>;
 }
+
+export enum EventsLabels {
+  NewTeacherConnected = 'new-teacher-connected',
+  ConnectTeacherToBeChosen = 'connect-teacher-to-be-chosen',
+}

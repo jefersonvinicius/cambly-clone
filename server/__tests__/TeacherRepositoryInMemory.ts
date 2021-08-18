@@ -12,4 +12,9 @@ export class TeacherRepositoryInMemory implements TeacherRepository {
   async insert(teacher: Teacher): Promise<void> {
     this.teachers.push(teacher);
   }
+
+  async deleteById(id: string): Promise<boolean> {
+    this.teachers = this.teachers.filter((t) => t.id !== id);
+    return true;
+  }
 }

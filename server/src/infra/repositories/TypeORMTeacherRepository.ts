@@ -11,6 +11,11 @@ export class TypeORMTeacherRepository implements TeacherRepository {
     this.userRepository = this.connection.getRepository(UserScheme);
   }
 
+  async deleteById(id: string): Promise<boolean> {
+    const { affected } = await this.userRepository.delete(id);
+    return !!affected;
+  }
+
   async findById(id: string): Promise<Teacher | null> {
     const scheme = await this.userRepository.findOne(id);
     return scheme ? new Teacher({ ...scheme }) : null;

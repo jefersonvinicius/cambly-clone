@@ -1,5 +1,6 @@
 import Teacher, { TeacherConstructorData } from '@app/core/entities/Teacher';
 import User, { UserConstructorData, UserTypes } from '@app/core/entities/User';
+import { Database } from '@app/infra/database';
 import { startHttpServer } from '@app/infra/http/server';
 import { setupSocketIO } from '@app/infra/web-sockets/SocketIOEvents';
 import { Hashing } from '@app/shared/Hashing';
@@ -33,4 +34,15 @@ export async function createFakeUser(data?: Partial<UserConstructorData>) {
 export async function setupHttpServerAndSocket() {
   setupSocketIO();
   await startHttpServer();
+}
+
+export async function setupDatabaseTest() {
+  const connection = await Database.getInstance();
+  await connection.runMigrations();
+  return connection;
+}
+
+export async function teardownDatabaseTest() {
+  await Database.cleanTestDatabase();
+  await Database.disconnectTestInstance();
 }

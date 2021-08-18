@@ -1,18 +1,16 @@
-import { createFakeTeacher } from '@tests/helpers';
+import { createFakeTeacher, setupDatabaseTest, teardownDatabaseTest } from '@tests/helpers';
 import { Connection } from 'typeorm';
-import { Database } from '../database';
 import { TypeORMTeacherRepository } from './TypeORMTeacherRepository';
 
 describe('TypeORMTeacherRepository suite test', () => {
   let connection: Connection;
 
   beforeAll(async () => {
-    connection = await Database.getTestInstance();
+    connection = await setupDatabaseTest();
   });
 
   afterAll(async () => {
-    await Database.cleanTestDatabase();
-    await Database.disconnectTestInstance();
+    await teardownDatabaseTest();
   });
 
   it('Should insert a teacher successfully', async () => {
@@ -26,5 +24,6 @@ describe('TypeORMTeacherRepository suite test', () => {
     await sut.insert(teacher);
     const teacherInserted = await sut.findById('any_id');
     expect(teacherInserted).toMatchObject(teacher);
+    await sut.deleteById('any_id');
   });
 });

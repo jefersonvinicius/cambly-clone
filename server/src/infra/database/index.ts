@@ -6,7 +6,8 @@ export class Database {
 
   static async getInstance() {
     if (!this.connection) {
-      this.connection = await createConnection();
+      if (process.env.NODE_ENV === 'dev') this.connection = await createConnection();
+      else this.connection = await this.getTestInstance();
     }
     return this.connection;
   }

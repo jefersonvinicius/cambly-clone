@@ -1,18 +1,17 @@
 import User, { UserTypes } from '@app/core/entities/User';
+import { setupDatabaseTest, teardownDatabaseTest } from '@tests/helpers';
 import { Connection } from 'typeorm';
-import { Database } from '../database';
 import { TypeORMUserRepository } from './TypeORMUserRepository';
 
 describe('TypeORMUserRepository suite tests', () => {
   let connection: Connection;
 
   beforeAll(async () => {
-    connection = await Database.getTestInstance();
-    await connection.runMigrations();
+    connection = await setupDatabaseTest();
   });
 
   afterAll(async () => {
-    await Database.disconnectTestInstance();
+    await teardownDatabaseTest();
   });
 
   it('Should return null when not found user by email', async () => {
