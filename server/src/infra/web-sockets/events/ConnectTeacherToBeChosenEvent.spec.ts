@@ -1,9 +1,14 @@
-import { io } from 'socket.io-client';
-import { createFakeTeacher, setupDatabaseTest, setupHttpServerAndSocket, teardownDatabaseTest } from '@tests/helpers';
+import { io, Socket } from 'socket.io-client';
+import {
+  createFakeTeacher,
+  setupDatabaseTest,
+  setupHttpServerAndSocket,
+  teardownDatabaseTest,
+  waitForCallbacks,
+} from '@tests/helpers';
 import { stopHttpServer } from '@app/infra/http/server';
 import { EventsLabels } from '../';
 import { TypeORMTeacherRepository } from '@app/infra/repositories/TypeORMTeacherRepository';
-import { Database } from '@app/infra/database';
 import { Connection } from 'typeorm';
 
 describe('SocketIOEvents', () => {
@@ -19,39 +24,46 @@ describe('SocketIOEvents', () => {
     stopHttpServer();
   });
 
-  it('Should student get new event when teacher is connected', async (done) => {
+  it('Should student get new event when teacher is connected', async () => {
     const teacherRepository = new TypeORMTeacherRepository(connection);
     const teacher = await createFakeTeacher({ id: 'teacherId', name: 'Any Name', email: 'any_email@gmail.com' });
     await teacherRepository.insert(teacher);
 
-    const student = createStudentClient();
-    const teacherClient = createTeacherClient();
+    const sut = await createStudentClient();
+    const teacherClient = await createTeacherClient();
 
-    student.on(EventsLabels.NewTeacherConnected, ({ teacher }) => {
-      expect(teacher).toEqual(
-        expect.objectContaining({
-          id: expect.any(String),
-          name: 'Any Name',
-          email: 'any_email@gmail.com',
-        })
-      );
-      done();
+    await waitForCallbacks(1, (incrementCalls) => {
+      sut.on(EventsLabels.NewTeacherConnected, async ({ teacher }) => {
+        expect(teacher).toEqual(
+          expect.objectContaining({
+            id: expect.any(String),
+            name: 'Any Name',
+            email: 'any_email@gmail.com',
+          })
+        );
 
-      student.close();
-      teacherClient.close();
+        sut.close();
+        teacherClient.close();
+        await teacherRepository.deleteById(teacher.id);
+        incrementCalls();
+      });
+
+      teacherClient.emit(EventsLabels.ConnectTeacherToBeChosen, { teacherId: 'teacherId' });
     });
-
-    teacherClient.connect();
-    student.connect();
-
-    teacherClient.emit(EventsLabels.ConnectTeacherToBeChosen, { teacherId: 'teacherId' });
   });
 });
 
-function createStudentClient() {
-  return io('http://localhost:3333');
+async function createStudentClient() {
+  return await createIOClient();
 }
 
-function createTeacherClient() {
-  return io('http://localhost:3333');
+async function createTeacherClient() {
+  return await createIOClient();
+}
+
+function createIOClient() {
+  return new Promise<Socket>((resolve) => {
+    const client = io('http://localhost:3333');
+    client.on('connect', () => resolve(client));
+  });
 }

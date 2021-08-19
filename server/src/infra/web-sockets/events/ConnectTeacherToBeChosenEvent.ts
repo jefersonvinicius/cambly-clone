@@ -13,7 +13,7 @@ export class ConnectTeacherToBeChosenEvent implements SocketEvent<Params> {
     return async ({ teacherId }: Params) => {
       const teacher = await this.connectTeacher.perform({ teacherId });
       const model = new TeacherViewModel(teacher);
-      socket.emit(EventsLabels.NewTeacherConnected, { teacher: model });
+      socket.broadcast.emit(EventsLabels.NewTeacherConnected, { teacher: model });
     };
   }
 }

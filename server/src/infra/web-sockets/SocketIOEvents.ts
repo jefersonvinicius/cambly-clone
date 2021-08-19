@@ -12,15 +12,19 @@ export async function setupSocketIO() {
   const io = new Server(httpServer);
 
   const socketServer = new SocketServerIO(io);
-
   const teacherRepository = new TypeORMTeacherRepository(await Database.getInstance());
-  const connectTeacherToBeChosenUseCase = new TeacherConnectToBeChosenUseCase(socketServer, teacherRepository);
-  const connectTeacherToBeChosenEvent = new ConnectTeacherToBeChosenEvent(connectTeacherToBeChosenUseCase);
+
+  const connectTeacherToBeChosenEvent = createTeacherToBeChosenEvent();
 
   io.on('connection', (socket) => {
     socket.emit('ping');
     socket.on(EventsLabels.ConnectTeacherToBeChosen, connectTeacherToBeChosenEvent.createHandler(socket));
   });
+
+  function createTeacherToBeChosenEvent() {
+    const connectTeacherToBeChosenUseCase = new TeacherConnectToBeChosenUseCase(socketServer, teacherRepository);
+    return new ConnectTeacherToBeChosenEvent(connectTeacherToBeChosenUseCase);
+  }
 }
 
 class SocketServerIO implements SocketServer {

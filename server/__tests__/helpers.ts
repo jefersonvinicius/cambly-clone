@@ -4,6 +4,7 @@ import { Database } from '@app/infra/database';
 import { startHttpServer } from '@app/infra/http/server';
 import { setupSocketIO } from '@app/infra/web-sockets/SocketIOEvents';
 import { Hashing } from '@app/shared/Hashing';
+import EventEmitter from 'events';
 import faker from 'faker';
 
 export async function createFakeTeacher(data?: Partial<TeacherConstructorData>) {
@@ -45,4 +46,26 @@ export async function setupDatabaseTest() {
 export async function teardownDatabaseTest() {
   await Database.cleanTestDatabase();
   await Database.disconnectTestInstance();
+}
+
+type ProcessFunction = (incrementCalls: () => void) => void;
+
+export function waitForCallbacks(amountCallbacks: number, process: ProcessFunction): Promise<void> {
+  const emitter = new EventEmitter();
+  return new Promise<void>((resolve) => {
+    let callbackHasCalled = 0;
+
+    emitter.on('callback-called', () => {
+      callbackHasCalled++;
+      if (callbackHasCalled === amountCallbacks) {
+        resolve();
+      }
+    });
+
+    function incrementCalls() {
+      emitter.emit('callback-called');
+    }
+
+    process(incrementCalls);
+  });
 }
