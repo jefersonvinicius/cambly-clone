@@ -3,15 +3,17 @@ import { TeacherViewModel } from '@app/infra/http/view-models/TeacherViewModel';
 import { Socket } from 'socket.io';
 import { SocketEvent } from '.';
 import { EventsLabels } from '..';
+import SocketServer from '../SocketServer';
 
 type Params = { teacherId: string };
 
 export class ConnectTeacherToBeChosenEvent implements SocketEvent<Params> {
-  constructor(private connectTeacher: TeacherConnectToBeChosenUseCase) {}
+  constructor(private connectTeacher: TeacherConnectToBeChosenUseCase, private socketServer: SocketServer) {}
 
   createHandler(socket: Socket) {
     return async ({ teacherId }: Params) => {
-      const teacher = await this.connectTeacher.perform({ teacherId });
+      const teacher = await this.connectTeacher.perform({ teacherId, teacherSocket: socket });
+      await this.socketServer.connectTeacher(teacher, socket);
       const model = new TeacherViewModel(teacher);
       socket.broadcast.emit(EventsLabels.NewTeacherConnected, { teacher: model });
     };

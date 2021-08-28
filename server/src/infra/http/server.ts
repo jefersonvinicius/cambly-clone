@@ -21,5 +21,7 @@ export function startHttpServer() {
 }
 
 export function stopHttpServer() {
-  httpServer.close();
+  return new Promise<void>((resolve) => {
+    httpServer.close(() => resolve());
+  });
 }

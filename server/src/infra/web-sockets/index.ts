@@ -1,17 +1,11 @@
-import RequestLesson from '@app/core/entities/RequestLesson';
-import Teacher from '@app/core/entities/Teacher';
-
-export interface SocketServer {
-  hasTeacher(teacherId: string): Promise<boolean>;
-  teacherIsBusy(teacherId: string): Promise<boolean>;
-  setTeacherAsBusy(teacherId: string): Promise<void>;
-  requestTeacher(request: RequestLesson): Promise<void>;
-  teachersIds(): Promise<string[]>;
-  teachersIdsNotBusy(): Promise<string[]>;
-  connectTeacher(teacher: Teacher): Promise<void>;
-}
+import SocketServer, { BaseSocket } from './SocketServer';
 
 export enum EventsLabels {
+  ConnectStudent = 'connect-student',
   NewTeacherConnected = 'new-teacher-connected',
   ConnectTeacherToBeChosen = 'connect-teacher-to-be-chosen',
+  NewStudentRequest = 'new-student-request',
+  RequestTeacherLesson = 'request-teacher-lesson',
 }
+
+export { SocketServer, BaseSocket };

@@ -1,5 +1,5 @@
 import { Socket } from 'socket.io';
 
 export interface SocketEvent<Params = undefined> {
-  createHandler(socket: Socket): (params: Params) => void;
+  createHandler(socket: Socket): (params: Params, callback?: Function) => void;
 }

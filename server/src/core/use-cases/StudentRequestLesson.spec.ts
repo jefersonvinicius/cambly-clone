@@ -1,6 +1,6 @@
 import Teacher from '@app/core/entities/Teacher';
 import { TeacherIsBusy, TeacherOffline } from '@app/core/errors';
-import { StudentRequestLesson } from './StudentRequestLesson';
+import { StudentRequestLessonUseCase } from './StudentRequestLesson';
 import { createFakeTeacher } from '@tests/helpers';
 import { FakeSocketServer } from '@tests/SocketServerFake';
 
@@ -16,7 +16,7 @@ describe('Use cases suite tests', () => {
   });
 
   it('Student not must be able request teacher lesson when teacher is not online', async () => {
-    const studentRequestLessonUseCase = new StudentRequestLesson(fakeSocketServer);
+    const studentRequestLessonUseCase = new StudentRequestLessonUseCase(fakeSocketServer);
     const performPromise = studentRequestLessonUseCase.perform({
       studentId: 'student_id',
       teacherId: 'teacher-that-not-exists',
@@ -25,7 +25,7 @@ describe('Use cases suite tests', () => {
   });
 
   it('Student not must be able request teacher lesson when teacher is in another lesson', async () => {
-    const studentRequestLessonUseCase = new StudentRequestLesson(fakeSocketServer);
+    const studentRequestLessonUseCase = new StudentRequestLessonUseCase(fakeSocketServer);
     const performPromise = studentRequestLessonUseCase.perform({
       studentId: 'student_id',
       teacherId: 'busy-teacher-1',
@@ -34,7 +34,7 @@ describe('Use cases suite tests', () => {
   });
 
   it('Student must be able request teacher lesson successfully', async () => {
-    const studentRequestLessonUseCase = new StudentRequestLesson(fakeSocketServer);
+    const studentRequestLessonUseCase = new StudentRequestLessonUseCase(fakeSocketServer);
     const request = await studentRequestLessonUseCase.perform({
       studentId: 'student_id',
       teacherId: 'teacher-1',

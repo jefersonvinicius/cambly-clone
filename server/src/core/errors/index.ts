@@ -52,3 +52,11 @@ export class TeacherNotFound extends Error {
     Object.setPrototypeOf(this, TeacherNotFound.prototype);
   }
 }
+
+export class StudentNotFound extends Error {
+  constructor(studentId: string) {
+    super(`Student ${studentId} not found`);
+    this.name = 'StudentNotFound';
+    Object.setPrototypeOf(this, StudentNotFound.prototype);
+  }
+}
