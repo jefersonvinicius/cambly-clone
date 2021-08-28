@@ -17,7 +17,6 @@ export class TeacherConnectToBeChosenUseCase implements UseCase<Params, Return> 
   async perform(params: Params): Promise<Return> {
     const teacher = await this.teacherRepository.findById(params.teacherId);
     if (!teacher) throw new TeacherNotFound(params.teacherId);
-
     await this.socketServer.connectTeacher(teacher, params.teacherSocket);
     return teacher;
   }
