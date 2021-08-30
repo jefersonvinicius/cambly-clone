@@ -6,6 +6,7 @@ import {
   teardownDatabaseTest,
   waitForCallbacks,
 } from '@tests/helpers';
+import { connectStudent } from '@tests/helpers/socket-events';
 import { EventsLabels } from '..';
 
 describe('ConnectStudentEvent suite test', () => {
@@ -22,7 +23,7 @@ describe('ConnectStudentEvent suite test', () => {
   it('Should connect student successfully', async () => {
     const student = await createStudentClient();
     await waitForCallbacks(1, (incrementCalls) => {
-      student.socket.emit(EventsLabels.ConnectStudent, { studentId: student.data.id }, async () => {
+      connectStudent(student.socket, { studentId: student.data.id }, async () => {
         expect(true).toBe(true);
         await student.destroy();
         incrementCalls();

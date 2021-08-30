@@ -2,7 +2,7 @@ import Student, { StudentConstructorData } from '@app/core/entities/Student';
 import Teacher, { TeacherConstructorData } from '@app/core/entities/Teacher';
 import User, { UserConstructorData, UserTypes } from '@app/core/entities/User';
 import { Database } from '@app/infra/database';
-import { startHttpServer } from '@app/infra/http/server';
+import { startHttpServer, stopHttpServer } from '@app/infra/http/server';
 import { TypeORMStudentRepository } from '@app/infra/repositories/TypeORMStudentRepository';
 import { TypeORMTeacherRepository } from '@app/infra/repositories/TypeORMTeacherRepository';
 import { setupSocketIO } from '@app/infra/web-sockets/SocketIOEvents';
@@ -54,6 +54,10 @@ export async function setupHttpServerAndSocket() {
   await startHttpServer();
 }
 
+export async function teardownHttpServer() {
+  await stopHttpServer();
+}
+
 export async function setupDatabaseTest() {
   const connection = await Database.getInstance();
   await connection.runMigrations();
@@ -94,12 +98,17 @@ export function createIOClient() {
   });
 }
 
-export async function createTeacherClient() {
+export async function createTeacherClient(teacherData?: Partial<TeacherConstructorData>) {
   const teacherRepository = new TypeORMTeacherRepository(await Database.getInstance());
-  const teacher = await createFakeTeacher({ id: 'teacherId', name: 'Any Name', email: 'any_email@gmail.com' });
+  const teacher = await createFakeTeacher(teacherData);
   await teacherRepository.insert(teacher);
   const socket = await createIOClient();
-  return { socket, data: teacher };
+  return { socket, data: teacher, destroy };
+
+  async function destroy() {
+    socket.close();
+    await teacherRepository.deleteById(teacher.id);
+  }
 }
 
 export async function createStudentClient(studentData?: Partial<StudentConstructorData>) {

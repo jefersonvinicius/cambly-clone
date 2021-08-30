@@ -8,7 +8,7 @@ describe('SocketIOEvents', () => {
   });
 
   afterAll(async () => {
-    stopHttpServer();
+    await stopHttpServer();
   });
 
   it('Should be able connect to socket server', (done) => {

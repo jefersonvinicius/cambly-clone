@@ -2,6 +2,7 @@ import RequestLesson from '@app/core/entities/RequestLesson';
 import Student from '@app/core/entities/Student';
 import Teacher from '@app/core/entities/Teacher';
 import { StudentConnectUseCase } from '@app/core/use-cases/StudentConnect';
+import { StudentRequestLessonUseCase } from '@app/core/use-cases/StudentRequestLesson';
 import { TeacherConnectToBeChosenUseCase } from '@app/core/use-cases/TeacherConnectToBeChoose';
 import { Server, Socket } from 'socket.io';
 import { EventsLabels, SocketServer } from '.';
@@ -11,6 +12,7 @@ import { TypeORMStudentRepository } from '../repositories/TypeORMStudentReposito
 import { TypeORMTeacherRepository } from '../repositories/TypeORMTeacherRepository';
 import { ConnectStudentEvent } from './events/ConnectStudentEvent';
 import { ConnectTeacherToBeChosenEvent } from './events/ConnectTeacherToBeChosenEvent';
+import { StudentRequestLessonEvent } from './events/StudentRequestLessonEvent';
 
 export async function setupSocketIO() {
   const io = new Server(httpServer);
@@ -21,18 +23,18 @@ export async function setupSocketIO() {
 
   const connectTeacherToBeChosenEvent = createTeacherToBeChosenEvent();
   const connectStudentEvent = createConnectStudentEvent();
-  // const studentRequestLessonEvent = createStudentRequestLessonEvent();
+  const studentRequestLessonEvent = createStudentRequestLessonEvent();
 
   io.on('connection', (socket) => {
     socket.emit('ping');
     socket.on(EventsLabels.ConnectTeacherToBeChosen, connectTeacherToBeChosenEvent.createHandler(socket));
     socket.on(EventsLabels.ConnectStudent, connectStudentEvent.createHandler(socket));
-    // socket.on(EventsLabels.RequestTeacherLesson, studentRequestLessonEvent.createHandler(socket));
+    socket.on(EventsLabels.RequestTeacherLesson, studentRequestLessonEvent.createHandler(socket));
   });
 
   function createTeacherToBeChosenEvent() {
     const connectTeacherToBeChosenUseCase = new TeacherConnectToBeChosenUseCase(socketServer, teacherRepository);
-    return new ConnectTeacherToBeChosenEvent(connectTeacherToBeChosenUseCase, socketServer);
+    return new ConnectTeacherToBeChosenEvent(connectTeacherToBeChosenUseCase);
   }
 
   function createConnectStudentEvent() {
@@ -40,10 +42,10 @@ export async function setupSocketIO() {
     return new ConnectStudentEvent(studentConnectUseCase);
   }
 
-  // function createStudentRequestLessonEvent() {
-  //   const requestTeacherLessonUseCase = new StudentRequestLessonUseCase(socketServer);
-  //   return new StudentRequestLessonEvent(requestTeacherLessonUseCase, socketServer);
-  // }
+  function createStudentRequestLessonEvent() {
+    const requestTeacherLessonUseCase = new StudentRequestLessonUseCase(socketServer);
+    return new StudentRequestLessonEvent(requestTeacherLessonUseCase);
+  }
 }
 
 class SocketServerIO implements SocketServer<Socket> {
@@ -85,7 +87,8 @@ class SocketServerIO implements SocketServer<Socket> {
   async requestTeacher(request: RequestLesson): Promise<void> {
     const studentSocket = this.sockets[request.studentId];
     const teacherSocket = this.sockets[request.teacherId];
-    studentSocket.to(teacherSocket.id).emit(EventsLabels.NewStudentRequest);
+    const student = this.students[request.studentId];
+    studentSocket.to(teacherSocket.id).emit(EventsLabels.NewStudentRequest, { student });
   }
 
   teachersIds(): Promise<string[]> {

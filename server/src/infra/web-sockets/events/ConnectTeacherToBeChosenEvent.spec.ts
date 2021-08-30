@@ -10,6 +10,7 @@ import { stopHttpServer } from '@app/infra/http/server';
 import { EventsLabels } from '../';
 import { TypeORMTeacherRepository } from '@app/infra/repositories/TypeORMTeacherRepository';
 import { Connection } from 'typeorm';
+import { connectTeacher } from '@tests/helpers/socket-events';
 
 describe('SocketIOEvents', () => {
   let connection: Connection;
@@ -21,7 +22,7 @@ describe('SocketIOEvents', () => {
 
   afterAll(async () => {
     await teardownDatabaseTest();
-    stopHttpServer();
+    await stopHttpServer();
   });
 
   it('Should student get new event when teacher is connected', async () => {
@@ -48,7 +49,7 @@ describe('SocketIOEvents', () => {
         incrementCalls();
       });
 
-      teacherClient.emit(EventsLabels.ConnectTeacherToBeChosen, { teacherId: 'teacherId' });
+      connectTeacher(teacherClient, { teacherId: 'teacherId' });
     });
   });
 });
