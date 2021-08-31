@@ -10,11 +10,14 @@ export default interface SocketServer<Socket = BaseSocket> {
   hasTeacher(teacherId: string): Promise<boolean>;
   hasStudent(studentId: string): Promise<boolean>;
   teacherIsBusy(teacherId: string): Promise<boolean>;
-  setTeacherAsBusy(teacherId: string): Promise<void>;
+  setTeacherBusyStatus(teacherId: string, status: boolean): Promise<void>;
   requestTeacher(request: RequestLesson): Promise<void>;
   teachersIds(): Promise<string[]>;
   teachersIdsNotBusy(): Promise<string[]>;
   connectTeacher(teacher: Teacher, teacherSocket: Socket): Promise<void>;
   connectStudent(student: Student, studentSocket: Socket): Promise<void>;
+  emitStudentStartLesson(studentId: string): Promise<void>;
+  emitTeacherStartLesson(teacherId: string): Promise<void>;
   socket(teacherIdOrUserId: string): Socket;
+  getLessonRequest(requestId: string): Promise<RequestLesson | null>;
 }

@@ -60,3 +60,11 @@ export class StudentNotFound extends Error {
     Object.setPrototypeOf(this, StudentNotFound.prototype);
   }
 }
+
+export class RequestLessonNotFound extends Error {
+  constructor(requestId: string) {
+    super(`Request lesson ${requestId} not found`);
+    this.name = this.constructor.name;
+    Object.setPrototypeOf(this, RequestLessonNotFound.prototype);
+  }
+}

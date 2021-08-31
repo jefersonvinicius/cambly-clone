@@ -8,6 +8,30 @@ export class FakeSocketServer implements SocketServer {
 
   constructor(private teachers: Teacher[] = [], private students: Student[] = []) {}
 
+  async setTeacherBusyStatus(teacherId: string, status: boolean): Promise<void> {
+    this.teachers.forEach((teacher) => {
+      if (teacher.id === teacherId) {
+        teacher.setBusy(status);
+      }
+    });
+  }
+
+  async getLessonRequest(requestId: string): Promise<RequestLesson | null> {
+    return this.requests.find((request) => request.id === requestId) ?? null;
+  }
+
+  async emitStudentStartLesson(studentId: string): Promise<void> {
+    console.log('emitStudentStartLesson called');
+  }
+
+  async emitTeacherStartLesson(teacherId: string): Promise<void> {
+    console.log('emitTeacherStartLesson called');
+  }
+
+  async hasLessonRequest(requestId: string): Promise<boolean> {
+    return this.requests.some((request) => request.id === requestId);
+  }
+
   async hasStudent(studentId: string): Promise<boolean> {
     return !!this.students.find((s) => s.id === studentId);
   }
