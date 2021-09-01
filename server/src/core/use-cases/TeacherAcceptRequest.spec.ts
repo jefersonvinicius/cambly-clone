@@ -24,6 +24,9 @@ describe('TeacherAcceptRequest', () => {
     expect(await socketServer.teacherIsBusy(teacher.id)).toBeTruthy();
     expect(studentStartLessonEmitterSpy).toHaveBeenCalled();
     expect(teacherStartLessonEmitterSpy).toHaveBeenCalled();
+
+    studentStartLessonEmitterSpy.mockRestore();
+    teacherStartLessonEmitterSpy.mockRestore();
   });
 
   it('should get error RequestLessonNotFound when dont has lesson request in socket server', async () => {

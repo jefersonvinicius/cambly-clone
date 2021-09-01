@@ -32,8 +32,11 @@ describe('StudentRequestLessonEvent suite tests', () => {
     const data = { teacherId: 'any_teacher_id', studentId: 'any_student_id' };
 
     await waitForCallbacks(2, (incrementCalls) => {
-      teacher.socket.on(EventsLabels.NewStudentRequest, async ({ student }) => {
+      teacher.socket.on(EventsLabels.NewStudentRequest, async ({ student, request }) => {
         expect(student).toMatchObject(student);
+        expect(request).toEqual(
+          expect.objectContaining({ id: expect.any(String), teacherId: 'any_teacher_id', studentId: 'any_student_id' })
+        );
         await teacher.destroy();
         incrementCalls();
       });

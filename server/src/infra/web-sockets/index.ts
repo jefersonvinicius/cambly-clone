@@ -6,6 +6,8 @@ export enum EventsLabels {
   ConnectTeacherToBeChosen = 'connect-teacher-to-be-chosen',
   NewStudentRequest = 'new-student-request',
   RequestTeacherLesson = 'request-teacher-lesson',
+  AcceptStudentRequest = 'accept-student-request',
+  LessonStarted = 'lesson-started',
 }
 
 export { SocketServer, BaseSocket };
