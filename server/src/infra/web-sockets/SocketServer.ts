@@ -20,4 +20,5 @@ export default interface SocketServer<Socket = BaseSocket> {
   emitTeacherStartLesson(teacherId: string): Promise<void>;
   socket(teacherIdOrUserId: string): Socket;
   getLessonRequest(requestId: string): Promise<RequestLesson | null>;
+  openStudentToLesson(studentId: string): Promise<void>;
 }

@@ -5,8 +5,13 @@ import { BaseSocket, SocketServer } from '@app/infra/web-sockets';
 
 export class FakeSocketServer implements SocketServer {
   private requests: RequestLesson[] = [];
+  private studentsWaitingForLesson: string[] = [];
 
   constructor(private teachers: Teacher[] = [], private students: Student[] = []) {}
+
+  openStudentToLesson(studentId: string): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
 
   async setTeacherBusyStatus(teacherId: string, status: boolean): Promise<void> {
     this.teachers.forEach((teacher) => {

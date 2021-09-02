@@ -6,6 +6,14 @@ export class TeacherOffline extends Error {
   }
 }
 
+export class StudentOffline extends Error {
+  constructor(studentId: string) {
+    super(`The student ${studentId} is offline`);
+    this.name = 'StudentOffline';
+    Object.setPrototypeOf(this, StudentOffline.prototype);
+  }
+}
+
 export class TeacherIsBusy extends Error {
   constructor(teacherId: string) {
     super(`The teacher ${teacherId} is busy`);
