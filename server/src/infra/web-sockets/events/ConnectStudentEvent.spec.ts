@@ -1,13 +1,12 @@
-import { stopHttpServer } from '@app/infra/http/server';
 import {
   createStudentClient,
   setupDatabaseTest,
   setupHttpServerAndSocket,
   teardownDatabaseTest,
+  teardownHttpServer,
   waitForCallbacks,
 } from '@tests/helpers';
 import { connectStudent } from '@tests/helpers/socket-events';
-import { EventsLabels } from '..';
 
 describe('ConnectStudentEvent suite test', () => {
   beforeAll(async () => {
@@ -17,7 +16,7 @@ describe('ConnectStudentEvent suite test', () => {
 
   afterAll(async () => {
     await teardownDatabaseTest();
-    await stopHttpServer();
+    await teardownHttpServer();
   });
 
   it('Should connect student successfully', async () => {

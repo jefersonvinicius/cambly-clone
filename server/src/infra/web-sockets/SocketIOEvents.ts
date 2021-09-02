@@ -17,9 +17,13 @@ import { ConnectTeacherToBeChosenEvent } from './events/ConnectTeacherToBeChosen
 import { StudentRequestLessonEvent } from './events/StudentRequestLessonEvent';
 import { TeacherAcceptRequestEvent } from './events/TeacherAcceptRequestEvent';
 
-export async function setupSocketIO() {
-  const io = new Server(httpServer);
+const io = new Server(httpServer);
 
+export async function stopSocketIO() {
+  io.close(console.log);
+}
+
+export async function setupSocketIO() {
   const socketServer = new SocketServerIO(io);
   const teacherRepository = await RepositoriesFactory.createTeacherRepository();
   const studentRepository = await RepositoriesFactory.createStudentRepository();

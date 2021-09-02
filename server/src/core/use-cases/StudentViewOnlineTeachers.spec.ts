@@ -1,8 +1,9 @@
-import { SocketServer } from '@app/infra/web-sockets';
+import { BaseSocket, SocketServer } from '@app/infra/web-sockets';
 import { createFakeTeacher } from '@tests/helpers';
 import { FakeSocketServer } from '@tests/SocketServerFake';
 import { TeacherRepositoryInMemory } from '@tests/TeacherRepositoryInMemory';
 import RequestLesson from '../entities/RequestLesson';
+import Student from '../entities/Student';
 import Teacher from '../entities/Teacher';
 import { TeacherRepository } from '../repositories/TeacherRepository';
 import { StudentViewOnlineTeachersUseCase } from './StudentViewOnlineTeachers';
@@ -74,6 +75,9 @@ describe('StudentViewOnlineTeachersUseCase suite test', () => {
 });
 
 class TeacherRepositoryChecker implements TeacherRepository {
+  deleteById(id: string): Promise<boolean> {
+    throw new Error('Method not implemented.');
+  }
   teacherIdToFind: string | null = null;
 
   async findById(id: string): Promise<Teacher | null> {
@@ -87,6 +91,27 @@ class TeacherRepositoryChecker implements TeacherRepository {
 }
 
 class SocketServerToVerifyMethodCall implements SocketServer {
+  hasStudent(studentId: string): Promise<boolean> {
+    throw new Error('Method not implemented.');
+  }
+  setTeacherBusyStatus(teacherId: string, status: boolean): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+  connectStudent(student: Student, studentSocket: BaseSocket): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+  emitStudentStartLesson(studentId: string): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+  emitTeacherStartLesson(teacherId: string): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+  socket(teacherIdOrUserId: string): BaseSocket {
+    throw new Error('Method not implemented.');
+  }
+  getLessonRequest(requestId: string): Promise<RequestLesson | null> {
+    throw new Error('Method not implemented.');
+  }
   calledTeachersIdsMethods = false;
 
   async teachersIdsNotBusy(): Promise<string[]> {

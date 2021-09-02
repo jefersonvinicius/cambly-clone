@@ -5,7 +5,7 @@ import { Database } from '@app/infra/database';
 import { startHttpServer, stopHttpServer } from '@app/infra/http/server';
 import { TypeORMStudentRepository } from '@app/infra/repositories/TypeORMStudentRepository';
 import { TypeORMTeacherRepository } from '@app/infra/repositories/TypeORMTeacherRepository';
-import { setupSocketIO } from '@app/infra/web-sockets/SocketIOEvents';
+import { setupSocketIO, stopSocketIO } from '@app/infra/web-sockets/SocketIOEvents';
 import { Hashing } from '@app/shared/Hashing';
 import EventEmitter from 'events';
 import faker from 'faker';
@@ -50,11 +50,12 @@ export async function createFakeStudent(data?: Partial<StudentConstructorData>) 
 }
 
 export async function setupHttpServerAndSocket() {
-  setupSocketIO();
   await startHttpServer();
+  await setupSocketIO();
 }
 
 export async function teardownHttpServer() {
+  await stopSocketIO();
   await stopHttpServer();
 }
 

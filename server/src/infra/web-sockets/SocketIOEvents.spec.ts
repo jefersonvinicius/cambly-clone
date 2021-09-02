@@ -1,6 +1,5 @@
-import { setupHttpServerAndSocket } from '@tests/helpers';
+import { setupHttpServerAndSocket, teardownHttpServer } from '@tests/helpers';
 import { io } from 'socket.io-client';
-import { stopHttpServer } from '../http/server';
 
 describe('SocketIOEvents', () => {
   beforeAll(async () => {
@@ -8,7 +7,7 @@ describe('SocketIOEvents', () => {
   });
 
   afterAll(async () => {
-    await stopHttpServer();
+    await teardownHttpServer();
   });
 
   it('Should be able connect to socket server', (done) => {

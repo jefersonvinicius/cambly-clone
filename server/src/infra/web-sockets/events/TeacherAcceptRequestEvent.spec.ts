@@ -50,5 +50,6 @@ describe('TeacherAcceptRequestEvent', () => {
 
     await student.destroy();
     await teacher.destroy();
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>.AQUI');
   });
 });

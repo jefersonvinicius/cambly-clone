@@ -4,29 +4,26 @@ import {
   setupDatabaseTest,
   setupHttpServerAndSocket,
   teardownDatabaseTest,
+  teardownHttpServer,
   waitForCallbacks,
 } from '@tests/helpers';
-import { stopHttpServer } from '@app/infra/http/server';
 import { EventsLabels } from '../';
-import { TypeORMTeacherRepository } from '@app/infra/repositories/TypeORMTeacherRepository';
-import { Connection } from 'typeorm';
 import { connectTeacher } from '@tests/helpers/socket-events';
+import { RepositoriesFactory } from '@app/infra/repositories/RepositoriesFactory';
 
-describe('SocketIOEvents', () => {
-  let connection: Connection;
-
+describe('ConnectTeacherToBeChosenEvent', () => {
   beforeAll(async () => {
-    connection = await setupDatabaseTest();
+    await setupDatabaseTest();
     await setupHttpServerAndSocket();
   });
 
   afterAll(async () => {
     await teardownDatabaseTest();
-    await stopHttpServer();
+    await teardownHttpServer();
   });
 
   it('Should student get new event when teacher is connected', async () => {
-    const teacherRepository = new TypeORMTeacherRepository(connection);
+    const teacherRepository = await RepositoriesFactory.createTeacherRepository();
     const teacher = await createFakeTeacher({ id: 'teacherId', name: 'Any Name', email: 'any_email@gmail.com' });
     await teacherRepository.insert(teacher);
 

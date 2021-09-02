@@ -5,6 +5,7 @@ import {
   setupDatabaseTest,
   setupHttpServerAndSocket,
   teardownDatabaseTest,
+  teardownHttpServer,
   waitForCallbacks,
 } from '@tests/helpers';
 import { connectStudent, connectTeacher } from '@tests/helpers/socket-events';
@@ -19,7 +20,7 @@ describe('StudentRequestLessonEvent suite tests', () => {
 
   afterAll(async () => {
     await teardownDatabaseTest();
-    await stopHttpServer();
+    await teardownHttpServer();
   });
 
   it('Should request lesson successfully', async () => {
