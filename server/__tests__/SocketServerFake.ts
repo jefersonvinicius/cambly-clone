@@ -10,6 +10,8 @@ export class FakeSocketServer implements SocketServer {
 
   constructor(private teachers: Teacher[] = [], private students: Student[] = []) {}
 
+  async emitNewStudentAvailableEvent(): Promise<void> {}
+
   async availableStudents(): Promise<{ [studentId: string]: BaseSocket }[]> {
     return this._availableStudents;
   }

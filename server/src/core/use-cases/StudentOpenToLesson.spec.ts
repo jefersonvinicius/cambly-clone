@@ -1,11 +1,17 @@
 import { BaseSocket } from '@app/infra/web-sockets';
 import { createFakeStudent } from '@tests/helpers';
 import { FakeSocketServer } from '@tests/SocketServerFake';
+import Student from '../entities/Student';
 import { StudentOffline } from '../errors';
 import { StudentOpenToLesson } from './StudentOpenToLesson';
 
 describe('StudentOpenToLesson', () => {
   let dummySocket: BaseSocket;
+  let student: Student;
+
+  beforeAll(async () => {
+    student = await createFakeStudent({ id: 'any_student_id' });
+  });
 
   beforeEach(() => {
     dummySocket = { id: 'any' };
@@ -20,7 +26,7 @@ describe('StudentOpenToLesson', () => {
 
   it('should call openStudentToLesson method', async () => {
     const { sut, socketServer } = createSut();
-    await socketServer.connectStudent(await createFakeStudent({ id: 'any_student_id' }), dummySocket);
+    await socketServer.connectStudent(student, dummySocket);
 
     const openStudentToLessonSpy = jest.spyOn(socketServer, 'openStudentToLesson');
     await sut.perform({ studentId: 'any_student_id' });
@@ -30,7 +36,7 @@ describe('StudentOpenToLesson', () => {
 
   it('Should student available after call openStudentToLesson method', async () => {
     const { sut, socketServer } = createSut();
-    await socketServer.connectStudent(await createFakeStudent({ id: 'any_student_id' }), dummySocket);
+    await socketServer.connectStudent(student, dummySocket);
 
     await sut.perform({ studentId: 'any_student_id' });
     expect(await socketServer.availableStudents()).toContainEqual(
@@ -39,7 +45,15 @@ describe('StudentOpenToLesson', () => {
       })
     );
   });
-  it.todo('Should emit event to teacher about new student available');
+  it('Should emit event to teacher about new student available', async () => {
+    const { sut, socketServer } = createSut();
+    await socketServer.connectStudent(student, dummySocket);
+
+    const emitNewStudentAvailableEventSpy = jest.spyOn(socketServer, 'emitNewStudentAvailableEvent');
+    await sut.perform({ studentId: student.id });
+    expect(emitNewStudentAvailableEventSpy).toHaveBeenCalledTimes(1);
+    expect(emitNewStudentAvailableEventSpy).toHaveBeenCalledWith(student.id);
+  });
   it.todo('Should dispatch event to teachers after student open to lesson');
 });
 
