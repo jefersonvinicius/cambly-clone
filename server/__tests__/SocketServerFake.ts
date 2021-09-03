@@ -4,13 +4,18 @@ import Teacher from '@app/core/entities/Teacher';
 import { BaseSocket, SocketServer } from '@app/infra/web-sockets';
 
 export class FakeSocketServer implements SocketServer {
+  private _availableStudents: { [key: string]: BaseSocket }[] = [];
   private requests: RequestLesson[] = [];
   private studentsWaitingForLesson: string[] = [];
 
   constructor(private teachers: Teacher[] = [], private students: Student[] = []) {}
 
-  openStudentToLesson(studentId: string): Promise<void> {
-    throw new Error('Method not implemented.');
+  async availableStudents(): Promise<{ [studentId: string]: BaseSocket }[]> {
+    return this._availableStudents;
+  }
+
+  async openStudentToLesson(studentId: string): Promise<void> {
+    this._availableStudents.push({ [studentId]: { id: 'any' } });
   }
 
   async setTeacherBusyStatus(teacherId: string, status: boolean): Promise<void> {
