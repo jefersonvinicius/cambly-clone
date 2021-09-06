@@ -5,12 +5,22 @@ import { BaseSocket, SocketServer } from '@app/infra/web-sockets';
 
 export class FakeSocketServer implements SocketServer {
   private _availableStudents: { [key: string]: BaseSocket }[] = [];
+  private _availableTeachers: { [key: string]: BaseSocket }[] = [];
   private requests: RequestLesson[] = [];
-  private studentsWaitingForLesson: string[] = [];
 
   constructor(private teachers: Teacher[] = [], private students: Student[] = []) {}
 
-  async emitNewStudentAvailableEvent(): Promise<void> {}
+  async openTeacherToLesson(teacherId: string): Promise<void> {
+    this._availableTeachers.push({ [teacherId]: this.socket(teacherId) });
+  }
+
+  async availableTeachers(): Promise<{ [teacherId: string]: BaseSocket }[]> {
+    return this._availableTeachers;
+  }
+
+  async emitNewTeacherAvailableEvent(teacherId: string): Promise<void> {}
+
+  async emitNewStudentAvailableEvent(studentId: string): Promise<void> {}
 
   async availableStudents(): Promise<{ [studentId: string]: BaseSocket }[]> {
     return this._availableStudents;
@@ -53,10 +63,10 @@ export class FakeSocketServer implements SocketServer {
   }
 
   socket(teacherIdOrUserId: string): BaseSocket {
-    throw new Error('Method not implemented.');
+    return { id: 'any' };
   }
 
-  async connectTeacher(teacher: Teacher): Promise<void> {
+  async connectTeacher(teacher: Teacher, teacherSocket: BaseSocket): Promise<void> {
     this.teachers.push(teacher);
   }
 
