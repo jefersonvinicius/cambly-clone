@@ -1,10 +1,6 @@
-import { TeacherConnectToBeChosenUseCase } from '@app/core/use-cases/TeacherConnectToBeChoose';
-import { TeacherViewModel } from '@app/infra/http/view-models/TeacherViewModel';
+import { StudentConnectUseCase } from '@app/core/use-cases/StudentConnect';
 import { Socket } from 'socket.io';
 import { SocketEvent } from '.';
-import { StudentConnectUseCase } from '@app/core/use-cases/StudentConnect';
-import { EventsLabels } from '..';
-import SocketServer from '../SocketServer';
 
 type Params = { studentId: string };
 

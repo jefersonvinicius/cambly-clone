@@ -1,5 +1,4 @@
 import {
-  createStudentClient,
   createTeacherClient,
   setupDatabaseTest,
   setupHttpServerAndSocket,
@@ -7,7 +6,7 @@ import {
   teardownHttpServer,
   waitForCallbacks,
 } from '@tests/helpers';
-import { connectStudent, connectTeacher } from '@tests/helpers/socket-events';
+import { connectTeacher } from '@tests/helpers/socket-events';
 
 describe('ConnectStudentEvent suite test', () => {
   beforeAll(async () => {

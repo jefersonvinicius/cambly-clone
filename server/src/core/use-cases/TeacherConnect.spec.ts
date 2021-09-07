@@ -1,9 +1,7 @@
-import { createFakeStudent, createFakeTeacher, createFakeUser } from '@tests/helpers';
+import { createFakeTeacher } from '@tests/helpers';
 import { FakeSocket, FakeSocketServer } from '@tests/SocketServerFake';
-import { StudentRepositoryInMemory } from '@tests/StudentRepositoryInMemory';
 import { TeacherRepositoryInMemory } from '@tests/TeacherRepositoryInMemory';
-import { StudentNotFound, TeacherNotFound } from '../errors';
-import { StudentConnectUseCase } from './StudentConnect';
+import { TeacherNotFound } from '../errors';
 import { TeacherConnectUseCase } from './TeacherConnect';
 
 describe('TeacherConnectUseCase suite tests', () => {
