@@ -1,9 +1,8 @@
 import { BaseSocket } from '@app/infra/web-sockets';
-import { createFakeStudent, createFakeTeacher } from '@tests/helpers';
+import { createFakeTeacher } from '@tests/helpers';
 import { FakeSocketServer } from '@tests/SocketServerFake';
-import Student from '../entities/Student';
 import Teacher from '../entities/Teacher';
-import { StudentOffline, TeacherOffline } from '../errors';
+import { TeacherOffline } from '../errors';
 import { TeacherOpenToLesson } from './TeacherOpenToLesson';
 
 describe('TeacherOpenToLesson', () => {

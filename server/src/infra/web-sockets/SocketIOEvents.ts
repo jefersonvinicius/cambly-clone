@@ -3,9 +3,8 @@ import Student from '@app/core/entities/Student';
 import Teacher from '@app/core/entities/Teacher';
 import { StudentConnectUseCase } from '@app/core/use-cases/StudentConnect';
 import { StudentRequestLessonUseCase } from '@app/core/use-cases/StudentRequestLesson';
-import { TeacherAcceptRequestUseCase } from '@app/core/use-cases/TeacherAcceptRequest';
-import { TeacherConnectToBeChosenUseCase } from '@app/core/use-cases/TeacherConnectToBeChoose';
 import { Server, Socket } from 'socket.io';
+import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { EventsLabels, SocketServer } from '.';
 import { Database } from '../database';
 import { httpServer } from '../http/server';
@@ -13,10 +12,6 @@ import { RepositoriesFactory } from '../repositories/RepositoriesFactory';
 import { TypeORMStudentRepository } from '../repositories/TypeORMStudentRepository';
 import { TypeORMTeacherRepository } from '../repositories/TypeORMTeacherRepository';
 import { ConnectStudentEvent } from './events/ConnectStudentEvent';
-import { ConnectTeacherToBeChosenEvent } from './events/ConnectTeacherToBeChosenEvent';
-import { StudentRequestLessonEvent } from './events/StudentRequestLessonEvent';
-import { TeacherAcceptRequestEvent } from './events/TeacherAcceptRequestEvent';
-
 const io = new Server(httpServer);
 
 export async function stopSocketIO() {
@@ -28,37 +23,15 @@ export async function setupSocketIO() {
   const teacherRepository = await RepositoriesFactory.createTeacherRepository();
   const studentRepository = await RepositoriesFactory.createStudentRepository();
 
-  const connectTeacherToBeChosenEvent = createTeacherToBeChosenEvent();
   const connectStudentEvent = createConnectStudentEvent();
-  const studentRequestLessonEvent = createStudentRequestLessonEvent();
-  const teacherAcceptRequestEvent = createTeacherAcceptRequestEvent();
-
   io.on('connection', (socket) => {
     socket.emit('ping');
-    socket.on(EventsLabels.ConnectTeacherToBeChosen, connectTeacherToBeChosenEvent.createHandler(socket));
     socket.on(EventsLabels.ConnectStudent, connectStudentEvent.createHandler(socket));
-    socket.on(EventsLabels.RequestTeacherLesson, studentRequestLessonEvent.createHandler(socket));
-    socket.on(EventsLabels.AcceptStudentRequest, teacherAcceptRequestEvent.createHandler(socket));
   });
-
-  function createTeacherToBeChosenEvent() {
-    const connectTeacherToBeChosenUseCase = new TeacherConnectToBeChosenUseCase(socketServer, teacherRepository);
-    return new ConnectTeacherToBeChosenEvent(connectTeacherToBeChosenUseCase);
-  }
 
   function createConnectStudentEvent() {
     const studentConnectUseCase = new StudentConnectUseCase(socketServer, studentRepository);
     return new ConnectStudentEvent(studentConnectUseCase);
-  }
-
-  function createStudentRequestLessonEvent() {
-    const requestTeacherLessonUseCase = new StudentRequestLessonUseCase(socketServer);
-    return new StudentRequestLessonEvent(requestTeacherLessonUseCase);
-  }
-
-  function createTeacherAcceptRequestEvent() {
-    const teacherAcceptRequestUseCase = new TeacherAcceptRequestUseCase(socketServer);
-    return new TeacherAcceptRequestEvent(teacherAcceptRequestUseCase);
   }
 }
 
@@ -69,6 +42,24 @@ class SocketServerIO implements SocketServer<Socket> {
   private sockets: { [userId: string]: Socket } = {};
 
   constructor(private ioServer: Server) {}
+  openStudentToLesson(studentId: string): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+  openTeacherToLesson(teacherId: string): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+  availableStudents(): Promise<{ [studentId: string]: Socket }[]> {
+    throw new Error('Method not implemented.');
+  }
+  availableTeachers(): Promise<{ [teacherId: string]: Socket }[]> {
+    throw new Error('Method not implemented.');
+  }
+  emitNewStudentAvailableEvent(studentId: string): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+  emitNewTeacherAvailableEvent(teacherId: string): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
 
   async setTeacherBusyStatus(teacherId: string, status: boolean): Promise<void> {
     this.teachers[teacherId].setBusy(status);

@@ -5,9 +5,10 @@ type ConnectTeacherData = {
   teacherId: string;
 };
 
-export function connectTeacher(socket: Socket, data: ConnectTeacherData) {
+export function connectTeacher(socket: Socket, data: ConnectTeacherData, callbak?: Function) {
   return new Promise<void>((resolve) => {
     socket.emit(EventsLabels.ConnectTeacherToBeChosen, data, () => {
+      callbak?.();
       resolve();
     });
   });
