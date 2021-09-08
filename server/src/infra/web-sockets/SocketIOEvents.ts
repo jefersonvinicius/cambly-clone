@@ -1,54 +1,16 @@
 import RequestLesson from '@app/core/entities/RequestLesson';
 import Student from '@app/core/entities/Student';
 import Teacher from '@app/core/entities/Teacher';
-import { StudentConnectUseCase } from '@app/core/use-cases/StudentConnect';
-import { StudentRequestLessonUseCase } from '@app/core/use-cases/StudentRequestLesson';
-import { TeacherConnectUseCase } from '@app/core/use-cases/TeacherConnect';
 import { Server, Socket } from 'socket.io';
-import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { EventsLabels, SocketServer } from '.';
-import { Database } from '../database';
-import { httpServer } from '../http/server';
-import { RepositoriesFactory } from '../repositories/RepositoriesFactory';
-import { TypeORMStudentRepository } from '../repositories/TypeORMStudentRepository';
-import { TypeORMTeacherRepository } from '../repositories/TypeORMTeacherRepository';
-import { ConnectStudentEvent } from './events/ConnectStudentEvent';
-import { ConnectTeacherEvent } from './events/ConnectTeacherEvent';
-const io = new Server(httpServer);
 
-export async function stopSocketIO() {
-  io.close(console.log);
-}
-
-export async function setupSocketIO() {
-  const socketServer = new SocketServerIO(io);
-  const teacherRepository = await RepositoriesFactory.createTeacherRepository();
-  const studentRepository = await RepositoriesFactory.createStudentRepository();
-
-  io.on('connection', (socket) => {
-    socket.emit('ping');
-    socket.on(EventsLabels.ConnectStudent, createConnectStudentEvent().createHandler(socket));
-    socket.on(EventsLabels.ConnectTeacher, createConnectTeacherEvent().createHandler(socket));
-  });
-
-  function createConnectStudentEvent() {
-    const studentConnectUseCase = new StudentConnectUseCase(socketServer, studentRepository);
-    return new ConnectStudentEvent(studentConnectUseCase);
-  }
-
-  function createConnectTeacherEvent() {
-    const teacherConnectUseCase = new TeacherConnectUseCase(socketServer, teacherRepository);
-    return new ConnectTeacherEvent(teacherConnectUseCase);
-  }
-}
-
-class SocketServerIO implements SocketServer<Socket> {
+export class SocketServerIO implements SocketServer<Socket> {
   private requests: { [key: string]: RequestLesson } = {};
   private teachers: { [key: string]: Teacher } = {};
   private students: { [key: string]: Student } = {};
   private sockets: { [userId: string]: Socket } = {};
 
-  constructor(private ioServer: Server) {}
+  constructor(public io: Server) {}
   openStudentToLesson(studentId: string): Promise<void> {
     throw new Error('Method not implemented.');
   }

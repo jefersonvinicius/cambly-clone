@@ -2,10 +2,7 @@ import Student, { StudentConstructorData } from '@app/core/entities/Student';
 import Teacher, { TeacherConstructorData } from '@app/core/entities/Teacher';
 import User, { UserConstructorData, UserTypes } from '@app/core/entities/User';
 import { Database } from '@app/infra/database';
-import { startHttpServer, stopHttpServer } from '@app/infra/http/server';
-import { TypeORMStudentRepository } from '@app/infra/repositories/TypeORMStudentRepository';
-import { TypeORMTeacherRepository } from '@app/infra/repositories/TypeORMTeacherRepository';
-import { setupSocketIO, stopSocketIO } from '@app/infra/web-sockets/SocketIOEvents';
+import { ensureIsTestEnvironment } from '@app/shared/environment';
 import { Hashing } from '@app/shared/Hashing';
 import EventEmitter from 'events';
 import faker from 'faker';
@@ -49,23 +46,15 @@ export async function createFakeStudent(data?: Partial<StudentConstructorData>) 
   });
 }
 
-export async function setupHttpServerAndSocket() {
-  await startHttpServer();
-  await setupSocketIO();
-}
-
-export async function teardownHttpServer() {
-  await stopSocketIO();
-  await stopHttpServer();
-}
-
 export async function setupDatabaseTest() {
+  ensureIsTestEnvironment();
   const connection = await Database.getInstance();
   await connection.runMigrations();
   return connection;
 }
 
 export async function teardownDatabaseTest() {
+  ensureIsTestEnvironment();
   await Database.cleanTestDatabase();
   await Database.disconnectTestInstance();
 }
@@ -100,34 +89,22 @@ export function createIOClient() {
 }
 
 export async function createTeacherClient(teacherData?: Partial<TeacherConstructorData>) {
-  const teacherRepository = new TypeORMTeacherRepository(await Database.getInstance());
   const teacher = await createFakeTeacher(teacherData);
-  await teacherRepository.insert(teacher);
   const socket = await createIOClient();
   return { socket, data: teacher, destroy };
 
   async function destroy() {
     socket.close();
-    await teacherRepository.deleteById(teacher.id);
   }
 }
 
 export async function createStudentClient(studentData?: Partial<StudentConstructorData>) {
-  const studentRepository = new TypeORMStudentRepository(await Database.getInstance());
   const student = await createFakeStudent(studentData);
-  await studentRepository.insert(student);
   const socket = await createIOClient();
 
   return { socket, data: student, destroy };
 
   async function destroy() {
     socket.close();
-    await studentRepository.deleteById(student.id);
   }
-}
-
-export function delay(seconds = 1): Promise<void> {
-  return new Promise<void>((resolve) => {
-    setTimeout(() => resolve(), seconds * 1000);
-  });
 }

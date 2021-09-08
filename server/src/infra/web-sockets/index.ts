@@ -1,10 +1,18 @@
+import { Server } from 'socket.io';
 import SocketServer, { BaseSocket } from './SocketServer';
+import http from 'http';
+import { SocketServerIO } from './SocketIOEvents';
+
+export function createIOServer(httpServerParam: http.Server) {
+  const server = new Server(httpServerParam);
+  return new SocketServerIO(server);
+}
 
 export enum EventsLabels {
   ConnectStudent = 'connect-student',
   ConnectTeacher = 'connect-teacher',
   OpenTeacherToLesson = 'open-teacher-to-lesson',
-  OpenStudentToLesson = 'open-student-to-lesson',
+  StudentOpenToLesson = 'student-open-to-lesson',
   NewTeacherAvailable = 'new-teacher-available',
   NewStudentAvailable = 'new-student-available',
   StartLesson = 'start-lesson',
