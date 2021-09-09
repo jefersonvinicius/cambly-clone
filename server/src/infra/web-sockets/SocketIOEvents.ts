@@ -8,24 +8,29 @@ export class SocketServerIO implements SocketServer<Socket> {
   private requests: { [key: string]: RequestLesson } = {};
   private teachers: { [key: string]: Teacher } = {};
   private students: { [key: string]: Student } = {};
+  private _studentsAvailable: { [key: string]: Student } = {};
   private sockets: { [userId: string]: Socket } = {};
 
   constructor(public io: Server) {}
-  openStudentToLesson(studentId: string): Promise<void> {
-    throw new Error('Method not implemented.');
+
+  async openStudentToLesson(studentId: string): Promise<void> {
+    this._studentsAvailable[studentId] = this.students[studentId];
   }
+
   openTeacherToLesson(teacherId: string): Promise<void> {
     throw new Error('Method not implemented.');
   }
-  availableStudents(): Promise<{ [studentId: string]: Socket }[]> {
-    throw new Error('Method not implemented.');
+
+  get studentsAvailable() {
+    return Object.values(this._studentsAvailable);
   }
+
   availableTeachers(): Promise<{ [teacherId: string]: Socket }[]> {
     throw new Error('Method not implemented.');
   }
-  emitNewStudentAvailableEvent(studentId: string): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
+
+  async emitNewStudentAvailableEvent(studentId: string): Promise<void> {}
+
   emitNewTeacherAvailableEvent(teacherId: string): Promise<void> {
     throw new Error('Method not implemented.');
   }
@@ -46,8 +51,8 @@ export class SocketServerIO implements SocketServer<Socket> {
     return this.requests[requestId] ?? null;
   }
 
-  hasStudent(studentId: string): Promise<boolean> {
-    throw new Error('Method not implemented.');
+  async hasStudent(studentId: string): Promise<boolean> {
+    return !!this.students[studentId];
   }
 
   async connectStudent(student: Student, studentSocket: Socket): Promise<void> {

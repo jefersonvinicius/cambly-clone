@@ -1,7 +1,7 @@
 import { TeacherConnectUseCase } from '@app/core/use-cases/TeacherConnect';
 import { createHTTPServer } from '@app/infra/http/server';
 import { createTeacherClient, waitForCallbacks } from '@tests/helpers';
-import { connectTeacher } from '@tests/helpers/socket-events';
+import { connectTeacherClient } from '@tests/helpers/socket-events';
 import { TeacherRepositoryInMemory } from '@tests/TeacherRepositoryInMemory';
 import { createIOServer, EventsLabels } from '..';
 import { ConnectTeacherEvent } from './ConnectTeacherEvent';
@@ -33,7 +33,7 @@ describe('ConnectStudentEvent suite test', () => {
     await teacherRepository.insert(teacher.data);
 
     await waitForCallbacks(1, (incrementCalls) => {
-      connectTeacher(teacher.socket, { teacherId: teacher.data.id }, async () => {
+      connectTeacherClient(teacher.socket, { teacherId: teacher.data.id }, async () => {
         expect(true).toBe(true);
         await teacher.destroy();
         await teacherRepository.deleteById(teacher.data.id);

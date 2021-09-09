@@ -7,6 +7,7 @@ export interface BaseSocket {
 }
 
 export default interface SocketServer<Socket = BaseSocket> {
+  get studentsAvailable(): Student[];
   hasTeacher(teacherId: string): Promise<boolean>;
   hasStudent(studentId: string): Promise<boolean>;
   teacherIsBusy(teacherId: string): Promise<boolean>;
@@ -22,7 +23,6 @@ export default interface SocketServer<Socket = BaseSocket> {
   getLessonRequest(requestId: string): Promise<RequestLesson | null>;
   openStudentToLesson(studentId: string): Promise<void>;
   openTeacherToLesson(teacherId: string): Promise<void>;
-  availableStudents(): Promise<{ [studentId: string]: Socket }[]>;
   availableTeachers(): Promise<{ [teacherId: string]: Socket }[]>;
 
   emitNewStudentAvailableEvent(studentId: string): Promise<void>;

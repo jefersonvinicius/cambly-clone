@@ -9,6 +9,9 @@ export class FakeSocketServer implements SocketServer {
   private requests: RequestLesson[] = [];
 
   constructor(private teachers: Teacher[] = [], private students: Student[] = []) {}
+  get studentsAvailable(): Student[] {
+    throw new Error('Method not implemented.');
+  }
 
   async openTeacherToLesson(teacherId: string): Promise<void> {
     this._availableTeachers.push({ [teacherId]: this.socket(teacherId) });

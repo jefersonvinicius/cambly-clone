@@ -1,14 +1,7 @@
 import { StudentConnectUseCase } from '@app/core/use-cases/StudentConnect';
 import { createHTTPServer } from '@app/infra/http/server';
-import {
-  createStudentClient,
-  setupDatabaseTest,
-  setupHttpServerAndSocket,
-  teardownDatabaseTest,
-  teardownHttpServer,
-  waitForCallbacks,
-} from '@tests/helpers';
-import { connectStudent } from '@tests/helpers/socket-events';
+import { createStudentClient, waitForCallbacks } from '@tests/helpers';
+import { connectStudentClient } from '@tests/helpers/socket-events';
 import { StudentRepositoryInMemory } from '@tests/StudentRepositoryInMemory';
 import { createIOServer, EventsLabels } from '..';
 import { ConnectStudentEvent } from './ConnectStudentEvent';
@@ -40,7 +33,7 @@ describe('ConnectStudentEvent suite test', () => {
     await studentRepository.insert(student.data);
 
     await waitForCallbacks(1, (incrementCalls) => {
-      connectStudent(student.socket, { studentId: student.data.id }, async () => {
+      connectStudentClient(student.socket, { studentId: student.data.id }, async () => {
         expect(true).toBe(true);
         await student.destroy();
         await studentRepository.deleteById(student.data.id);

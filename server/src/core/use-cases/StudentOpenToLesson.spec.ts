@@ -54,7 +54,6 @@ describe('StudentOpenToLesson', () => {
     expect(emitNewStudentAvailableEventSpy).toHaveBeenCalledTimes(1);
     expect(emitNewStudentAvailableEventSpy).toHaveBeenCalledWith(student.id);
   });
-  it.todo('Should dispatch event to teachers after student open to lesson');
 });
 
 function createSut() {
