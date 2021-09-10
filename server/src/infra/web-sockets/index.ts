@@ -11,7 +11,7 @@ export function createIOServer(httpServerParam: http.Server) {
 export enum EventsLabels {
   ConnectStudent = 'connect-student',
   ConnectTeacher = 'connect-teacher',
-  OpenTeacherToLesson = 'open-teacher-to-lesson',
+  TeacherOpenToLesson = 'teacher-open-to-lesson',
   StudentOpenToLesson = 'student-open-to-lesson',
   NewTeacherAvailable = 'new-teacher-available',
   NewStudentAvailable = 'new-student-available',

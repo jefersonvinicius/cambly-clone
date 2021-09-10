@@ -3,7 +3,7 @@ import { createFakeTeacher } from '@tests/helpers';
 import { FakeSocketServer } from '@tests/SocketServerFake';
 import Teacher from '../entities/Teacher';
 import { TeacherOffline } from '../errors';
-import { TeacherOpenToLesson } from './TeacherOpenToLesson';
+import { TeacherOpenToLessonUseCase } from './TeacherOpenToLesson';
 
 describe('TeacherOpenToLesson', () => {
   let dummySocket: BaseSocket;
@@ -19,7 +19,7 @@ describe('TeacherOpenToLesson', () => {
 
   it('Should get error TeacherOffline when teacher not exists in socket server', async () => {
     const socketServer = new FakeSocketServer();
-    const sut = new TeacherOpenToLesson(socketServer);
+    const sut = new TeacherOpenToLessonUseCase(socketServer);
     const performPromise = sut.perform({ teacherId: 'any_teacher_id' });
     expect(performPromise).rejects.toThrowError(new TeacherOffline('any_teacher_id'));
   });
@@ -58,6 +58,6 @@ describe('TeacherOpenToLesson', () => {
 
 function createSut() {
   const socketServer = new FakeSocketServer();
-  const sut = new TeacherOpenToLesson(socketServer);
+  const sut = new TeacherOpenToLessonUseCase(socketServer);
   return { sut, socketServer };
 }

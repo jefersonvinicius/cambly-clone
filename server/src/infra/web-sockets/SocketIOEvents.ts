@@ -8,17 +8,22 @@ export class SocketServerIO implements SocketServer<Socket> {
   private requests: { [key: string]: RequestLesson } = {};
   private teachers: { [key: string]: Teacher } = {};
   private students: { [key: string]: Student } = {};
-  private _studentsAvailable: { [key: string]: Student } = {};
+  private _studentsAvailable: { [studentId: string]: Student } = {};
+  private _teachersAvailable: { [teacherId: string]: Teacher } = {};
   private sockets: { [userId: string]: Socket } = {};
 
   constructor(public io: Server) {}
+
+  get teachersAvailable(): Teacher[] {
+    return Object.values(this._teachersAvailable);
+  }
 
   async openStudentToLesson(studentId: string): Promise<void> {
     this._studentsAvailable[studentId] = this.students[studentId];
   }
 
-  openTeacherToLesson(teacherId: string): Promise<void> {
-    throw new Error('Method not implemented.');
+  async openTeacherToLesson(teacherId: string): Promise<void> {
+    this._teachersAvailable[teacherId] = this.teachers[teacherId];
   }
 
   get studentsAvailable() {
@@ -31,9 +36,7 @@ export class SocketServerIO implements SocketServer<Socket> {
 
   async emitNewStudentAvailableEvent(studentId: string): Promise<void> {}
 
-  emitNewTeacherAvailableEvent(teacherId: string): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
+  async emitNewTeacherAvailableEvent(teacherId: string): Promise<void> {}
 
   async setTeacherBusyStatus(teacherId: string, status: boolean): Promise<void> {
     this.teachers[teacherId].setBusy(status);

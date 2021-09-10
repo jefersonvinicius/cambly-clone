@@ -8,6 +8,7 @@ export interface BaseSocket {
 
 export default interface SocketServer<Socket = BaseSocket> {
   get studentsAvailable(): Student[];
+  get teachersAvailable(): Teacher[];
   hasTeacher(teacherId: string): Promise<boolean>;
   hasStudent(studentId: string): Promise<boolean>;
   teacherIsBusy(teacherId: string): Promise<boolean>;

@@ -5,6 +5,9 @@ import { SocketServerIO } from '@app/infra/web-sockets/SocketIOEvents';
 import { StudentRepositoryInMemory } from '@tests/StudentRepositoryInMemory';
 import { Socket as ClientSocket } from 'socket.io-client';
 import { Socket as ServerSocket } from 'socket.io';
+import { ConnectTeacherEvent } from '@app/infra/web-sockets/events/ConnectTeacherEvent';
+import { TeacherConnectUseCase } from '@app/core/use-cases/TeacherConnect';
+import { TeacherRepositoryInMemory } from '@tests/TeacherRepositoryInMemory';
 
 type ConnectTeacherData = {
   teacherId: string;
@@ -40,4 +43,14 @@ export function setupStudentConnectEvent(
   const connectStudentUseCase = new StudentConnectUseCase(socketServer, studentRepository);
   const connectStudentEvent = new ConnectStudentEvent(connectStudentUseCase);
   socket.on(EventsLabels.ConnectStudent, connectStudentEvent.createHandler(socket));
+}
+
+export function setupTeacherConnectEvent(
+  socket: ServerSocket,
+  socketServer: SocketServerIO,
+  teacherRepository: TeacherRepositoryInMemory
+) {
+  const connectTeacherUseCase = new TeacherConnectUseCase(socketServer, teacherRepository);
+  const connectTeacherEvent = new ConnectTeacherEvent(connectTeacherUseCase);
+  socket.on(EventsLabels.ConnectTeacher, connectTeacherEvent.createHandler(socket));
 }

@@ -9,6 +9,9 @@ export class FakeSocketServer implements SocketServer {
   private requests: RequestLesson[] = [];
 
   constructor(private teachers: Teacher[] = [], private students: Student[] = []) {}
+  get teachersAvailable(): Teacher[] {
+    throw new Error('Method not implemented.');
+  }
   get studentsAvailable(): Student[] {
     throw new Error('Method not implemented.');
   }

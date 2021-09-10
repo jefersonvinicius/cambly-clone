@@ -1,6 +1,8 @@
 import express from 'express';
 import { ExpressRoutes } from './ExpressRoutes';
 import http from 'http';
+import { createIOClient } from '@tests/helpers';
+import { createIOServer } from '../web-sockets';
 
 const app = express();
 
@@ -48,20 +50,5 @@ export function startHttpServer() {
       console.log('Serving on http://localhost:3333');
       resolve();
     });
-  });
-}
-
-export function stopHttpServer() {
-  return new Promise<void>((resolve) => {
-    let serverClosed = false;
-
-    httpServer.close(() => {
-      serverClosed = true;
-      resolve();
-    });
-
-    setTimeout(() => {
-      if (!serverClosed) resolve();
-    }, 1000);
   });
 }

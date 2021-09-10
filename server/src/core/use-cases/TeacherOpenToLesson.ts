@@ -6,7 +6,7 @@ type Params = {
   teacherId: string;
 };
 
-export class TeacherOpenToLesson implements UseCase<Params, void> {
+export class TeacherOpenToLessonUseCase implements UseCase<Params, void> {
   constructor(private socketServer: SocketServer) {}
 
   async perform(params: Params): Promise<void> {
