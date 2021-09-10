@@ -1,6 +1,6 @@
 import { BaseSocket, SocketServer } from '@app/infra/web-sockets';
 import { createFakeTeacher } from '@tests/helpers';
-import { FakeSocketServer } from '@tests/SocketServerFake';
+import { FakeSocket, FakeSocketServer } from '@tests/SocketServerFake';
 import { TeacherRepositoryInMemory } from '@tests/TeacherRepositoryInMemory';
 import RequestLesson from '../entities/RequestLesson';
 import Student from '../entities/Student';
@@ -10,30 +10,22 @@ import { StudentViewOnlineTeachersUseCase } from './StudentViewOnlineTeachers';
 
 describe('StudentViewOnlineTeachersUseCase suite test', () => {
   it('Should use web sockets server to get teachers online', async () => {
-    const socketServerToVerifyMethodCall = new SocketServerToVerifyMethodCall();
-    const teacherRepositoryInMemory = new TeacherRepositoryInMemory();
-    const sut = new StudentViewOnlineTeachersUseCase(socketServerToVerifyMethodCall, teacherRepositoryInMemory);
-    await sut.perform({});
-    expect(socketServerToVerifyMethodCall.calledTeachersIdsMethods).toBe(true);
-  });
+    const { sut, socketServer } = createSut();
+    const teachersAvailableSpy = jest.spyOn(socketServer, 'teachersAvailable', 'get');
 
-  it('Should use TeacherRepository to fetch teacher data by id', async () => {
-    const teachers = [await createFakeTeacher({ id: 'teacher1' })];
-    const socketServer = new FakeSocketServer(teachers);
-    const teacherRepository = new TeacherRepositoryChecker();
-    const sut = new StudentViewOnlineTeachersUseCase(socketServer, teacherRepository);
     await sut.perform({});
-    expect(teacherRepository.teacherIdToFind).toBe('teacher1');
+
+    expect(teachersAvailableSpy).toHaveBeenCalled();
   });
 
   it('Should return teachers online', async () => {
-    const teachers = [await createFakeTeacher({ id: 'teacher1' }), await createFakeTeacher({ id: 'teacher2' })];
-    const socketServer = new FakeSocketServer(teachers);
-    const teacherRepository = new TeacherRepositoryInMemory();
-    await teacherRepository.insert(teachers[0]);
-    await teacherRepository.insert(teachers[1]);
+    const { sut, socketServer } = createSut();
 
-    const sut = new StudentViewOnlineTeachersUseCase(socketServer, teacherRepository);
+    const teachers = [await createFakeTeacher({ id: 'teacher1' }), await createFakeTeacher({ id: 'teacher2' })];
+    await socketServer.connectTeacher(teachers[0], new FakeSocket('any'));
+    await socketServer.connectTeacher(teachers[1], new FakeSocket('any'));
+    await socketServer.openTeacherToLesson(teachers[0].id);
+    await socketServer.openTeacherToLesson(teachers[1].id);
 
     const teachersOnline = await sut.perform({});
     expect(teachersOnline.length).toBe(2);
@@ -50,18 +42,18 @@ describe('StudentViewOnlineTeachersUseCase suite test', () => {
   });
 
   it('Should return teachers online and not busy', async () => {
+    const { sut, socketServer } = createSut();
     const teachers = [
       await createFakeTeacher({ id: 'teacher1', busy: true }),
       await createFakeTeacher({ id: 'teacher2' }),
     ];
-    const socketServer = new FakeSocketServer(teachers);
-    const teacherRepository = new TeacherRepositoryInMemory();
-    await teacherRepository.insert(teachers[0]);
-    await teacherRepository.insert(teachers[1]);
-
-    const sut = new StudentViewOnlineTeachersUseCase(socketServer, teacherRepository);
+    await socketServer.connectTeacher(teachers[0], new FakeSocket('any'));
+    await socketServer.connectTeacher(teachers[1], new FakeSocket('any'));
+    await socketServer.openTeacherToLesson(teachers[0].id);
+    await socketServer.openTeacherToLesson(teachers[1].id);
 
     const teachersOnline = await sut.perform({});
+
     expect(teachersOnline.length).toBe(1);
     expect(teachersOnline).toEqual(
       expect.arrayContaining([
@@ -74,68 +66,9 @@ describe('StudentViewOnlineTeachersUseCase suite test', () => {
   });
 });
 
-class TeacherRepositoryChecker implements TeacherRepository {
-  deleteById(id: string): Promise<boolean> {
-    throw new Error('Method not implemented.');
-  }
-  teacherIdToFind: string | null = null;
-
-  async findById(id: string): Promise<Teacher | null> {
-    this.teacherIdToFind = id;
-    return null;
-  }
-
-  insert(teacher: Teacher): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
-}
-
-class SocketServerToVerifyMethodCall implements SocketServer {
-  hasStudent(studentId: string): Promise<boolean> {
-    throw new Error('Method not implemented.');
-  }
-  setTeacherBusyStatus(teacherId: string, status: boolean): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
-  connectStudent(student: Student, studentSocket: BaseSocket): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
-  emitStudentStartLesson(studentId: string): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
-  emitTeacherStartLesson(teacherId: string): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
-  socket(teacherIdOrUserId: string): BaseSocket {
-    throw new Error('Method not implemented.');
-  }
-  getLessonRequest(requestId: string): Promise<RequestLesson | null> {
-    throw new Error('Method not implemented.');
-  }
-  calledTeachersIdsMethods = false;
-
-  async teachersIdsNotBusy(): Promise<string[]> {
-    this.calledTeachersIdsMethods = true;
-    return [];
-  }
-
-  hasTeacher(teacherId: string): Promise<boolean> {
-    throw new Error('Method not implemented.');
-  }
-  teacherIsBusy(teacherId: string): Promise<boolean> {
-    throw new Error('Method not implemented.');
-  }
-  setTeacherAsBusy(teacherId: string): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
-  requestTeacher(request: RequestLesson): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
-  async teachersIds(): Promise<string[]> {
-    throw new Error('Method not implemented.');
-  }
-
-  connectTeacher(teacher: Teacher): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
+function createSut() {
+  const socketServer = new FakeSocketServer();
+  const teacherRepository = new TeacherRepositoryInMemory();
+  const sut = new StudentViewOnlineTeachersUseCase(socketServer, teacherRepository);
+  return { sut, teacherRepository, socketServer };
 }
