@@ -1,11 +1,6 @@
-import { BaseSocket, SocketServer } from '@app/infra/web-sockets';
 import { createFakeTeacher } from '@tests/helpers';
 import { FakeSocket, FakeSocketServer } from '@tests/SocketServerFake';
 import { TeacherRepositoryInMemory } from '@tests/TeacherRepositoryInMemory';
-import RequestLesson from '../entities/RequestLesson';
-import Student from '../entities/Student';
-import Teacher from '../entities/Teacher';
-import { TeacherRepository } from '../repositories/TeacherRepository';
 import { StudentViewOnlineTeachersUseCase } from './StudentViewOnlineTeachers';
 
 describe('StudentViewOnlineTeachersUseCase suite test', () => {

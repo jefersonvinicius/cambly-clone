@@ -1,19 +1,10 @@
-import { TeacherRepository } from '@app/core/repositories/TeacherRepository';
-import { StudentOpenToLesson } from '@app/core/use-cases/StudentOpenToLesson';
 import { TeacherOpenToLessonUseCase } from '@app/core/use-cases/TeacherOpenToLesson';
 import { createHTTPServer } from '@app/infra/http/server';
-import { createStudentClient, createTeacherClient, waitForCallbacks } from '@tests/helpers';
-import {
-  connectStudentClient,
-  connectTeacherClient,
-  setupStudentConnectEvent,
-  setupTeacherConnectEvent,
-} from '@tests/helpers/socket-events';
-import { StudentRepositoryInMemory } from '@tests/StudentRepositoryInMemory';
+import { createTeacherClient, waitForCallbacks } from '@tests/helpers';
+import { connectTeacherClient, setupTeacherConnectEvent } from '@tests/helpers/socket-events';
 import { TeacherRepositoryInMemory } from '@tests/TeacherRepositoryInMemory';
 import { createIOServer, EventsLabels } from '..';
 import { SocketServerIO } from '../SocketIOEvents';
-import { StudentOpenToLessonEvent } from './StudentOpenToLessonEvent';
 import { TeacherOpenToLessonEvent } from './TeacherOpenToLessonEvent';
 
 describe('StudentOpenToLessonEvent', () => {
