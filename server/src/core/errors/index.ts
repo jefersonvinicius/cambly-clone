@@ -84,3 +84,11 @@ export class StudentUnavailable extends Error {
     Object.setPrototypeOf(this, StudentUnavailable.prototype);
   }
 }
+
+export class TeacherUnavailable extends Error {
+  constructor(teacherId: string) {
+    super(`Teacher ${teacherId} isn't open to lesson`);
+    this.name = this.constructor.name;
+    Object.setPrototypeOf(this, TeacherUnavailable.prototype);
+  }
+}

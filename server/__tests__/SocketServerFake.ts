@@ -10,6 +10,10 @@ export class FakeSocketServer implements SocketServer {
 
   constructor(private teachers: Teacher[] = [], private students: Student[] = []) {}
 
+  async teacherIsAvailable(teacherId: string): Promise<boolean> {
+    return this._availableTeachers.has(teacherId);
+  }
+
   async studentIsAvailable(studentId: string): Promise<boolean> {
     return this._availableStudents.has(studentId);
   }
