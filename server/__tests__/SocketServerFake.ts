@@ -4,18 +4,22 @@ import Teacher from '@app/core/entities/Teacher';
 import { BaseSocket, SocketServer } from '@app/infra/web-sockets';
 
 export class FakeSocketServer implements SocketServer {
-  private _availableStudents: { [key: string]: BaseSocket }[] = [];
+  private _availableStudents: Map<string, Student> = new Map();
   private _availableTeachers: Map<string, Teacher> = new Map();
   private requests: RequestLesson[] = [];
 
   constructor(private teachers: Teacher[] = [], private students: Student[] = []) {}
+
+  async studentIsAvailable(studentId: string): Promise<boolean> {
+    return this._availableStudents.has(studentId);
+  }
 
   get teachersAvailable(): Teacher[] {
     return Array.from(this._availableTeachers.values());
   }
 
   get studentsAvailable(): Student[] {
-    throw new Error('Method not implemented.');
+    return Array.from(this._availableStudents.values());
   }
 
   async openTeacherToLesson(teacherId: string): Promise<void> {
@@ -27,12 +31,9 @@ export class FakeSocketServer implements SocketServer {
 
   async emitNewStudentAvailableEvent(studentId: string): Promise<void> {}
 
-  async availableStudents(): Promise<{ [studentId: string]: BaseSocket }[]> {
-    return this._availableStudents;
-  }
-
   async openStudentToLesson(studentId: string): Promise<void> {
-    this._availableStudents.push({ [studentId]: { id: 'any' } });
+    const student = this.students.find((s) => s.id === studentId);
+    if (student) this._availableStudents.set(studentId, student);
   }
 
   async setTeacherBusyStatus(teacherId: string, status: boolean): Promise<void> {

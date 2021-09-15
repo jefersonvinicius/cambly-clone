@@ -39,9 +39,9 @@ describe('StudentOpenToLesson', () => {
     await socketServer.connectStudent(student, dummySocket);
 
     await sut.perform({ studentId: 'any_student_id' });
-    expect(await socketServer.availableStudents()).toContainEqual(
+    expect(socketServer.studentsAvailable).toContainEqual(
       expect.objectContaining({
-        any_student_id: expect.any(Object),
+        id: student.id,
       })
     );
   });
