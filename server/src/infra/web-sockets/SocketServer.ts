@@ -29,4 +29,6 @@ export default interface SocketServer<Socket = BaseSocket> {
   emitNewTeacherAvailableEvent(teacherId: string): Promise<void>;
   studentIsAvailable(studentId: string): Promise<boolean>;
   teacherIsAvailable(teacherId: string): Promise<boolean>;
+  removeTeacherFromAvailable(teacherId: string): Promise<void>;
+  removeStudentFromAvailable(studentId: string): Promise<void>;
 }

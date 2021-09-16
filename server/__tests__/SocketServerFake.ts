@@ -10,6 +10,14 @@ export class FakeSocketServer implements SocketServer {
 
   constructor(private teachers: Teacher[] = [], private students: Student[] = []) {}
 
+  async removeStudentFromAvailable(studentId: string): Promise<void> {
+    this._availableStudents.delete(studentId);
+  }
+
+  async removeTeacherFromAvailable(teacherId: string): Promise<void> {
+    this._availableTeachers.delete(teacherId);
+  }
+
   async teacherIsAvailable(teacherId: string): Promise<boolean> {
     return this._availableTeachers.has(teacherId);
   }

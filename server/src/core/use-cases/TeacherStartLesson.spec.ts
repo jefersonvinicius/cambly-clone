@@ -48,6 +48,37 @@ describe('TeacherStartLesson suite tests', () => {
 
     expect(performPromise).rejects.toThrowError(new StudentUnavailable(student.id));
   });
+
+  it('should teacher change to busy and get unavailable after start lesson', async () => {
+    const { sut, socketServer } = createSut();
+    const teacher = await createFakeTeacher();
+    await socketServer.connectTeacher(teacher, dummySocket);
+    await socketServer.openTeacherToLesson(teacher.id);
+
+    const student = await createFakeStudent();
+    await socketServer.connectStudent(student, dummySocket);
+    await socketServer.openStudentToLesson(student.id);
+
+    await sut.perform({ studentId: student.id, teacherId: teacher.id });
+
+    expect(await socketServer.teacherIsAvailable(teacher.id)).toBe(false);
+    expect(await socketServer.teacherIsBusy(teacher.id)).toBe(true);
+  });
+
+  it('should student get unavailable after start lesson', async () => {
+    const { sut, socketServer } = createSut();
+    const teacher = await createFakeTeacher();
+    await socketServer.connectTeacher(teacher, dummySocket);
+    await socketServer.openTeacherToLesson(teacher.id);
+
+    const student = await createFakeStudent();
+    await socketServer.connectStudent(student, dummySocket);
+    await socketServer.openStudentToLesson(student.id);
+
+    await sut.perform({ studentId: student.id, teacherId: teacher.id });
+
+    expect(await socketServer.studentIsAvailable(student.id)).toBe(false);
+  });
 });
 
 function createSut() {
