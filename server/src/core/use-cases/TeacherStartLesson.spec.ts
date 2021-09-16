@@ -79,6 +79,23 @@ describe('TeacherStartLesson suite tests', () => {
 
     expect(await socketServer.studentIsAvailable(student.id)).toBe(false);
   });
+
+  it('should emit event NewLessonStarted to teacher and student', async () => {
+    const { sut, socketServer } = createSut();
+    const teacher = await createFakeTeacher();
+    await socketServer.connectTeacher(teacher, dummySocket);
+    await socketServer.openTeacherToLesson(teacher.id);
+
+    const student = await createFakeStudent();
+    await socketServer.connectStudent(student, dummySocket);
+    await socketServer.openStudentToLesson(student.id);
+
+    const emitNewLessonStartedLessonSpy = jest.spyOn(socketServer, 'emitNewLessonStartedEvent');
+
+    const lesson = await sut.perform({ studentId: student.id, teacherId: teacher.id });
+
+    expect(emitNewLessonStartedLessonSpy).toBeCalledWith(lesson);
+  });
 });
 
 function createSut() {

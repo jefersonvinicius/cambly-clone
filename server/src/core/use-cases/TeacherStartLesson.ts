@@ -23,6 +23,13 @@ export class TeacherStartLessonUseCase implements UseCase<Params, Lesson> {
     await this.socketServer.setTeacherBusyStatus(params.teacherId, true);
     await this.socketServer.removeStudentFromAvailable(params.studentId);
 
-    return new Lesson(params);
+    const lesson = new Lesson({
+      studentId: params.studentId,
+      teacherId: params.teacherId,
+    });
+
+    await this.socketServer.emitNewLessonStartedEvent(lesson);
+
+    return lesson;
   }
 }

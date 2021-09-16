@@ -1,3 +1,4 @@
+import Lesson from '@app/core/entities/Lesson';
 import RequestLesson from '@app/core/entities/RequestLesson';
 import Student from '@app/core/entities/Student';
 import Teacher from '@app/core/entities/Teacher';
@@ -9,6 +10,8 @@ export class FakeSocketServer implements SocketServer {
   private requests: RequestLesson[] = [];
 
   constructor(private teachers: Teacher[] = [], private students: Student[] = []) {}
+
+  async emitNewLessonStartedEvent(lesson: Lesson): Promise<void> {}
 
   async removeStudentFromAvailable(studentId: string): Promise<void> {
     this._availableStudents.delete(studentId);

@@ -1,3 +1,4 @@
+import Lesson from '@app/core/entities/Lesson';
 import RequestLesson from '@app/core/entities/RequestLesson';
 import Student from '@app/core/entities/Student';
 import Teacher from '@app/core/entities/Teacher';
@@ -31,4 +32,5 @@ export default interface SocketServer<Socket = BaseSocket> {
   teacherIsAvailable(teacherId: string): Promise<boolean>;
   removeTeacherFromAvailable(teacherId: string): Promise<void>;
   removeStudentFromAvailable(studentId: string): Promise<void>;
+  emitNewLessonStartedEvent(lesson: Lesson): Promise<void>;
 }
