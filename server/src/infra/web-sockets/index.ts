@@ -23,6 +23,7 @@ export enum EventsLabels {
   RequestTeacherLesson = 'request-teacher-lesson',
   AcceptStudentRequest = 'accept-student-request',
   LessonStarted = 'lesson-started',
+  NewLessonStarted = 'new-lesson-started',
 }
 
 export { SocketServer, BaseSocket };

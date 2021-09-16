@@ -8,6 +8,10 @@ import { Socket as ServerSocket } from 'socket.io';
 import { ConnectTeacherEvent } from '@app/infra/web-sockets/events/ConnectTeacherEvent';
 import { TeacherConnectUseCase } from '@app/core/use-cases/TeacherConnect';
 import { TeacherRepositoryInMemory } from '@tests/TeacherRepositoryInMemory';
+import { StudentOpenToLesson } from '@app/core/use-cases/StudentOpenToLesson';
+import { StudentOpenToLessonEvent } from '@app/infra/web-sockets/events/StudentOpenToLessonEvent';
+import { TeacherOpenToLessonUseCase } from '@app/core/use-cases/TeacherOpenToLesson';
+import { TeacherOpenToLessonEvent } from '@app/infra/web-sockets/events/TeacherOpenToLessonEvent';
 
 type ConnectTeacherData = {
   teacherId: string;
@@ -35,6 +39,22 @@ export function connectStudentClient(socket: ClientSocket, data: ConnectStudentD
   });
 }
 
+export function openStudentToLesson(studentSocket: ClientSocket, payload: { studentId: string }) {
+  return new Promise<void>((resolve) => {
+    studentSocket.emit(EventsLabels.StudentOpenToLesson, payload, () => {
+      resolve();
+    });
+  });
+}
+
+export function openTeacherToLesson(teacherSocket: ClientSocket, payload: { teacherId: string }) {
+  return new Promise<void>((resolve) => {
+    teacherSocket.emit(EventsLabels.TeacherOpenToLesson, payload, () => {
+      resolve();
+    });
+  });
+}
+
 export function setupStudentConnectEvent(
   socket: ServerSocket,
   socketServer: SocketServerIO,
@@ -45,6 +65,12 @@ export function setupStudentConnectEvent(
   socket.on(EventsLabels.ConnectStudent, connectStudentEvent.createHandler(socket));
 }
 
+export function setupStudentOpenToLessonEvent(socket: ServerSocket, socketServer: SocketServerIO) {
+  const studentOpenToLessonUseCase = new StudentOpenToLesson(socketServer);
+  const studentOpenToLessonEvent = new StudentOpenToLessonEvent(studentOpenToLessonUseCase);
+  socket.on(EventsLabels.StudentOpenToLesson, studentOpenToLessonEvent.createHandler(socket));
+}
+
 export function setupTeacherConnectEvent(
   socket: ServerSocket,
   socketServer: SocketServerIO,
@@ -53,4 +79,10 @@ export function setupTeacherConnectEvent(
   const connectTeacherUseCase = new TeacherConnectUseCase(socketServer, teacherRepository);
   const connectTeacherEvent = new ConnectTeacherEvent(connectTeacherUseCase);
   socket.on(EventsLabels.ConnectTeacher, connectTeacherEvent.createHandler(socket));
+}
+
+export function setupTeacherOpenToLessonEvent(socket: ServerSocket, socketServer: SocketServerIO) {
+  const teacherOpenToLessonUseCase = new TeacherOpenToLessonUseCase(socketServer);
+  const teacherOpenToLessonEvent = new TeacherOpenToLessonEvent(teacherOpenToLessonUseCase);
+  socket.on(EventsLabels.TeacherOpenToLesson, teacherOpenToLessonEvent.createHandler(socket));
 }

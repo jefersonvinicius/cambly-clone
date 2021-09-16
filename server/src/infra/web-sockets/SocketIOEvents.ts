@@ -1,3 +1,4 @@
+import Lesson from '@app/core/entities/Lesson';
 import RequestLesson from '@app/core/entities/RequestLesson';
 import Student from '@app/core/entities/Student';
 import Teacher from '@app/core/entities/Teacher';
@@ -8,26 +9,47 @@ export class SocketServerIO implements SocketServer<Socket> {
   private requests: { [key: string]: RequestLesson } = {};
   private teachers: { [key: string]: Teacher } = {};
   private students: { [key: string]: Student } = {};
-  private _studentsAvailable: { [studentId: string]: Student } = {};
-  private _teachersAvailable: { [teacherId: string]: Teacher } = {};
+  private _studentsAvailable: Map<string, Student> = new Map();
+  private _teachersAvailable: Map<string, Teacher> = new Map();
   private sockets: { [userId: string]: Socket } = {};
 
   constructor(public io: Server) {}
 
+  async studentIsAvailable(studentId: string): Promise<boolean> {
+    return this._studentsAvailable.has(studentId);
+  }
+
+  async teacherIsAvailable(teacherId: string): Promise<boolean> {
+    return this._teachersAvailable.has(teacherId);
+  }
+  async removeTeacherFromAvailable(teacherId: string): Promise<void> {
+    this._teachersAvailable.delete(teacherId);
+  }
+
+  async removeStudentFromAvailable(studentId: string): Promise<void> {
+    this._studentsAvailable.delete(studentId);
+  }
+
+  async emitNewLessonStartedEvent(lesson: Lesson): Promise<void> {
+    const studentSocket = this.socket(lesson.studentId);
+    const teacherSocket = this.socket(lesson.teacherId);
+    this.io.to([studentSocket.id, teacherSocket.id]).emit(EventsLabels.NewLessonStarted, { lesson });
+  }
+
   get teachersAvailable(): Teacher[] {
-    return Object.values(this._teachersAvailable);
+    return Array.from(this._teachersAvailable.values());
   }
 
   async openStudentToLesson(studentId: string): Promise<void> {
-    this._studentsAvailable[studentId] = this.students[studentId];
+    this._studentsAvailable.set(studentId, this.students[studentId]);
   }
 
   async openTeacherToLesson(teacherId: string): Promise<void> {
-    this._teachersAvailable[teacherId] = this.teachers[teacherId];
+    this._teachersAvailable.set(teacherId, this.teachers[teacherId]);
   }
 
   get studentsAvailable() {
-    return Object.values(this._studentsAvailable);
+    return Array.from(this._studentsAvailable.values());
   }
 
   availableTeachers(): Promise<{ [teacherId: string]: Socket }[]> {
