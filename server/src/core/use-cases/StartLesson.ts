@@ -10,7 +10,7 @@ type Params = {
 
 type Return = Lesson;
 
-export class TeacherStartLessonUseCase implements UseCase<Params, Lesson> {
+export class StartLessonUseCase implements UseCase<Params, Lesson> {
   constructor(private socketServer: SocketServer) {}
 
   async perform(params: Params): Promise<Lesson> {

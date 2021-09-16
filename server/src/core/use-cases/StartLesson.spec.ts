@@ -1,13 +1,13 @@
 import { createFakeStudent, createFakeTeacher } from '@tests/helpers';
 import { FakeSocket, FakeSocketServer } from '@tests/SocketServerFake';
 import { StudentOffline, StudentUnavailable, TeacherOffline, TeacherUnavailable } from '../errors';
-import { TeacherStartLessonUseCase } from './TeacherStartLesson';
+import { StartLessonUseCase } from './StartLesson';
 
 describe('TeacherStartLesson suite tests', () => {
   const dummySocket = new FakeSocket('any');
 
   it('should TeacherStartLesson class is defined correctly', () => {
-    expect(TeacherStartLessonUseCase).toBeDefined();
+    expect(StartLessonUseCase).toBeDefined();
   });
 
   it('should get error TeacherOffline when teacher is offline', () => {
@@ -100,6 +100,6 @@ describe('TeacherStartLesson suite tests', () => {
 
 function createSut() {
   const socketServer = new FakeSocketServer();
-  const sut = new TeacherStartLessonUseCase(socketServer);
+  const sut = new StartLessonUseCase(socketServer);
   return { sut, socketServer };
 }
