@@ -1,9 +1,11 @@
+import Lesson, { LessonConstructorData } from '@app/core/entities/Lesson';
 import Student, { StudentConstructorData } from '@app/core/entities/Student';
 import Teacher, { TeacherConstructorData } from '@app/core/entities/Teacher';
 import User, { UserConstructorData, UserTypes } from '@app/core/entities/User';
 import { Database } from '@app/infra/database';
 import { ensureIsTestEnvironment } from '@app/shared/environment';
 import { Hashing } from '@app/shared/Hashing';
+import UUID from '@app/shared/UUID';
 import EventEmitter from 'events';
 import faker from 'faker';
 import { io, Socket } from 'socket.io-client';
@@ -31,6 +33,19 @@ export async function createFakeUser(data?: Partial<UserConstructorData>) {
     createdAt: data?.createdAt,
     updatedAt: data?.updatedAt,
     type: data?.type ?? UserTypes.Student,
+  });
+}
+
+export async function createFakeLesson(data?: Partial<LessonConstructorData>) {
+  return new Lesson({
+    id: data?.id,
+    studentId: data?.studentId ?? UUID.v4(),
+    teacherId: data?.teacherId ?? UUID.v4(),
+    code: data?.code,
+    startedAt: data?.startedAt,
+    endedAt: data?.endedAt,
+    createdAt: data?.createdAt,
+    updatedAt: data?.updatedAt,
   });
 }
 

@@ -21,7 +21,7 @@ export default class Lesson extends BaseEntity {
   }
 }
 
-type LessonConstructorData = {
+export type LessonConstructorData = {
   code?: string;
   teacherId: string;
   studentId: string;
