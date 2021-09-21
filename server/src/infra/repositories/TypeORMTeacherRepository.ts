@@ -1,14 +1,14 @@
 import Teacher from '@app/core/entities/Teacher';
 import { TeacherRepository } from '@app/core/repositories/TeacherRepository';
 import { Connection, Repository } from 'typeorm';
-import { UserScheme, UserSchemeProperties } from '../database/schemes/UserScheme';
+import { UserSchema, UserSchemaProperties } from '../database/schemas/UserSchema';
 import { UserMapper } from '../mappers/UserMapper';
 
 export class TypeORMTeacherRepository implements TeacherRepository {
-  private userRepository: Repository<UserSchemeProperties>;
+  private userRepository: Repository<UserSchemaProperties>;
 
   constructor(private connection: Connection) {
-    this.userRepository = this.connection.getRepository(UserScheme);
+    this.userRepository = this.connection.getRepository(UserSchema);
   }
 
   async deleteById(id: string): Promise<boolean> {
@@ -22,7 +22,7 @@ export class TypeORMTeacherRepository implements TeacherRepository {
   }
 
   async insert(teacher: Teacher): Promise<void> {
-    const scheme = this.userRepository.create(UserMapper.toUserScheme(teacher));
+    const scheme = this.userRepository.create(UserMapper.toUserSchema(teacher));
     await this.userRepository.save(scheme);
   }
 }

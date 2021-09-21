@@ -1,14 +1,14 @@
 import Student from '@app/core/entities/Student';
 import { StudentRepository } from '@app/core/repositories/StudentRepository';
 import { Connection, Repository } from 'typeorm';
-import { UserScheme, UserSchemeProperties } from '../database/schemes/UserScheme';
+import { UserSchema, UserSchemaProperties } from '../database/schemas/UserSchema';
 import { UserMapper } from '../mappers/UserMapper';
 
 export class TypeORMStudentRepository implements StudentRepository {
-  private userRepository: Repository<UserSchemeProperties>;
+  private userRepository: Repository<UserSchemaProperties>;
 
   constructor(private connection: Connection) {
-    this.userRepository = this.connection.getRepository(UserScheme);
+    this.userRepository = this.connection.getRepository(UserSchema);
   }
 
   async deleteById(id: string): Promise<boolean> {
@@ -22,7 +22,7 @@ export class TypeORMStudentRepository implements StudentRepository {
   }
 
   async insert(student: Student): Promise<void> {
-    const scheme = this.userRepository.create(UserMapper.toUserScheme(student));
+    const scheme = this.userRepository.create(UserMapper.toUserSchema(student));
     await this.userRepository.save(scheme);
   }
 }

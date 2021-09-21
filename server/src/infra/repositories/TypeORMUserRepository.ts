@@ -2,18 +2,18 @@ import User, { UserTypes } from '@app/core/entities/User';
 import { UserRepository } from '@app/core/repositories/UserRepository';
 import { Connection, Repository } from 'typeorm';
 import { Database } from '../database';
-import { UserScheme, UserSchemeProperties } from '../database/schemes/UserScheme';
+import { UserSchema, UserSchemaProperties } from '../database/schemas/UserSchema';
 import { UserMapper } from '../mappers/UserMapper';
 
 export class TypeORMUserRepository implements UserRepository {
-  private userRepository: Repository<UserSchemeProperties>;
+  private userRepository: Repository<UserSchemaProperties>;
 
   constructor(private connection: Connection) {
-    this.userRepository = this.connection.getRepository(UserScheme);
+    this.userRepository = this.connection.getRepository(UserSchema);
   }
 
   async insert(user: User): Promise<void> {
-    const userToSave = this.userRepository.create(UserMapper.toUserScheme(user));
+    const userToSave = this.userRepository.create(UserMapper.toUserSchema(user));
     await this.userRepository.save(userToSave);
   }
 
@@ -33,7 +33,7 @@ export class TypeORMUserRepository implements UserRepository {
   }
 }
 
-function createUserFromUserScheme(userSchemeProperties: UserSchemeProperties) {
+function createUserFromUserScheme(userSchemeProperties: UserSchemaProperties) {
   return new User({
     ...userSchemeProperties,
     type: userSchemeProperties.type as UserTypes,

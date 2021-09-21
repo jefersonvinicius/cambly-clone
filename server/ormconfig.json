@@ -7,7 +7,7 @@
   "database": "cambly_clone",
   "logging": true,
   "entities": [
-    "src/infra/database/schemes/**/*.ts"
+    "src/infra/database/schemas/**/*.ts"
   ],
   "migrations": [
     "src/infra/database/migrations/**/*.ts"

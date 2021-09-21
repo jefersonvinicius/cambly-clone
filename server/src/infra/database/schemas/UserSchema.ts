@@ -1,17 +1,14 @@
 import { EntitySchema } from 'typeorm';
-import { schemesBaseColumns } from '.';
+import { BaseSchemaProperties, schemesBaseColumns } from '.';
 
-export type UserSchemeProperties = {
+export type UserSchemaProperties = BaseSchemaProperties & {
   name: string;
   type: string;
   email: string;
   password: string;
-  id: string;
-  createdAt: string;
-  updatedAt: string;
 };
 
-export const UserScheme = new EntitySchema<UserSchemeProperties>({
+export const UserSchema = new EntitySchema<UserSchemaProperties>({
   name: 'user',
   tableName: 'users',
   columns: {

@@ -16,3 +16,9 @@ export const schemesBaseColumns = {
     updateDate: true,
   } as EntitySchemaColumnOptions,
 };
+
+export type BaseSchemaProperties = {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+};

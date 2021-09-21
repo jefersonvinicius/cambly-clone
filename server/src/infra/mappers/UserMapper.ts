@@ -1,8 +1,8 @@
 import User from '@app/core/entities/User';
-import { UserSchemeProperties } from '../database/schemes/UserScheme';
+import { UserSchemaProperties } from '../database/schemas/UserSchema';
 
 export class UserMapper {
-  static toUserScheme(user: User): UserSchemeProperties {
+  static toUserSchema(user: User): UserSchemaProperties {
     return {
       id: user.id,
       email: user.email,
