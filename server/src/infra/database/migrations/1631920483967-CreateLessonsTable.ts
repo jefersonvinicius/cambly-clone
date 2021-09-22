@@ -17,11 +17,11 @@ export class CreateLessonsTable1631920483967 implements MigrationInterface {
             name: 'code',
             type: 'varchar',
             length: '50',
+            isUnique: true,
           },
           {
             name: 'student_id',
             type: 'uuid',
-            isUnique: true,
           },
           {
             name: 'teacher_id',

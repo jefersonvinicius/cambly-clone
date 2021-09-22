@@ -3,17 +3,15 @@ import Teacher from '@app/core/entities/Teacher';
 import { EntitySchema } from 'typeorm';
 import { BaseSchemaProperties, schemesBaseColumns } from '.';
 
-type LessonProperties = BaseSchemaProperties & {
+export type LessonSchemaProperties = BaseSchemaProperties & {
   code: string;
   studentId: string;
   teacherId: string;
-  student: Student;
-  teacher: Teacher;
   startedAt?: string;
   endedAt?: string;
 };
 
-export const LessonSchema = new EntitySchema<LessonProperties>({
+export const LessonSchema = new EntitySchema<LessonSchemaProperties>({
   name: 'lesson',
   tableName: 'lessons',
   columns: {
@@ -22,23 +20,23 @@ export const LessonSchema = new EntitySchema<LessonProperties>({
       type: 'varchar',
       length: 50,
     },
+    studentId: {
+      name: 'student_id',
+      type: 'uuid',
+    },
+    teacherId: {
+      name: 'teacher_id',
+      type: 'uuid',
+    },
     startedAt: {
+      name: 'started_at',
       type: 'time with time zone',
       nullable: true,
     },
     endedAt: {
+      name: 'ended_at',
       type: 'time with time zone',
       nullable: true,
-    },
-  },
-  relations: {
-    student: {
-      type: 'one-to-many',
-      target: 'user',
-    },
-    teacher: {
-      type: 'one-to-many',
-      target: 'user',
     },
   },
 });
