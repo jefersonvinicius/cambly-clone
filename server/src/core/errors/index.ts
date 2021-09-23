@@ -92,3 +92,11 @@ export class TeacherUnavailable extends Error {
     Object.setPrototypeOf(this, TeacherUnavailable.prototype);
   }
 }
+
+export class LessonNotFound extends Error {
+  constructor(lessonId: string) {
+    super(`Lesson ${lessonId} not found`);
+    this.name = this.constructor.name;
+    Object.setPrototypeOf(this, LessonNotFound.prototype);
+  }
+}
