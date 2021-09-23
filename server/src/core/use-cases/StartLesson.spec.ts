@@ -1,4 +1,5 @@
 import { createFakeStudent, createFakeTeacher } from '@tests/helpers';
+import { LessonRepositoryInMemory } from '@tests/LessonRepositoryInMemory';
 import { FakeSocket, FakeSocketServer } from '@tests/SocketServerFake';
 import { StudentOffline, StudentUnavailable, TeacherOffline, TeacherUnavailable } from '../errors';
 import { StartLessonUseCase } from './StartLesson';
@@ -96,10 +97,26 @@ describe('TeacherStartLesson suite tests', () => {
 
     expect(emitNewLessonStartedLessonSpy).toBeCalledWith(lesson);
   });
+
+  it('should save lesson on repository', async () => {
+    const { sut, socketServer, lessonRepository } = createSut();
+    const teacher = await createFakeTeacher();
+    await socketServer.connectTeacher(teacher, dummySocket);
+    await socketServer.openTeacherToLesson(teacher.id);
+
+    const student = await createFakeStudent();
+    await socketServer.connectStudent(student, dummySocket);
+    await socketServer.openStudentToLesson(student.id);
+
+    const lesson = await sut.perform({ studentId: student.id, teacherId: teacher.id });
+
+    expect(await lessonRepository.findById(lesson.id)).toMatchObject(lesson);
+  });
 });
 
 function createSut() {
   const socketServer = new FakeSocketServer();
-  const sut = new StartLessonUseCase(socketServer);
-  return { sut, socketServer };
+  const lessonRepository = new LessonRepositoryInMemory();
+  const sut = new StartLessonUseCase(socketServer, lessonRepository);
+  return { sut, socketServer, lessonRepository };
 }

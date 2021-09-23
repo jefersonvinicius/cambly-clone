@@ -11,6 +11,7 @@ import {
   setupTeacherConnectEvent,
   setupTeacherOpenToLessonEvent,
 } from '@tests/helpers/socket-events';
+import { LessonRepositoryInMemory } from '@tests/LessonRepositoryInMemory';
 import { StudentRepositoryInMemory } from '@tests/StudentRepositoryInMemory';
 import { TeacherRepositoryInMemory } from '@tests/TeacherRepositoryInMemory';
 import { createIOServer, EventsLabels } from '..';
@@ -22,6 +23,7 @@ describe('StartLessonEvent suite tests', () => {
   let studentRepository: StudentRepositoryInMemory;
   let socketServer: SocketServerIO;
   let teacherRepository: TeacherRepositoryInMemory;
+  const lessonRepository = new LessonRepositoryInMemory();
 
   beforeAll(async () => {
     const { server, stopHTTPServer } = await createHTTPServer();
@@ -32,7 +34,7 @@ describe('StartLessonEvent suite tests', () => {
     studentRepository = new StudentRepositoryInMemory();
     teacherRepository = new TeacherRepositoryInMemory();
 
-    const startLessonUseCase = new StartLessonUseCase(socketServer);
+    const startLessonUseCase = new StartLessonUseCase(socketServer, lessonRepository);
     const sut = new StartLessonEvent(startLessonUseCase);
     socketServer.io.on('connection', (socket) => {
       setupStudentConnectEvent(socket, socketServer, studentRepository);

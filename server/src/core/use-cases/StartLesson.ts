@@ -2,6 +2,7 @@ import { SocketServer } from '@app/infra/web-sockets';
 import { UseCase } from '.';
 import Lesson from '../entities/Lesson';
 import { StudentOffline, StudentUnavailable, TeacherOffline, TeacherUnavailable } from '../errors';
+import { LessonRepository } from '../repositories/LessonRepository';
 
 type Params = {
   studentId: string;
@@ -11,7 +12,7 @@ type Params = {
 type Return = Lesson;
 
 export class StartLessonUseCase implements UseCase<Params, Lesson> {
-  constructor(private socketServer: SocketServer) {}
+  constructor(private socketServer: SocketServer, private lessonRepository: LessonRepository) {}
 
   async perform(params: Params): Promise<Lesson> {
     if (!(await this.socketServer.hasTeacher(params.teacherId))) throw new TeacherOffline(params.teacherId);
@@ -27,6 +28,7 @@ export class StartLessonUseCase implements UseCase<Params, Lesson> {
       studentId: params.studentId,
       teacherId: params.teacherId,
     });
+    await this.lessonRepository.insert(lesson);
 
     await this.socketServer.emitNewLessonStartedEvent(lesson);
 
