@@ -1,3 +1,4 @@
+import { Clock } from '@app/shared/Clock';
 import { createFakeStudent, createFakeTeacher } from '@tests/helpers';
 import { LessonRepositoryInMemory } from '@tests/LessonRepositoryInMemory';
 import { FakeSocket, FakeSocketServer } from '@tests/SocketServerFake';
@@ -111,6 +112,22 @@ describe('TeacherStartLesson suite tests', () => {
     const lesson = await sut.perform({ studentId: student.id, teacherId: teacher.id });
 
     expect(await lessonRepository.findById(lesson.id)).toMatchObject(lesson);
+  });
+
+  it('should save lesson with field startedAt filled with date', async () => {
+    const { sut, socketServer } = createSut();
+    const teacher = await createFakeTeacher();
+    await socketServer.connectTeacher(teacher, dummySocket);
+    await socketServer.openTeacherToLesson(teacher.id);
+
+    const student = await createFakeStudent();
+    await socketServer.connectStudent(student, dummySocket);
+    await socketServer.openStudentToLesson(student.id);
+
+    jest.spyOn(Clock, 'today').mockImplementation(() => new Date('2021-09-23T19:43:08'));
+    const lesson = await sut.perform({ studentId: student.id, teacherId: teacher.id });
+
+    expect(lesson.startedAt).toEqual(new Date('2021-09-23T19:43:08'));
   });
 });
 

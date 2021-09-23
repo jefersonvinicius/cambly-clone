@@ -1,4 +1,5 @@
 import { SocketServer } from '@app/infra/web-sockets';
+import { Clock } from '@app/shared/Clock';
 import { UseCase } from '.';
 import Lesson from '../entities/Lesson';
 import { StudentOffline, StudentUnavailable, TeacherOffline, TeacherUnavailable } from '../errors';
@@ -28,6 +29,7 @@ export class StartLessonUseCase implements UseCase<Params, Lesson> {
       studentId: params.studentId,
       teacherId: params.teacherId,
     });
+    lesson.startedAt = Clock.today();
     await this.lessonRepository.insert(lesson);
 
     await this.socketServer.emitNewLessonStartedEvent(lesson);
