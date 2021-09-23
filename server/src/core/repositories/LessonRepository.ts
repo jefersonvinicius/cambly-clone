@@ -5,4 +5,5 @@ export interface LessonRepository {
   findByCode(code: string): Promise<Lesson | null>;
   insert(lesson: Lesson): Promise<void>;
   deleteById(id: string): Promise<boolean>;
+  save(lesson: Lesson): Promise<void>;
 }

@@ -4,8 +4,12 @@ import { LessonRepository } from '@app/core/repositories/LessonRepository';
 export class LessonRepositoryInMemory implements LessonRepository {
   private lessons: Map<string, Lesson> = new Map();
 
+  async save(lesson: Lesson): Promise<void> {
+    this.lessons.set(lesson.id, lesson.clone());
+  }
+
   async findById(id: string): Promise<Lesson | null> {
-    return this.lessons.get(id) ?? null;
+    return this.lessons.get(id)?.clone() ?? null;
   }
 
   async findByCode(code: string): Promise<Lesson | null> {

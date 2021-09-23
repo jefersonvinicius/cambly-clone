@@ -19,6 +19,10 @@ export default class Lesson extends BaseEntity {
   private createCode() {
     return Math.random().toString(36).substr(2, 7);
   }
+
+  clone() {
+    return new Lesson({ ...this });
+  }
 }
 
 export type LessonConstructorData = {
