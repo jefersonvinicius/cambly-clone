@@ -70,4 +70,18 @@ describe('TypeORMLessonRepository', () => {
     const wasDeleted = await sut.deleteById(UUID.v4());
     expect(wasDeleted).toBe(false);
   });
+
+  it('should save the lesson correctly', async () => {
+    const sut = new TypeORMLessonRepository(connection);
+    const lesson = await createFakeLesson({ studentId: student.id, teacherId: teacher.id });
+    await sut.insert(lesson);
+
+    lesson.code = 'any_code';
+    lesson.endedAt = new Date('2020-09-24T19:50:00Z');
+    await sut.save(lesson);
+
+    const lessonOfRepository = await sut.findById(lesson.id);
+    expect(lessonOfRepository).toMatchObject({ ...lesson, updatedAt: expect.any(Date) });
+    expect(lessonOfRepository?.updatedAt).not.toBe(lesson.updatedAt);
+  });
 });

@@ -30,12 +30,12 @@ export const LessonSchema = new EntitySchema<LessonSchemaProperties>({
     },
     startedAt: {
       name: 'started_at',
-      type: 'time with time zone',
+      type: 'timestamp',
       nullable: true,
     },
     endedAt: {
       name: 'ended_at',
-      type: 'time with time zone',
+      type: 'timestamp',
       nullable: true,
     },
   },

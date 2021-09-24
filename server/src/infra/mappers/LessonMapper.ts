@@ -8,7 +8,7 @@ export class LessonMapper {
     return {
       ...lesson,
       startedAt: lesson.startedAt?.toISOString(),
-      endedAt: lesson.startedAt?.toISOString(),
+      endedAt: lesson.endedAt?.toISOString(),
       createdAt: lesson.createdAt.toISOString(),
       updatedAt: lesson.updatedAt.toISOString(),
     };

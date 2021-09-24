@@ -11,6 +11,9 @@ export class TypeORMLessonRepository implements LessonRepository {
   constructor(private connection: Connection) {
     this.lessonRepository = this.connection.getRepository(LessonSchema);
   }
+  async save(lesson: Lesson): Promise<void> {
+    await this.lessonRepository.save(LessonMapper.toLessonSchema(lesson));
+  }
 
   async findById(id: string): Promise<Lesson | null> {
     const lessonSchema = await this.lessonRepository.findOne({ where: { id } });
