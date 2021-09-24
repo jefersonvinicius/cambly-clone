@@ -1,6 +1,7 @@
 import { Clock } from '@app/shared/Clock';
-import { createFakeLesson } from '@tests/helpers';
+import { createFakeLesson, createFakeTeacher } from '@tests/helpers';
 import { LessonRepositoryInMemory } from '@tests/LessonRepositoryInMemory';
+import { FakeSocket, FakeSocketServer } from '@tests/SocketServerFake';
 import { LessonNotFound } from '../errors';
 import { FinishLessonUseCase } from './FinishLesson';
 
@@ -21,10 +22,23 @@ describe('FinishLessonUseCase', () => {
     expect(lessonUpdated.endedAt).toEqual(new Date('2021-09-23T19:43:08'));
     expect((await lessonRepository.findById('any'))?.endedAt).toEqual(new Date('2021-09-23T19:43:08'));
   });
+
+  it('should to change the teacher status to not busy', async () => {
+    const { sut, lessonRepository, socketServer } = createSut();
+    const lesson = await createFakeLesson({ id: 'any', teacherId: 'teacherId' });
+    await lessonRepository.insert(lesson.clone());
+    await socketServer.connectTeacher(await createFakeTeacher({ id: 'teacherId' }), new FakeSocket('any'));
+    await socketServer.setTeacherBusyStatus('teacherId', true);
+
+    await sut.perform({ lessonId: 'any' });
+
+    expect(await socketServer.teacherIsBusy('teacherId')).toBe(false);
+  });
 });
 
 function createSut() {
+  const socketServer = new FakeSocketServer();
   const lessonRepository = new LessonRepositoryInMemory();
-  const sut = new FinishLessonUseCase(lessonRepository);
-  return { sut, lessonRepository };
+  const sut = new FinishLessonUseCase(socketServer, lessonRepository);
+  return { sut, lessonRepository, socketServer };
 }

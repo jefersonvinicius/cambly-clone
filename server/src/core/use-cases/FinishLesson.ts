@@ -1,3 +1,4 @@
+import { SocketServer } from '@app/infra/web-sockets';
 import { Clock } from '@app/shared/Clock';
 import { UseCase } from '.';
 import Lesson from '../entities/Lesson';
@@ -9,7 +10,7 @@ type Params = {
 };
 
 export class FinishLessonUseCase implements UseCase<Params, Lesson> {
-  constructor(private lessonRepository: LessonRepository) {}
+  constructor(private socketServer: SocketServer, private lessonRepository: LessonRepository) {}
 
   async perform(params: Params): Promise<Lesson> {
     const lesson = await this.lessonRepository.findById(params.lessonId);
@@ -17,6 +18,7 @@ export class FinishLessonUseCase implements UseCase<Params, Lesson> {
 
     lesson.endedAt = Clock.today();
     await this.lessonRepository.save(lesson);
+    await this.socketServer.setTeacherBusyStatus(lesson.teacherId, false);
 
     return lesson;
   }
