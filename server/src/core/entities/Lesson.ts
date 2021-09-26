@@ -1,5 +1,8 @@
 import BaseEntity, { BaseEntityData } from './Base';
 
+const SECOND = 1000;
+const MINUTE = 60 * SECOND;
+
 export default class Lesson extends BaseEntity {
   public code: string;
   public teacherId: string;
@@ -14,6 +17,20 @@ export default class Lesson extends BaseEntity {
     this.endedAt = data.endedAt;
     this.studentId = data.studentId;
     this.teacherId = data.teacherId;
+  }
+
+  get durationTime() {
+    if (!this.endedAt || !this.startedAt) return 0;
+    return this.endedAt.getTime() - this.startedAt.getTime();
+  }
+
+  get durationInMinutes() {
+    if (!this.durationTime) return 0;
+    return Math.round(this.durationTime / MINUTE);
+  }
+
+  get finished() {
+    return !!this.endedAt;
   }
 
   private createCode() {
