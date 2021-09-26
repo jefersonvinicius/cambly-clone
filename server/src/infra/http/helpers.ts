@@ -1,5 +1,11 @@
 import { InvalidUserType } from '@app/core/entities/User';
-import { EmailAlreadyExists, ParamNotProvided, PasswordNotMatch, UserWithEmailNotExists } from '@app/core/errors';
+import {
+  EmailAlreadyExists,
+  LessonNotFound,
+  ParamNotProvided,
+  PasswordNotMatch,
+  UserWithEmailNotExists,
+} from '@app/core/errors';
 
 export function getStatusCodeOf(error: any) {
   console.log(`Getting status code of: ${error}`);
@@ -8,6 +14,7 @@ export function getStatusCodeOf(error: any) {
   if (error instanceof InvalidUserType) return StatusCode.BadRequest;
   if (error instanceof UserWithEmailNotExists) return StatusCode.NotFound;
   if (error instanceof PasswordNotMatch) return StatusCode.Unauthorized;
+  if (error instanceof LessonNotFound) return StatusCode.NotFound;
   return StatusCode.ServerError;
 }
 
