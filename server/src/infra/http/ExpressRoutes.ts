@@ -5,15 +5,19 @@ import { createFakeTeacher } from '@tests/helpers';
 import { FakeSocketServer } from '@tests/SocketServerFake';
 import { Request, Response } from 'express';
 import { Database } from '../database';
+import { RepositoriesFactory } from '../repositories/RepositoriesFactory';
 import { TypeORMTeacherRepository } from '../repositories/TypeORMTeacherRepository';
 import { TypeORMUserRepository } from '../repositories/TypeORMUserRepository';
 import { LogInRoute } from './routes/LogInRoute';
 import { HttpRequest } from './routes/Route';
 import { SignUpRoute } from './routes/SignUpRoute';
 import { StudentViewOnlineTeachersRoute } from './routes/StudentViewTeachersOnlineRoute';
+import { SocketServer } from '../web-sockets';
 
 export class ExpressRoutes {
-  static async singUp(request: Request, response: Response) {
+  constructor(private socketServer: SocketServer) {}
+
+  async singUp(request: Request, response: Response) {
     const userRepository = await TypeORMUserRepository.create();
     const signupUseCase = new SignUp(userRepository);
     const signupRoute = new SignUpRoute(signupUseCase);
@@ -21,21 +25,17 @@ export class ExpressRoutes {
     return response.status(result.statusCode).json(result.body);
   }
 
-  static async logIn(request: Request, response: Response) {
-    const userRepository = await TypeORMUserRepository.create();
+  async logIn(request: Request, response: Response) {
+    const userRepository = await RepositoriesFactory.createUserRepository();
     const loginUseCase = new LogInUseCase(userRepository);
     const loginRoute = new LogInRoute(loginUseCase);
     const result = await loginRoute.handle(new HttpRequest(request.body));
     return response.status(result.statusCode).json(result.body);
   }
 
-  static async viewTeachersOnline(request: Request, response: Response) {
-    const teacher1 = await createFakeTeacher();
-    const teacher2 = await createFakeTeacher();
-    const socketServer = new FakeSocketServer([teacher1, teacher2]);
-    const connection = await Database.getInstance();
-    const teacherRepository = new TypeORMTeacherRepository(connection);
-    const studentViewOnlineTeachersUseCase = new StudentViewOnlineTeachersUseCase(socketServer, teacherRepository);
+  async viewTeachersOnline(request: Request, response: Response) {
+    const teacherRepository = await RepositoriesFactory.createTeacherRepository();
+    const studentViewOnlineTeachersUseCase = new StudentViewOnlineTeachersUseCase(this.socketServer, teacherRepository);
     const studentViewOnlineTeachersRoute = new StudentViewOnlineTeachersRoute(studentViewOnlineTeachersUseCase);
     const result = await studentViewOnlineTeachersRoute.handle({});
     return response.status(result.statusCode).json(result.body);

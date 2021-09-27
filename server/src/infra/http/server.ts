@@ -6,12 +6,14 @@ import { createIOServer } from '../web-sockets';
 
 const app = express();
 
-app.use(express.json());
-app.post('/signup', ExpressRoutes.singUp);
-app.post('/login', ExpressRoutes.logIn);
-app.get('/teachers/online', ExpressRoutes.viewTeachersOnline);
-
 export const httpServer = http.createServer(app);
+const socketServer = createIOServer(httpServer);
+const routes = new ExpressRoutes(socketServer);
+
+app.use(express.json());
+app.post('/signup', routes.singUp);
+app.post('/login', routes.logIn);
+app.get('/teachers/online', routes.viewTeachersOnline);
 
 export async function createHTTPServer() {
   const server = http.createServer(app);
