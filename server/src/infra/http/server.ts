@@ -1,8 +1,7 @@
 import express from 'express';
-import { ExpressRoutes } from './ExpressRoutes';
 import http from 'http';
-import { createIOClient } from '@tests/helpers';
 import { createIOServer } from '../web-sockets';
+import { ExpressRoutes } from './ExpressRoutes';
 
 const app = express();
 
