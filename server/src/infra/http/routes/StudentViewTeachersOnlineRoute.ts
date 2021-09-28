@@ -14,7 +14,7 @@ export class StudentViewOnlineTeachersRoute implements Route {
         statusCode: StatusCode.Ok,
         body: { teachers: teachersViewModel },
       };
-    } catch (error) {
+    } catch (error: any) {
       return {
         statusCode: getStatusCodeOf(error),
         body: { message: error.message },

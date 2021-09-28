@@ -1,5 +1,5 @@
 import LogInUseCase from '@app/core/use-cases/LogIn';
-import SignUp from '@app/core/use-cases/SignUp';
+import SignUpUseCase from '@app/core/use-cases/SignUp';
 import { StudentViewOnlineTeachersUseCase } from '@app/core/use-cases/StudentViewOnlineTeachers';
 import { Request, Response } from 'express';
 import { RepositoriesFactory } from '../repositories/RepositoriesFactory';
@@ -15,7 +15,7 @@ export class ExpressRoutes {
 
   async singUp(request: Request, response: Response) {
     const userRepository = await TypeORMUserRepository.create();
-    const signupUseCase = new SignUp(userRepository);
+    const signupUseCase = new SignUpUseCase(userRepository);
     const signupRoute = new SignUpRoute(signupUseCase);
     const result = await signupRoute.handle(new HttpRequest(request.body));
     return response.status(result.statusCode).json(result.body);
@@ -29,11 +29,11 @@ export class ExpressRoutes {
     return response.status(result.statusCode).json(result.body);
   }
 
-  viewTeachersOnline = async (request: Request, response: Response) => {
+  async viewTeachersOnline(request: Request, response: Response) {
     const teacherRepository = await RepositoriesFactory.createTeacherRepository();
     const studentViewOnlineTeachersUseCase = new StudentViewOnlineTeachersUseCase(this.socketServer, teacherRepository);
     const studentViewOnlineTeachersRoute = new StudentViewOnlineTeachersRoute(studentViewOnlineTeachersUseCase);
     const result = await studentViewOnlineTeachersRoute.handle({});
     return response.status(result.statusCode).json(result.body);
-  };
+  }
 }

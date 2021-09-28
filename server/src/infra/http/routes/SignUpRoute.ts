@@ -1,9 +1,9 @@
-import SignUp, { SignUpPayload } from '@app/core/use-cases/SignUp';
+import SignUpUseCase, { SignUpPayload } from '@app/core/use-cases/SignUp';
 import { getStatusCodeOf, StatusCode } from '../helpers';
 import { HttpRequest, HttpResponse, Route } from './Route';
 
 export class SignUpRoute implements Route {
-  constructor(private signUpUseCase: SignUp) {}
+  constructor(private signUpUseCase: SignUpUseCase) {}
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse<any>> {
     try {
@@ -16,7 +16,7 @@ export class SignUpRoute implements Route {
 
       await this.signUpUseCase.perform(payload);
       return { statusCode: StatusCode.Ok };
-    } catch (error) {
+    } catch (error: any) {
       return {
         statusCode: getStatusCodeOf(error),
         body: { message: error.message },

@@ -2,7 +2,7 @@ import { createFakeUser } from '@tests/helpers';
 import { UserRepositoryInMemory } from '@tests/UserRepositoryInMemory';
 import { InvalidUserType, UserTypes } from '../entities/User';
 import { EmailAlreadyExists, ParamNotProvided } from '../errors';
-import SignUp, { SignUpPayload } from './SignUp';
+import SignUpUseCase, { SignUpPayload } from './SignUp';
 
 describe('SignUp use case suite tests', () => {
   it('Should be able sing up successfully', async () => {
@@ -95,6 +95,6 @@ describe('SignUp use case suite tests', () => {
 
 function createSignupUseCase() {
   const userRepositoryInMemory = new UserRepositoryInMemory();
-  const sut = new SignUp(userRepositoryInMemory);
+  const sut = new SignUpUseCase(userRepositoryInMemory);
   return { sut, userRepositoryInMemory };
 }

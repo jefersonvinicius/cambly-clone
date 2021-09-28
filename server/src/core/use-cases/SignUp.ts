@@ -4,7 +4,7 @@ import User, { UserTypes } from '../entities/User';
 import { EmailAlreadyExists, ParamNotProvided } from '../errors';
 import { UserRepository } from '../repositories/UserRepository';
 
-export default class SignUp implements UseCase<SignUpPayload, void> {
+export default class SignUpUseCase implements UseCase<SignUpPayload, void> {
   constructor(private usersRepository: UserRepository) {}
 
   async perform(params: SignUpPayload): Promise<void> {

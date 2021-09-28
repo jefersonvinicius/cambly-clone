@@ -12,7 +12,7 @@ const routes = new ExpressRoutes(socketServer);
 app.use(express.json());
 app.post('/signup', routes.singUp);
 app.post('/login', routes.logIn);
-app.get('/teachers/online', routes.viewTeachersOnline);
+app.get('/teachers/online', routes.viewTeachersOnline.bind(routes));
 
 export async function createHTTPServer() {
   const server = http.createServer(app);
