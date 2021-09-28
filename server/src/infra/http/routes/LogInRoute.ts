@@ -14,7 +14,7 @@ export class LogInRoute implements Route {
 
       const jwt = await this.logInUseCase.perform(payload);
       return { statusCode: StatusCode.Ok, body: jwt };
-    } catch (error) {
+    } catch (error: any) {
       return {
         statusCode: getStatusCodeOf(error),
         body: { message: error.message },
