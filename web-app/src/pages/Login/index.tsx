@@ -1,4 +1,5 @@
-import React from 'react';
+import React from "react";
+import Input from "../../components/Input";
 import {
   Container,
   Illustration,
@@ -8,7 +9,7 @@ import {
   RightSide,
   RightSideContent,
   RightSideTitle,
-} from './styles';
+} from "./styles";
 
 export default function Login() {
   return (
@@ -21,6 +22,12 @@ export default function Login() {
           <RightSideTitle>Welcome back to Cambly</RightSideTitle>
           <LoginForm>
             <LoginFormTitle>Log in with your email:</LoginFormTitle>
+            <Input type="email" label="Email" data-testid="email-input" />
+            <Input
+              type="password"
+              label="Password"
+              data-testid="password-input"
+            />
           </LoginForm>
         </RightSideContent>
       </RightSide>

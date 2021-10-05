@@ -1,6 +1,9 @@
 import styled from 'styled-components';
 
-export const Container = styled.div``;
+export const Container = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
 
 export const LoginForm = styled.form``;
 
@@ -8,10 +11,19 @@ export const LoginFormTitle = styled.h3``;
 
 export const LeftSide = styled.section``;
 
-export const RightSide = styled.section``;
+export const RightSide = styled.section`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
-export const Illustration = styled.img``;
+export const Illustration = styled.img`
+  height: 100vh;
+`;
 
-export const RightSideContent = styled.main``;
+export const RightSideContent = styled.main`
+  width: 80%;
+`;
 
 export const RightSideTitle = styled.h3``;
