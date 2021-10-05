@@ -1,5 +1,5 @@
-import React, { InputHTMLAttributes, ReactNode } from 'react';
-import { Container } from './styles';
+import React, { InputHTMLAttributes, ReactNode } from "react";
+import { Container } from "./styles";
 
 export type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   label?: string;
