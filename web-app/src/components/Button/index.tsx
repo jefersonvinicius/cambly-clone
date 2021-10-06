@@ -1,15 +1,19 @@
 import { Colors } from "config/theme";
 import React, { ButtonHTMLAttributes } from "react";
+import { Container, Label } from "./styles";
 
-type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
+export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   color?: string;
 };
 
-export default function Button({ color = Colors.Primary, ...props }: Props) {
+export default function Button({
+  color = Colors.Primary,
+  ...props
+}: ButtonProps) {
   return (
-    <button {...props} style={{ backgroundColor: color, ...props.style }}>
-      {typeof props.children === "string" && <span>{props.children}</span>}
+    <Container {...props} style={{ backgroundColor: color, ...props.style }}>
+      {typeof props.children === "string" && <Label>{props.children}</Label>}
       {typeof props.children === "object" && props.children}
-    </button>
+    </Container>
   );
 }
