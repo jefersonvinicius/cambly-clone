@@ -1,11 +1,22 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const Container = styled.div`
   display: flex;
   flex-direction: row;
 `;
 
-export const LoginForm = styled.form``;
+export const LoginForm = styled.form`
+  display: flex;
+  flex-direction: column;
+
+  & > *:not(:last-child) {
+    margin-top: 5px;
+  }
+
+  & > *:last-child {
+    margin-top: 10px;
+  }
+`;
 
 export const LoginFormTitle = styled.h3``;
 
