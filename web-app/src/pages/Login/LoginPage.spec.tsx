@@ -1,4 +1,6 @@
 import { act, render, fireEvent } from "@testing-library/react";
+import { APIEndpoints } from "services/api";
+import { createAxiosErrorWith } from "utils/tests";
 import Login from ".";
 
 describe("LoginPage", () => {
@@ -8,8 +10,14 @@ describe("LoginPage", () => {
     expect(getByTestId("password-input")).toBeInTheDocument();
   });
 
-  it("should show message when account is not found", () => {
-    const { getByTestId, getByText } = render(<Login />);
+  it("should show message when account is not found", async () => {
+    jest.spyOn(APIEndpoints, "logIn").mockRejectedValue(
+      createAxiosErrorWith({
+        statusCode: 404,
+      })
+    );
+
+    const { getByTestId, findByTestId } = render(<Login />);
 
     const loginForm = getByTestId("login-form");
     const emailInput = getByTestId("email-input");
@@ -23,8 +31,8 @@ describe("LoginPage", () => {
       fireEvent.submit(loginForm);
     });
 
-    expect(
-      getByText("Nenhuma conta associada ao email informado!")
-    ).toBeInTheDocument();
+    const messageElement = await findByTestId("not-found-message");
+
+    expect(messageElement).toBeInTheDocument();
   });
 });

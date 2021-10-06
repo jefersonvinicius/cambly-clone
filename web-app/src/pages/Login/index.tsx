@@ -1,5 +1,6 @@
 import Button from "components/Button";
-import React, { FormEvent, FormHTMLAttributes } from "react";
+import React, { FormEvent, useState } from "react";
+import { APIEndpoints, LogInData } from "services/api";
 import Input from "../../components/Input";
 import {
   Container,
@@ -13,9 +14,19 @@ import {
 } from "./styles";
 
 export default function Login() {
-  function handleSubmit(event: FormEvent) {
+  const [wasNotFound, setWasNotFound] = useState(false);
+
+  async function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    new FormData(event.target as HTMLFormElement);
+    const formData = new FormData(event.target as HTMLFormElement);
+
+    const data = Object.fromEntries(formData.entries()) as LogInData;
+
+    try {
+      await APIEndpoints.logIn(data);
+    } catch (error: any) {
+      if (error.response?.status === 404) setWasNotFound(true);
+    }
   }
 
   return (
@@ -41,7 +52,11 @@ export default function Login() {
               data-testid="password-input"
             />
             <Button>Log In</Button>
-            <span>Nenhuma conta associada ao email informado!</span>
+            {wasNotFound && (
+              <span data-testid="not-found-message">
+                Nenhuma conta associada ao email informado!
+              </span>
+            )}
           </LoginForm>
         </RightSideContent>
       </RightSide>
