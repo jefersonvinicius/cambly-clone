@@ -21,10 +21,12 @@ export default function Login() {
     event.preventDefault();
     const formData = new FormData(event.target as HTMLFormElement);
 
-    const data = Object.fromEntries(formData.entries()) as LogInData;
+    const loginPayload = Object.fromEntries(formData.entries()) as LogInData;
 
     try {
-      await APIEndpoints.logIn(data);
+      const { data } = await APIEndpoints.logIn(loginPayload);
+      console.log(data);
+      localStorage.setItem("@token", data.accessToken);
     } catch (error: any) {
       if (error.response?.status === 404) setWasNotFound(true);
       if (error.response?.status === 401) setPasswordIsWrong(true);
@@ -61,7 +63,7 @@ export default function Login() {
             )}
             {passwordIsWrong && (
               <span data-testid="wrong-password-message">
-                Nenhuma conta associada ao email informado!
+                Credenciais incorretas!
               </span>
             )}
           </LoginForm>

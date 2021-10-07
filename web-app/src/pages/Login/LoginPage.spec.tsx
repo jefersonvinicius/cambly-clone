@@ -1,6 +1,10 @@
 import { act, render, fireEvent } from "@testing-library/react";
 import { APIEndpoints } from "services/api";
-import { createAxiosErrorWith } from "utils/tests";
+import {
+  createAxiosErrorWith,
+  createAxiosResponseWith,
+  sleep,
+} from "utils/tests";
 import Login from ".";
 
 describe("LoginPage", () => {
@@ -11,8 +15,9 @@ describe("LoginPage", () => {
   });
 
   it("should show message when account is not found", async () => {
-    const notFoundError = createAxiosErrorWith({ statusCode: 404 });
-    jest.spyOn(APIEndpoints, "logIn").mockRejectedValue(notFoundError);
+    jest
+      .spyOn(APIEndpoints, "logIn")
+      .mockRejectedValue(createAxiosErrorWith({ statusCode: 404 }));
 
     const { getByTestId, findByTestId } = render(<Login />);
 
@@ -34,8 +39,9 @@ describe("LoginPage", () => {
   });
 
   it("should show message when password is wrong", async () => {
-    const notFoundError = createAxiosErrorWith({ statusCode: 401 });
-    jest.spyOn(APIEndpoints, "logIn").mockRejectedValue(notFoundError);
+    jest
+      .spyOn(APIEndpoints, "logIn")
+      .mockRejectedValue(createAxiosErrorWith({ statusCode: 401 }));
 
     const { getByTestId, findByTestId } = render(<Login />);
 
@@ -54,5 +60,31 @@ describe("LoginPage", () => {
     const messageElement = await findByTestId("wrong-password-message");
 
     expect(messageElement).toBeInTheDocument();
+  });
+
+  it("should save access token when log in successfully", async () => {
+    jest
+      .spyOn(APIEndpoints, "logIn")
+      .mockResolvedValue(
+        createAxiosResponseWith({ data: { accessToken: "any" } })
+      );
+
+    const { getByTestId } = render(<Login />);
+
+    const loginForm = getByTestId("login-form");
+    const emailInput = getByTestId("email-input");
+    const passwordInput = getByTestId("password-input");
+
+    act(() => {
+      fireEvent.change(emailInput, {
+        target: { value: "valid@gmail.com" },
+      });
+      fireEvent.change(passwordInput, { target: { value: "any" } });
+      fireEvent.submit(loginForm);
+    });
+
+    await act(() => sleep(300));
+
+    expect(localStorage.getItem("@token")).toBe("any");
   });
 });
