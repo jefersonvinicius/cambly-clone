@@ -15,6 +15,7 @@ import {
 
 export default function Login() {
   const [wasNotFound, setWasNotFound] = useState(false);
+  const [passwordIsWrong, setPasswordIsWrong] = useState(false);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -26,6 +27,7 @@ export default function Login() {
       await APIEndpoints.logIn(data);
     } catch (error: any) {
       if (error.response?.status === 404) setWasNotFound(true);
+      if (error.response?.status === 401) setPasswordIsWrong(true);
     }
   }
 
@@ -54,6 +56,11 @@ export default function Login() {
             <Button>Log In</Button>
             {wasNotFound && (
               <span data-testid="not-found-message">
+                Nenhuma conta associada ao email informado!
+              </span>
+            )}
+            {passwordIsWrong && (
+              <span data-testid="wrong-password-message">
                 Nenhuma conta associada ao email informado!
               </span>
             )}

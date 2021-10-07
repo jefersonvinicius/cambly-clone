@@ -11,11 +11,8 @@ describe("LoginPage", () => {
   });
 
   it("should show message when account is not found", async () => {
-    jest.spyOn(APIEndpoints, "logIn").mockRejectedValue(
-      createAxiosErrorWith({
-        statusCode: 404,
-      })
-    );
+    const notFoundError = createAxiosErrorWith({ statusCode: 404 });
+    jest.spyOn(APIEndpoints, "logIn").mockRejectedValue(notFoundError);
 
     const { getByTestId, findByTestId } = render(<Login />);
 
@@ -32,6 +29,29 @@ describe("LoginPage", () => {
     });
 
     const messageElement = await findByTestId("not-found-message");
+
+    expect(messageElement).toBeInTheDocument();
+  });
+
+  it("should show message when password is wrong", async () => {
+    const notFoundError = createAxiosErrorWith({ statusCode: 401 });
+    jest.spyOn(APIEndpoints, "logIn").mockRejectedValue(notFoundError);
+
+    const { getByTestId, findByTestId } = render(<Login />);
+
+    const loginForm = getByTestId("login-form");
+    const emailInput = getByTestId("email-input");
+    const passwordInput = getByTestId("password-input");
+
+    act(() => {
+      fireEvent.change(emailInput, {
+        target: { value: "valid@gmail.com" },
+      });
+      fireEvent.change(passwordInput, { target: { value: "wrong" } });
+      fireEvent.submit(loginForm);
+    });
+
+    const messageElement = await findByTestId("wrong-password-message");
 
     expect(messageElement).toBeInTheDocument();
   });
