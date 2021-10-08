@@ -27,3 +27,7 @@ export type LogInPayload = {
   email: string;
   password: string;
 };
+
+export type AccessTokenData = {
+  userId: string;
+};

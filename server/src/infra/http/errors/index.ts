@@ -5,3 +5,11 @@ export class AccessTokenInvalid extends Error {
     Object.setPrototypeOf(this, AccessTokenInvalid.prototype);
   }
 }
+
+export class AccessTokenNotProvided extends Error {
+  constructor() {
+    super(`Access token not provided`);
+    this.name = 'AccessTokenNotProvided';
+    Object.setPrototypeOf(this, AccessTokenNotProvided.prototype);
+  }
+}
