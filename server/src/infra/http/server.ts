@@ -1,5 +1,6 @@
 import express from 'express';
 import http from 'http';
+import cors from 'cors';
 import { createIOServer } from '../web-sockets';
 import { ExpressRoutes } from './ExpressRoutes';
 
@@ -9,6 +10,7 @@ export const httpServer = http.createServer(app);
 const socketServer = createIOServer(httpServer);
 const routes = new ExpressRoutes(socketServer);
 
+app.use(cors());
 app.use(express.json());
 app.post('/signup', routes.singUp);
 app.post('/login', routes.logIn);
