@@ -6,8 +6,18 @@ import {
   sleep,
 } from "utils/tests";
 import Login from ".";
+import Main from "pages/Main";
+import { MemoryRouter, Route, Switch } from "react-router-dom";
 
 describe("LoginPage", () => {
+  beforeEach(() => {
+    jest
+      .spyOn(APIEndpoints, "logIn")
+      .mockResolvedValue(
+        createAxiosResponseWith({ data: { accessToken: "any" } })
+      );
+  });
+
   it("should render email and password inputs", () => {
     const { getByTestId } = render(<Login />);
     expect(getByTestId("email-input")).toBeInTheDocument();
@@ -63,12 +73,6 @@ describe("LoginPage", () => {
   });
 
   it("should save access token when log in successfully", async () => {
-    jest
-      .spyOn(APIEndpoints, "logIn")
-      .mockResolvedValue(
-        createAxiosResponseWith({ data: { accessToken: "any" } })
-      );
-
     const { getByTestId } = render(<Login />);
 
     const loginForm = getByTestId("login-form");
@@ -87,4 +91,39 @@ describe("LoginPage", () => {
 
     expect(localStorage.getItem("@token")).toBe("any");
   });
+
+  it("should navigate to student main page", async () => {
+    const { getByTestId } = render(<LoginWithRouter />);
+
+    const loginForm = getByTestId("login-form");
+    const emailInput = getByTestId("email-input");
+    const passwordInput = getByTestId("password-input");
+
+    act(() => {
+      fireEvent.change(emailInput, {
+        target: { value: "valid@gmail.com" },
+      });
+      fireEvent.change(passwordInput, { target: { value: "any" } });
+      fireEvent.submit(loginForm);
+    });
+
+    await act(() => sleep(300));
+
+    expect(getByTestId("main-page")).toBeInTheDocument();
+  });
 });
+
+function LoginWithRouter() {
+  return (
+    <MemoryRouter>
+      <Switch>
+        <Route exact path="/">
+          <Login />
+        </Route>
+        <Route path="/student">
+          <Main />
+        </Route>
+      </Switch>
+    </MemoryRouter>
+  );
+}

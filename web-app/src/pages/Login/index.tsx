@@ -1,5 +1,6 @@
 import Button from "components/Button";
 import React, { FormEvent, useState } from "react";
+import { useHistory } from "react-router";
 import { APIEndpoints, LogInData } from "services/api";
 import Input from "../../components/Input";
 import {
@@ -14,6 +15,8 @@ import {
 } from "./styles";
 
 export default function Login() {
+  const history = useHistory();
+
   const [wasNotFound, setWasNotFound] = useState(false);
   const [passwordIsWrong, setPasswordIsWrong] = useState(false);
 
@@ -24,9 +27,12 @@ export default function Login() {
     const loginPayload = Object.fromEntries(formData.entries()) as LogInData;
 
     try {
+      setWasNotFound(false);
+      setPasswordIsWrong(false);
       const { data } = await APIEndpoints.logIn(loginPayload);
       console.log(data);
       localStorage.setItem("@token", data.accessToken);
+      history.push("/student");
     } catch (error: any) {
       if (error.response?.status === 404) setWasNotFound(true);
       if (error.response?.status === 401) setPasswordIsWrong(true);
