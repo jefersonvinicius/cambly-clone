@@ -13,16 +13,23 @@ import { HttpRequest } from '../routes/Route';
 
 export class CheckAccessTokenMiddleware implements Middleware<AccessTokenData> {
   async handle(request: HttpRequest<any>): Promise<AccessTokenData> {
-    const token = tokenOfHeader();
+    const decoded = JWT.decode<any>(tokenOfHeader());
+    validateToken();
+
+    return decoded;
 
     function tokenOfHeader() {
       const header = request.headers?.['Authorization'] ? String(request.headers?.['Authorization']) : null;
       if (!header) throw new AccessTokenNotProvided();
 
       const spacePos = header.indexOf(' ');
-      if (spacePos === -1) throw new AccessTokenNotProvided();
+      if (!header.startsWith('Bearer') || spacePos === -1) throw new AccessTokenNotProvided();
 
-      // return header.substring(spacePos).trim();
+      return header.substring(spacePos).trim();
+    }
+
+    function validateToken() {
+      if (!decoded?.userId) throw new AccessTokenInvalid();
     }
   }
 }
