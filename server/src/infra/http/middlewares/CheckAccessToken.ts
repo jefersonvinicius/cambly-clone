@@ -19,13 +19,12 @@ export class CheckAccessTokenMiddleware implements Middleware<AccessTokenData> {
     return decoded;
 
     function tokenOfHeader() {
-      const header = request.headers?.['Authorization'] ? String(request.headers?.['Authorization']) : null;
-      if (!header) throw new AccessTokenNotProvided();
+      const header = String(request.headers?.['Authorization']);
 
-      const spacePos = header.indexOf(' ');
-      if (!header.startsWith('Bearer') || spacePos === -1) throw new AccessTokenNotProvided();
+      const spaceIdx = header.indexOf(' ');
+      if (!header.startsWith('Bearer') || spaceIdx === -1) throw new AccessTokenNotProvided();
 
-      return header.substring(spacePos).trim();
+      return header.substring(spaceIdx).trim();
     }
 
     function validateToken() {
