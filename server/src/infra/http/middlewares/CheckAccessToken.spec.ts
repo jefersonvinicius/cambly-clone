@@ -1,6 +1,6 @@
 import { JWT } from '@app/shared/JWT';
 import { AccessTokenInvalid, AccessTokenNotProvided } from '../errors';
-import { HttpRequest } from '../routes/Route';
+import { HttpRequest } from '../HttpRequest';
 import { CheckAccessTokenMiddleware } from './CheckAccessToken';
 
 describe('CheckAccessToken', () => {

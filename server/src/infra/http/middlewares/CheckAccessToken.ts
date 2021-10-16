@@ -2,7 +2,7 @@ import { AccessTokenData } from '@app/core/use-cases/LogIn';
 import { JWT } from '@app/shared/JWT';
 import { Middleware } from '.';
 import { AccessTokenInvalid, AccessTokenNotProvided } from '../errors';
-import { HttpRequest } from '../routes/Route';
+import { HttpRequest } from '../HttpRequest';
 
 // export function checkAccessToken(token: string): { accessToken: string } {
 //   const decoded = JWT.decode<any>(token);

@@ -5,8 +5,8 @@ import { Request, Response } from 'express';
 import { RepositoriesFactory } from '../repositories/RepositoriesFactory';
 import { TypeORMUserRepository } from '../repositories/TypeORMUserRepository';
 import { SocketServer } from '../web-sockets';
+import { HttpRequest } from './HttpRequest';
 import { LogInRoute } from './routes/LogInRoute';
-import { HttpRequest } from './routes/Route';
 import { SignUpRoute } from './routes/SignUpRoute';
 import { StudentViewOnlineTeachersRoute } from './routes/StudentViewTeachersOnlineRoute';
 
