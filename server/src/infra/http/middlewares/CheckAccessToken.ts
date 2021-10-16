@@ -19,7 +19,8 @@ export class CheckAccessTokenMiddleware implements Middleware<AccessTokenData> {
     return decoded;
 
     function tokenOfHeader() {
-      const header = String(request.headers?.['Authorization']);
+      console.log(request.headers);
+      const header = String(request.headers?.['authorization']);
 
       const spaceIdx = header.indexOf(' ');
       if (!header.startsWith('Bearer') || spaceIdx === -1) throw new AccessTokenNotProvided();

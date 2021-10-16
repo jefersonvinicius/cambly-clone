@@ -1,6 +1,7 @@
 import SignUpUseCase, { SignUpPayload } from '@app/core/use-cases/SignUp';
 import { getStatusCodeOf, StatusCode } from '../helpers';
-import { HttpRequest, HttpResponse, Route } from './Route';
+import { HttpRequest } from '../HttpRequest';
+import { HttpResponse, Route } from './Route';
 
 export class SignUpRoute implements Route {
   constructor(private signUpUseCase: SignUpUseCase) {}

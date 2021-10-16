@@ -13,12 +13,13 @@ const routes = new ExpressRoutes(socketServer);
 
 const requiredAuthRoutes = Router();
 requiredAuthRoutes.use(ExpressMiddlewares.checkUserJWT);
+requiredAuthRoutes.get('/teachers/online', routes.viewTeachersOnline.bind(routes));
 
 app.use(cors());
 app.use(express.json());
 app.post('/signup', routes.singUp);
 app.post('/login', routes.logIn);
-requiredAuthRoutes.get('/teachers/online', routes.viewTeachersOnline.bind(routes));
+app.use(requiredAuthRoutes);
 
 export async function createHTTPServer() {
   const server = http.createServer(app);

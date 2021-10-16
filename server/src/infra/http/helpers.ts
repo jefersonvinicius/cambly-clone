@@ -6,6 +6,7 @@ import {
   PasswordNotMatch,
   UserWithEmailNotExists,
 } from '@app/core/errors';
+import { AccessTokenNotProvided } from './errors';
 
 export function getStatusCodeOf(error: any) {
   console.log(`Getting status code of: ${error}`);
@@ -15,6 +16,7 @@ export function getStatusCodeOf(error: any) {
   if (error instanceof UserWithEmailNotExists) return StatusCode.NotFound;
   if (error instanceof PasswordNotMatch) return StatusCode.Unauthorized;
   if (error instanceof LessonNotFound) return StatusCode.NotFound;
+  if (error instanceof AccessTokenNotProvided) return StatusCode.BadRequest;
   return StatusCode.ServerError;
 }
 

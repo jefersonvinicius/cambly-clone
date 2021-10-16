@@ -17,7 +17,7 @@ describe('CheckAccessToken', () => {
     const sut = new CheckAccessTokenMiddleware();
     const request = new HttpRequest({
       headers: {
-        Authorization: 'invalid_token',
+        authorization: 'invalid_token',
       },
     });
     const promise = sut.handle(request);
@@ -28,7 +28,7 @@ describe('CheckAccessToken', () => {
     const sut = new CheckAccessTokenMiddleware();
     const request = new HttpRequest({
       headers: {
-        Authorization: `Bearer ${JWT.create({ invalid: 'any' })}`,
+        authorization: `Bearer ${JWT.create({ invalid: 'any' })}`,
       },
     });
     const promise = sut.handle(request);
@@ -39,7 +39,7 @@ describe('CheckAccessToken', () => {
     const sut = new CheckAccessTokenMiddleware();
     const request = new HttpRequest({
       headers: {
-        Authorization: `Bearer ${JWT.create({ userId: 'any' })}`,
+        authorization: `Bearer ${JWT.create({ userId: 'any' })}`,
       },
     });
     const data = await sut.handle(request);

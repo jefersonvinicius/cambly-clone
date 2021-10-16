@@ -17,7 +17,7 @@ export class ExpressRoutes {
     const userRepository = await TypeORMUserRepository.create();
     const signupUseCase = new SignUpUseCase(userRepository);
     const signupRoute = new SignUpRoute(signupUseCase);
-    const result = await signupRoute.handle(new HttpRequest(request.body));
+    const result = await signupRoute.handle(HttpRequest.ofExpress(request));
     return response.status(result.statusCode).json(result.body);
   }
 
@@ -25,7 +25,7 @@ export class ExpressRoutes {
     const userRepository = await RepositoriesFactory.createUserRepository();
     const loginUseCase = new LogInUseCase(userRepository);
     const loginRoute = new LogInRoute(loginUseCase);
-    const result = await loginRoute.handle(new HttpRequest(request.body));
+    const result = await loginRoute.handle(HttpRequest.ofExpress(request));
     return response.status(result.statusCode).json(result.body);
   }
 
