@@ -1,8 +1,9 @@
-import express from 'express';
+import express, { Router } from 'express';
 import http from 'http';
 import cors from 'cors';
 import { createIOServer } from '../web-sockets';
 import { ExpressRoutes } from './ExpressRoutes';
+import { ExpressMiddlewares } from './middlewares/ExpressMiddlewares';
 
 const app = express();
 
@@ -10,11 +11,14 @@ export const httpServer = http.createServer(app);
 const socketServer = createIOServer(httpServer);
 const routes = new ExpressRoutes(socketServer);
 
+const requiredAuthRoutes = Router();
+requiredAuthRoutes.use(ExpressMiddlewares.checkUserJWT);
+
 app.use(cors());
 app.use(express.json());
 app.post('/signup', routes.singUp);
 app.post('/login', routes.logIn);
-app.get('/teachers/online', routes.viewTeachersOnline.bind(routes));
+requiredAuthRoutes.get('/teachers/online', routes.viewTeachersOnline.bind(routes));
 
 export async function createHTTPServer() {
   const server = http.createServer(app);

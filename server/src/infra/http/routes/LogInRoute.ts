@@ -1,6 +1,7 @@
 import LogInUseCase, { LogInPayload } from '@app/core/use-cases/LogIn';
 import { getStatusCodeOf, StatusCode } from '../helpers';
-import { HttpRequest, HttpResponse, Route } from './Route';
+import { HttpRequest } from '../HttpRequest';
+import { HttpResponse, Route } from './Route';
 
 export class LogInRoute implements Route {
   constructor(private logInUseCase: LogInUseCase) {}
