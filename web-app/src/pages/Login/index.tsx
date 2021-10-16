@@ -1,6 +1,7 @@
 import Button from "components/Button";
 import React, { FormEvent, useState } from "react";
 import { useHistory } from "react-router";
+import { RoutesPath } from "routes";
 import { APIEndpoints, LogInData } from "services/api";
 import Input from "../../components/Input";
 import {
@@ -22,9 +23,11 @@ export default function Login() {
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    const formData = new FormData(event.target as HTMLFormElement);
 
+    const formData = new FormData(event.target as HTMLFormElement);
     const loginPayload = Object.fromEntries(formData.entries()) as LogInData;
+
+    console.log(loginPayload);
 
     try {
       setWasNotFound(false);
@@ -32,7 +35,7 @@ export default function Login() {
       const { data } = await APIEndpoints.logIn(loginPayload);
       console.log(data);
       localStorage.setItem("@token", data.accessToken);
-      history.push("/student");
+      history.push(RoutesPath.StudentMain);
     } catch (error: any) {
       if (error.response?.status === 404) setWasNotFound(true);
       if (error.response?.status === 401) setPasswordIsWrong(true);
