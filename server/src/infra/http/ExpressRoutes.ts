@@ -30,7 +30,6 @@ export class ExpressRoutes {
   }
 
   async viewTeachersOnline(request: Request, response: Response) {
-    console.log(request);
     const teacherRepository = await RepositoriesFactory.createTeacherRepository();
     const studentViewOnlineTeachersUseCase = new StudentViewOnlineTeachersUseCase(this.socketServer, teacherRepository);
     const studentViewOnlineTeachersRoute = new StudentViewOnlineTeachersRoute(studentViewOnlineTeachersUseCase);
