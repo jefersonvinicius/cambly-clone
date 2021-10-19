@@ -18,9 +18,11 @@ describe('SignUp use case suite tests', () => {
       email: 'correct_email@gmail.com',
       password: '1a2b3c',
     };
-    const { accessToken } = await sut.perform(payload);
-    expect(accessToken).toEqual(expect.any(String));
-    expect(JWT.decode<UserJWT>(accessToken)?.userId).toBe(user.id);
+    const result = await sut.perform(payload);
+
+    expect(result.accessToken).toEqual(expect.any(String));
+    expect(result.user).toEqual(user);
+    expect(JWT.decode<UserJWT>(result.accessToken)?.userId).toBe(user.id);
   });
 
   it('Should not be able sing up when email not exists', async () => {

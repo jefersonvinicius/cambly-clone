@@ -1,6 +1,7 @@
 import { Hashing } from '@app/shared/Hashing';
 import { JWT } from '@app/shared/JWT';
 import { UseCase } from '.';
+import User from '../entities/User';
 import { PasswordNotMatch, UserWithEmailNotExists } from '../errors';
 import { UserRepository } from '../repositories/UserRepository';
 
@@ -15,12 +16,13 @@ export default class LogInUseCase implements UseCase<LogInPayload, Return> {
       throw new PasswordNotMatch();
     }
 
-    return { accessToken: JWT.create({ userId: user.id }) };
+    return { accessToken: JWT.create({ userId: user.id }), user };
   }
 }
 
 export type Return = {
   accessToken: string;
+  user: User;
 };
 
 export type LogInPayload = {
