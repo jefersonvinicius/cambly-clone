@@ -11,17 +11,13 @@ export const httpServer = http.createServer(app);
 const socketServer = createIOServer(httpServer);
 const routes = new ExpressRoutes(socketServer);
 
-const requiredAuthRoutes = Router();
-requiredAuthRoutes.use(ExpressMiddlewares.checkUserJWT);
-requiredAuthRoutes.get('/teachers/online', routes.viewTeachersOnline.bind(routes));
-
 app.use(cors());
 app.use(express.json());
 app.post('/signup', routes.singUp);
 app.post('/login', routes.logIn);
-app.use(requiredAuthRoutes);
+app.get('/teachers/online', ExpressMiddlewares.checkUserJWT, routes.viewTeachersOnline.bind(routes));
 
-export async function createHTTPServer() {
+export async function createHTTPServer(port = 3332) {
   const server = http.createServer(app);
   await start();
 
@@ -29,8 +25,8 @@ export async function createHTTPServer() {
 
   function start() {
     return new Promise<void>((resolve) => {
-      server.listen(3333, () => {
-        console.log('Serving on http://localhost:3333');
+      server.listen(port, () => {
+        console.log(`Serving on http://localhost:${port}`);
         resolve();
       });
     });
@@ -50,13 +46,4 @@ export async function createHTTPServer() {
       }, 1000);
     });
   }
-}
-
-export function startHttpServer() {
-  return new Promise<void>((resolve) => {
-    httpServer.listen(3333, () => {
-      console.log('Serving on http://localhost:3333');
-      resolve();
-    });
-  });
 }

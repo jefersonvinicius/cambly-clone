@@ -1,6 +1,6 @@
 import RequestLesson from '@app/core/entities/RequestLesson';
-import { ViewModel } from '.';
+import { EntityViewModel } from '.';
 
-export class RequestLessonViewModel extends ViewModel<RequestLesson> {
+export class RequestLessonViewModel extends EntityViewModel<RequestLesson> {
   hiddenFields = [];
 }

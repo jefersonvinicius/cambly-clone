@@ -1,6 +1,6 @@
 import BaseEntity from '@app/core/entities/Base';
 
-export class ViewModel<Entity = BaseEntity> {
+export class EntityViewModel<Entity = BaseEntity> {
   protected hiddenFields: string[] = [];
 
   constructor(private entity: Entity) {}

@@ -98,7 +98,7 @@ export function waitForCallbacks(amountCallbacks: number, process: ProcessFuncti
 
 export function createIOClient() {
   return new Promise<Socket>((resolve) => {
-    const client = io('http://localhost:3333');
+    const client = io('http://localhost:3332');
     client.on('connect', () => resolve(client));
   });
 }
