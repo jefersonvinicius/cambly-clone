@@ -14,7 +14,7 @@ export class LogInViewModel extends ViewModel<Data> {
 
   toJSON() {
     return {
-      accessToken: this.data.user,
+      accessToken: this.data.accessToken,
       user: new StudentViewModel(this.data.user),
     };
   }
