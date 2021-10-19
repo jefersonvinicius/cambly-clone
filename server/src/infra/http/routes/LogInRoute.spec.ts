@@ -2,6 +2,8 @@ import LogInUseCase from '@app/core/use-cases/LogIn';
 import { JWT } from '@app/shared/JWT';
 import { createFakeUser } from '@tests/helpers';
 import { UserRepositoryInMemory } from '@tests/UserRepositoryInMemory';
+import { LogInViewModel } from '../view-models/LogInViewModel';
+import { UserViewModel } from '../view-models/UserViewModel';
 import { LogInRoute } from './LogInRoute';
 
 describe('LogInRoute', () => {
@@ -22,17 +24,15 @@ describe('LogInRoute', () => {
   });
 
   it('should return access token when the user log in successfully', async () => {
+    jest.spyOn(JWT, 'create').mockReturnValue('any_token');
+
     const { sut, userRepository } = createSut();
     const user = await createFakeUser({ ...validPayloadSample() });
     await userRepository.insert(user);
 
     const result = await sut.handle({ body: validPayloadSample() });
 
-    expect(typeof result.body.accessToken).toBe('string');
-    const decoded = JWT.decode(result.body.accessToken);
-    expect(decoded).toMatchObject({
-      userId: user.id,
-    });
+    expect(result.body).toMatchObject(new LogInViewModel({ user, accessToken: 'any_token' }));
   });
 });
 

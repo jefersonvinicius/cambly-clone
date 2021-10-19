@@ -22,7 +22,9 @@ describe('SignUp use case suite tests', () => {
 
     expect(result.accessToken).toEqual(expect.any(String));
     expect(result.user).toEqual(user);
-    expect(JWT.decode<UserJWT>(result.accessToken)?.userId).toBe(user.id);
+
+    const accessTokenDecoded = JWT.decode<UserJWT>(result.accessToken);
+    expect(accessTokenDecoded).toMatchObject({ userId: user.id, iat: expect.any(Number) });
   });
 
   it('Should not be able sing up when email not exists', async () => {

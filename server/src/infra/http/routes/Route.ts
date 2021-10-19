@@ -6,5 +6,5 @@ export interface Route {
 
 export type HttpResponse<Body = any> = {
   statusCode: number;
-  body?: Body;
+  body?: Body | { message: string };
 };

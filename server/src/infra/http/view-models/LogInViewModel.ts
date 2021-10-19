@@ -1,5 +1,5 @@
 import User from '@app/core/entities/User';
-import { StudentViewModel } from './StudentViewModel';
+import { UserViewModel } from './UserViewModel';
 import { ViewModel } from './base/ViewModel';
 
 type Data = {
@@ -8,14 +8,19 @@ type Data = {
 };
 
 export class LogInViewModel extends ViewModel<Data> {
+  public accessToken: string;
+  public user: User;
+
   constructor(data: Data) {
     super(data);
+    this.accessToken = data.accessToken;
+    this.user = data.user;
   }
 
   toJSON() {
     return {
       accessToken: this.data.accessToken,
-      user: new StudentViewModel(this.data.user),
+      user: new UserViewModel(this.data.user),
     };
   }
 }
