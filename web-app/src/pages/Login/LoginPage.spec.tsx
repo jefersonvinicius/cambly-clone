@@ -12,10 +12,12 @@ import {
 import Login from ".";
 
 describe("LoginPage", () => {
+  const userMock = { name: "Jeferson" };
+
   beforeEach(() => {
     jest.spyOn(APIEndpoints, "logIn").mockResolvedValue(
       createAxiosResponseWith({
-        data: { accessToken: "any", user: { name: "Jeferson" } },
+        data: { accessToken: "any", user: userMock },
       })
     );
   });
@@ -98,7 +100,7 @@ describe("LoginPage", () => {
     expect(messageElement).toBeInTheDocument();
   });
 
-  it("should save access token when log in successfully", async () => {
+  it("should save access token and user data on sessionStorage after log in successfully", async () => {
     const { getByTestId } = createSut();
 
     const loginForm = getByTestId("login-form");
@@ -115,7 +117,8 @@ describe("LoginPage", () => {
 
     await act(() => sleep(300));
 
-    expect(localStorage.getItem("@token")).toBe("any");
+    expect(sessionStorage.getItem("@token")).toBe("any");
+    expect(JSON.parse(sessionStorage.getItem("@user") ?? "")).toEqual(userMock);
   });
 
   it("should navigate to student main page", async () => {

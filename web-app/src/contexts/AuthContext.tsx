@@ -16,7 +16,8 @@ export default function AuthContextProvider(props: Props) {
   const [user, setUser] = useState<User | null>(null);
 
   const logIn = useCallback((data: any) => {
-    localStorage.setItem("@token", data.accessToken);
+    sessionStorage.setItem("@token", data.accessToken);
+    sessionStorage.setItem("@user", JSON.stringify(data.user));
     setUser(new User(data.user));
   }, []);
 
