@@ -1,4 +1,8 @@
-import { act, render, fireEvent } from "@testing-library/react";
+import { act, fireEvent, render } from "@testing-library/react";
+import TestingRouter from "components/TestingRouter";
+import Main from "pages/Main";
+import { Route } from "react-router-dom";
+import { RoutesPath } from "routes";
 import { APIEndpoints } from "services/api";
 import {
   createAxiosErrorWith,
@@ -6,11 +10,6 @@ import {
   sleep,
 } from "utils/tests";
 import Login from ".";
-import Main from "pages/Main";
-import { Route, Switch, Router } from "react-router-dom";
-import { RoutesPath } from "routes";
-import { createMemoryHistory } from "history";
-import AuthContextProvider from "contexts/AuthContext";
 
 describe("LoginPage", () => {
   beforeEach(() => {
@@ -145,17 +144,9 @@ function createSut() {
 
 function LoginWithRouter() {
   return (
-    <AuthContextProvider>
-      <Router
-        history={createMemoryHistory({
-          initialEntries: [RoutesPath.StudentLogin],
-        })}
-      >
-        <Switch>
-          <Route exact path={RoutesPath.StudentLogin} component={Login} />
-          <Route exact path={RoutesPath.StudentMain} component={Main} />
-        </Switch>
-      </Router>
-    </AuthContextProvider>
+    <TestingRouter initialEntries={[RoutesPath.StudentLogin]}>
+      <Route exact path={RoutesPath.StudentLogin} component={Login} />
+      <Route exact path={RoutesPath.StudentMain} component={Main} />
+    </TestingRouter>
   );
 }

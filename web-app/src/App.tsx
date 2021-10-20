@@ -1,11 +1,11 @@
-import AuthContextProvider from "contexts/AuthContext";
+import ProvidersComposed from "components/ProvidersComposed";
 import React from "react";
 import Routes from "routes";
 
 export default function App() {
   return (
-    <AuthContextProvider>
+    <ProvidersComposed>
       <Routes />
-    </AuthContextProvider>
+    </ProvidersComposed>
   );
 }
