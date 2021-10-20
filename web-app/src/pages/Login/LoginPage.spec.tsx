@@ -7,19 +7,22 @@ import {
 } from "utils/tests";
 import Login from ".";
 import Main from "pages/Main";
-import { MemoryRouter, Route, Switch } from "react-router-dom";
+import { Route, Switch, Router } from "react-router-dom";
+import { RoutesPath } from "routes";
+import { createMemoryHistory } from "history";
+import AuthContextProvider from "contexts/AuthContext";
 
 describe("LoginPage", () => {
   beforeEach(() => {
-    jest
-      .spyOn(APIEndpoints, "logIn")
-      .mockResolvedValue(
-        createAxiosResponseWith({ data: { accessToken: "any" } })
-      );
+    jest.spyOn(APIEndpoints, "logIn").mockResolvedValue(
+      createAxiosResponseWith({
+        data: { accessToken: "any", user: { name: "Jeferson" } },
+      })
+    );
   });
 
   it("should render email and password inputs", () => {
-    const { getByTestId } = render(<Login />);
+    const { getByTestId } = createSut();
     expect(getByTestId("email-input")).toBeInTheDocument();
     expect(getByTestId("password-input")).toBeInTheDocument();
   });
@@ -29,7 +32,7 @@ describe("LoginPage", () => {
       .spyOn(APIEndpoints, "logIn")
       .mockRejectedValue(createAxiosErrorWith({ statusCode: 404 }));
 
-    const { getByTestId, findByTestId } = render(<Login />);
+    const { getByTestId, findByTestId } = createSut();
 
     const loginForm = getByTestId("login-form");
     const emailInput = getByTestId("email-input");
@@ -53,7 +56,7 @@ describe("LoginPage", () => {
       .spyOn(APIEndpoints, "logIn")
       .mockRejectedValue(createAxiosErrorWith({ statusCode: 401 }));
 
-    const { getByTestId, findByTestId } = render(<Login />);
+    const { getByTestId, findByTestId } = createSut();
 
     const loginForm = getByTestId("login-form");
     const emailInput = getByTestId("email-input");
@@ -73,7 +76,7 @@ describe("LoginPage", () => {
   });
 
   it("should save access token when log in successfully", async () => {
-    const { getByTestId } = render(<Login />);
+    const { getByTestId } = createSut();
 
     const loginForm = getByTestId("login-form");
     const emailInput = getByTestId("email-input");
@@ -93,7 +96,7 @@ describe("LoginPage", () => {
   });
 
   it("should navigate to student main page", async () => {
-    const { getByTestId } = render(<LoginWithRouter />);
+    const { getByTestId, getByText, findByTestId } = createSut();
 
     const loginForm = getByTestId("login-form");
     const emailInput = getByTestId("email-input");
@@ -107,23 +110,28 @@ describe("LoginPage", () => {
       fireEvent.submit(loginForm);
     });
 
-    await act(() => sleep(300));
-
-    expect(getByTestId("main-page")).toBeInTheDocument();
+    expect(await findByTestId("main-page")).toBeInTheDocument();
+    expect(getByText(/Welcome Jeferson/)).toBeInTheDocument();
   });
 });
 
+function createSut() {
+  return render(<LoginWithRouter />);
+}
+
 function LoginWithRouter() {
   return (
-    <MemoryRouter>
-      <Switch>
-        <Route exact path="/">
-          <Login />
-        </Route>
-        <Route path="/student">
-          <Main />
-        </Route>
-      </Switch>
-    </MemoryRouter>
+    <AuthContextProvider>
+      <Router
+        history={createMemoryHistory({
+          initialEntries: [RoutesPath.StudentLogin],
+        })}
+      >
+        <Switch>
+          <Route exact path={RoutesPath.StudentLogin} component={Login} />
+          <Route exact path={RoutesPath.StudentMain} component={Main} />
+        </Switch>
+      </Router>
+    </AuthContextProvider>
   );
 }

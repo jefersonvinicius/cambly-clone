@@ -37,3 +37,19 @@ export function sleep(ms: number) {
     setTimeout(() => resolve(), ms);
   });
 }
+
+type Data = {
+  pathname: string;
+  search: string;
+  hash: string;
+  state: null;
+};
+
+export function createRouterDomLocation(data: Partial<Data>) {
+  return {
+    pathname: data.pathname ?? "",
+    search: data.hash ?? "",
+    hash: data.hash ?? "",
+    state: data.state ?? null,
+  };
+}
