@@ -22,6 +22,7 @@ export default function Login() {
 
   const [wasNotFound, setWasNotFound] = useState(false);
   const [passwordIsWrong, setPasswordIsWrong] = useState(false);
+  const [unexpectedError, setUnexpectedError] = useState(false);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -32,14 +33,14 @@ export default function Login() {
     try {
       setWasNotFound(false);
       setPasswordIsWrong(false);
+      setUnexpectedError(false);
       const { data } = await APIEndpoints.logIn(loginPayload);
-      console.log(data);
       auth.logIn(data);
-      console.log(history);
       history.push(RoutesPath.StudentMain);
     } catch (error: any) {
       if (error.response?.status === 404) setWasNotFound(true);
-      if (error.response?.status === 401) setPasswordIsWrong(true);
+      else if (error.response?.status === 401) setPasswordIsWrong(true);
+      else setUnexpectedError(true);
     }
   }
 
@@ -74,6 +75,11 @@ export default function Login() {
             {passwordIsWrong && (
               <span data-testid="wrong-password-message">
                 Credenciais incorretas!
+              </span>
+            )}
+            {unexpectedError && (
+              <span data-testid="unexpected-message">
+                Ocorreu um erro inesperado. Tente novamente mais tarde!
               </span>
             )}
           </LoginForm>

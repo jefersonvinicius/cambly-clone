@@ -75,6 +75,30 @@ describe("LoginPage", () => {
     expect(messageElement).toBeInTheDocument();
   });
 
+  it("should show message when unexpected error is returned", async () => {
+    jest
+      .spyOn(APIEndpoints, "logIn")
+      .mockRejectedValue(createAxiosErrorWith({ statusCode: 500 }));
+
+    const { getByTestId, findByTestId } = createSut();
+
+    const loginForm = getByTestId("login-form");
+    const emailInput = getByTestId("email-input");
+    const passwordInput = getByTestId("password-input");
+
+    act(() => {
+      fireEvent.change(emailInput, {
+        target: { value: "valid@gmail.com" },
+      });
+      fireEvent.change(passwordInput, { target: { value: "wrong" } });
+      fireEvent.submit(loginForm);
+    });
+
+    const messageElement = await findByTestId("unexpected-message");
+
+    expect(messageElement).toBeInTheDocument();
+  });
+
   it("should save access token when log in successfully", async () => {
     const { getByTestId } = createSut();
 
