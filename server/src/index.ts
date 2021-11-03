@@ -1,9 +1,12 @@
 import { Database } from './infra/database';
-import { createHTTPServer } from './infra/http/server';
 
 async function bootstrap() {
   await Database.connect();
-  await createHTTPServer(3333);
+
+  const { httpServer } = await import('./infra/http/server');
+  httpServer.listen(3333, () => {
+    console.log('Serving on http://localhost:3333');
+  });
 }
 
 bootstrap();

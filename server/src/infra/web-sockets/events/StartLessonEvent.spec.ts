@@ -1,5 +1,5 @@
 import { StartLessonUseCase } from '@app/core/use-cases/StartLesson';
-import { createHTTPServer } from '@app/infra/http/server';
+import { createHTTPServer } from '@tests/helpers/http';
 import { createStudentClient, createTeacherClient, waitForCallbacks } from '@tests/helpers';
 import {
   connectStudentClient,

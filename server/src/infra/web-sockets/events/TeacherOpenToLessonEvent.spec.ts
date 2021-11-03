@@ -1,5 +1,5 @@
 import { TeacherOpenToLessonUseCase } from '@app/core/use-cases/TeacherOpenToLesson';
-import { createHTTPServer } from '@app/infra/http/server';
+import { createHTTPServer } from '@tests/helpers/http';
 import { createTeacherClient, waitForCallbacks } from '@tests/helpers';
 import { connectTeacherClient, setupTeacherConnectEvent } from '@tests/helpers/socket-events';
 import { TeacherRepositoryInMemory } from '@tests/TeacherRepositoryInMemory';

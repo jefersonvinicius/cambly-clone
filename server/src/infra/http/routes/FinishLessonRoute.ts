@@ -1,6 +1,7 @@
 import { FinishLessonUseCase } from '@app/core/use-cases/FinishLesson';
 import { getStatusCodeOf } from '../helpers';
-import { HttpRequest, HttpResponse, Route } from './Route';
+import { HttpRequest } from '../HttpRequest';
+import { HttpResponse, Route } from './Route';
 
 export class FinishLessonRoute implements Route {
   constructor(private finishLessonRouteUseCase: FinishLessonUseCase) {}

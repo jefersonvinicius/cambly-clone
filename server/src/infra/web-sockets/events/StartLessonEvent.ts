@@ -13,6 +13,7 @@ export class StartLessonEvent implements SocketEvent<Params> {
   createHandler(socket: Socket) {
     return async (params: Params, callback?: Function) => {
       await this.startLessonUseCase.perform(params);
+      callback?.();
     };
   }
 }

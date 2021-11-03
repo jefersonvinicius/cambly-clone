@@ -1,3 +1,4 @@
+import { getConnection } from 'typeorm';
 import { Database } from '../database';
 import { TypeORMLessonRepository } from './TypeORMLessonRepository';
 import { TypeORMStudentRepository } from './TypeORMStudentRepository';
@@ -9,12 +10,20 @@ export class RepositoriesFactory {
     return new TypeORMTeacherRepository(await Database.getInstance());
   }
 
+  static createTeacherRepositorySync() {
+    return new TypeORMTeacherRepository(getConnection());
+  }
+
   static async createStudentRepository() {
     return new TypeORMStudentRepository(await Database.getInstance());
   }
 
   static async createUserRepository() {
     return new TypeORMUserRepository(await Database.getInstance());
+  }
+
+  static createUserRepositorySync() {
+    return new TypeORMUserRepository(getConnection());
   }
 
   static async createLessonRepository() {

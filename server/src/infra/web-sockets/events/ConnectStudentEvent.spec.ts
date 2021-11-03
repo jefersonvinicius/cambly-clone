@@ -1,5 +1,5 @@
 import { StudentConnectUseCase } from '@app/core/use-cases/StudentConnect';
-import { createHTTPServer } from '@app/infra/http/server';
+import { createHTTPServer } from '@tests/helpers/http';
 import { createStudentClient, waitForCallbacks } from '@tests/helpers';
 import { connectStudentClient } from '@tests/helpers/socket-events';
 import { StudentRepositoryInMemory } from '@tests/StudentRepositoryInMemory';
