@@ -20,9 +20,7 @@ export default function Login() {
   const auth = useAuthContext();
   const history = useHistory();
 
-  const [wasNotFound, setWasNotFound] = useState(false);
-  const [passwordIsWrong, setPasswordIsWrong] = useState(false);
-  const [unexpectedError, setUnexpectedError] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -31,16 +29,16 @@ export default function Login() {
     const loginPayload = Object.fromEntries(formData.entries()) as LogInData;
 
     try {
-      setWasNotFound(false);
-      setPasswordIsWrong(false);
-      setUnexpectedError(false);
+      setError(null);
       const { data } = await APIEndpoints.logIn(loginPayload);
       auth.logIn(data);
       history.push(RoutesPath.StudentMain);
     } catch (error: any) {
-      if (error.response?.status === 404) setWasNotFound(true);
-      else if (error.response?.status === 401) setPasswordIsWrong(true);
-      else setUnexpectedError(true);
+      if (error.response?.status === 404)
+        setError("Nenhuma conta associada ao email informado!");
+      else if (error.response?.status === 401)
+        setError("Credenciais incorretas!");
+      else setError("Ocorreu um erro inesperado. Tente novamente mais tarde!");
     }
   }
 
@@ -67,21 +65,7 @@ export default function Login() {
               data-testid="password-input"
             />
             <Button>Log In</Button>
-            {wasNotFound && (
-              <span data-testid="not-found-message">
-                Nenhuma conta associada ao email informado!
-              </span>
-            )}
-            {passwordIsWrong && (
-              <span data-testid="wrong-password-message">
-                Credenciais incorretas!
-              </span>
-            )}
-            {unexpectedError && (
-              <span data-testid="unexpected-message">
-                Ocorreu um erro inesperado. Tente novamente mais tarde!
-              </span>
-            )}
+            {error && <span>{error}</span>}
           </LoginForm>
         </RightSideContent>
       </RightSide>

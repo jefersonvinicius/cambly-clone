@@ -36,7 +36,7 @@ describe("LoginPage", () => {
       .spyOn(APIEndpoints, "logIn")
       .mockRejectedValue(createAxiosErrorWith({ statusCode: 404 }));
 
-    const { getByTestId, findByTestId } = createSut();
+    const { getByTestId, findByText } = createSut();
 
     const loginForm = getByTestId("login-form");
     const emailInput = getByTestId("email-input");
@@ -50,9 +50,9 @@ describe("LoginPage", () => {
       fireEvent.submit(loginForm);
     });
 
-    const messageElement = await findByTestId("not-found-message");
-
-    expect(messageElement).toBeInTheDocument();
+    expect(
+      await findByText(/Nenhuma conta associada ao email informado!/i)
+    ).toBeInTheDocument();
   });
 
   it("should show message when password is wrong", async () => {
@@ -60,7 +60,7 @@ describe("LoginPage", () => {
       .spyOn(APIEndpoints, "logIn")
       .mockRejectedValue(createAxiosErrorWith({ statusCode: 401 }));
 
-    const { getByTestId, findByTestId } = createSut();
+    const { getByTestId, findByText } = createSut();
 
     const loginForm = getByTestId("login-form");
     const emailInput = getByTestId("email-input");
@@ -74,9 +74,7 @@ describe("LoginPage", () => {
       fireEvent.submit(loginForm);
     });
 
-    const messageElement = await findByTestId("wrong-password-message");
-
-    expect(messageElement).toBeInTheDocument();
+    expect(await findByText(/Credenciais incorretas!/)).toBeInTheDocument();
   });
 
   it("should show message when unexpected error is returned", async () => {
@@ -84,7 +82,7 @@ describe("LoginPage", () => {
       .spyOn(APIEndpoints, "logIn")
       .mockRejectedValue(createAxiosErrorWith({ statusCode: 500 }));
 
-    const { getByTestId, findByTestId } = createSut();
+    const { getByTestId, findByText } = createSut();
 
     const loginForm = getByTestId("login-form");
     const emailInput = getByTestId("email-input");
@@ -98,9 +96,7 @@ describe("LoginPage", () => {
       fireEvent.submit(loginForm);
     });
 
-    const messageElement = await findByTestId("unexpected-message");
-
-    expect(messageElement).toBeInTheDocument();
+    expect(await findByText(/Ocorreu um erro inesperado/)).toBeInTheDocument();
   });
 
   it("should save access token and user data on sessionStorage after log in successfully", async () => {
