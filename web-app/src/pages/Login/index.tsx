@@ -45,7 +45,7 @@ export default function Login() {
   }
 
   return (
-    <Container>
+    <Container data-testid="login-page">
       <LeftSide>
         <Illustration src="/assets/login_illustration.png" />
       </LeftSide>

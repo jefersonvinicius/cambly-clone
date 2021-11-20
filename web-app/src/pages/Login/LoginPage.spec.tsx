@@ -1,6 +1,9 @@
 import { act, fireEvent, render } from "@testing-library/react";
-import TestingRouter from "components/TestingRouter";
-import Main from "pages/Main";
+import TestingRouter from "components/tests-helpers/TestingRouter";
+import AuthContextProvider, {
+  AuthStorage,
+  useAuthContext,
+} from "contexts/AuthContext";
 import { Route } from "react-router-dom";
 import { RoutesPath } from "routes";
 import { APIEndpoints } from "services/api";
@@ -122,7 +125,7 @@ describe("LoginPage", () => {
   });
 
   it("should navigate to student main page", async () => {
-    const { getByTestId, getByText, findByTestId } = createSut();
+    const { getByTestId, findByText } = createSut();
 
     const loginForm = getByTestId("login-form");
     const emailInput = getByTestId("email-input");
@@ -136,8 +139,8 @@ describe("LoginPage", () => {
       fireEvent.submit(loginForm);
     });
 
-    expect(await findByTestId("main-page")).toBeInTheDocument();
-    expect(getByText(/Welcome Jeferson/)).toBeInTheDocument();
+    expect(AuthStorage.getToken()).toBe("any");
+    expect(await findByText(/Welcome Jeferson/)).toBeInTheDocument();
   });
 });
 
@@ -147,9 +150,16 @@ function createSut() {
 
 function LoginWithRouter() {
   return (
-    <TestingRouter initialEntries={[RoutesPath.StudentLogin]}>
-      <Route exact path={RoutesPath.StudentLogin} component={Login} />
-      <Route exact path={RoutesPath.StudentMain} component={Main} />
-    </TestingRouter>
+    <AuthContextProvider>
+      <TestingRouter initialEntries={[RoutesPath.StudentLogin]}>
+        <Route exact path={RoutesPath.StudentLogin} component={Login} />
+        <Route exact path={RoutesPath.StudentMain} component={DummyMainPage} />
+      </TestingRouter>
+    </AuthContextProvider>
   );
+}
+
+function DummyMainPage() {
+  const { user } = useAuthContext();
+  return <div>Welcome {user?.name}</div>;
 }

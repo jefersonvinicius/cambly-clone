@@ -1,12 +1,15 @@
+import { AuthContextValue } from "contexts/AuthContext";
+import { createMemoryHistory, MemoryHistory } from "history";
 import React, { ReactNode } from "react";
 import { Router, Switch } from "react-router-dom";
-import { createMemoryHistory, MemoryHistory } from "history";
-import ProvidersComposed from "./ProvidersComposed";
 
 type Props = {
   initialEntries?: string[];
   history?: MemoryHistory;
   children: ReactNode;
+  contextsValues?: {
+    auth?: Partial<AuthContextValue>;
+  };
 };
 
 export default function TestingRouter(props: Props) {
@@ -15,10 +18,8 @@ export default function TestingRouter(props: Props) {
   });
 
   return (
-    <ProvidersComposed>
-      <Router history={props.history ?? history}>
-        <Switch>{props.children}</Switch>
-      </Router>
-    </ProvidersComposed>
+    <Router history={props.history ?? history}>
+      <Switch>{props.children}</Switch>
+    </Router>
   );
 }
