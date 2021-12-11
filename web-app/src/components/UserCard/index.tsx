@@ -9,6 +9,8 @@ import {
   Indicator,
   NameText,
   Header,
+  Footer,
+  CallButton,
 } from "./styles";
 
 export enum UserCardStatuses {
@@ -43,11 +45,12 @@ export default function UserCard({ user, status }: UserCardProps) {
       <div>
         <BioText>{user.bio}</BioText>
       </div>
-      <div>
+      <Footer>
+        <Button color="#ccc">Profile</Button>
         {status === UserCardStatuses.Online && (
-          <Button data-testid="call-button">Call</Button>
+          <CallButton data-testid="call-button">Call</CallButton>
         )}
-      </div>
+      </Footer>
     </Container>
   );
 }

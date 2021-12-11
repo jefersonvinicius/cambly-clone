@@ -14,3 +14,9 @@ UserCardOnline.args = {
   status: UserCardStatuses.Online,
   user: createUser(),
 };
+
+export const UserCardOffline = Template.bind({});
+UserCardOffline.args = {
+  status: UserCardStatuses.Offline,
+  user: createUser(),
+};

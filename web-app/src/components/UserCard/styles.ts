@@ -1,3 +1,4 @@
+import Button from "components/Button";
 import styled from "styled-components";
 
 export const Container = styled.section`
@@ -14,6 +15,7 @@ export const Header = styled.div`
 
 export const ImageBox = styled.div`
   position: relative;
+  margin-right: 10px;
 `;
 
 export const AvatarImage = styled.img`
@@ -27,6 +29,7 @@ export const BioText = styled.p`
   font-weight: 300;
   color: rgb(119, 119, 119);
   font-size: 14px;
+  margin: 10px 0;
 `;
 
 type IndicatorProps = {
@@ -36,9 +39,19 @@ export const Indicator = styled.div<IndicatorProps>`
   background-color: ${(props) => props.color};
   position: absolute;
   bottom: -3px;
-  left: -3px;
+  left: -6px;
   width: 12px;
   height: 12px;
   border-radius: 4px;
   border: solid 2px #fff;
+`;
+
+export const Footer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+`;
+
+export const CallButton = styled(Button)`
+  margin-left: 10px;
 `;
