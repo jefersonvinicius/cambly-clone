@@ -1,4 +1,4 @@
-import { render } from "@testing-library/react";
+import { act, fireEvent, render } from "@testing-library/react";
 import { User } from "models/User";
 import UserCard, { UserCardProps, UserCardStatuses } from ".";
 
@@ -44,29 +44,60 @@ describe("UserCard", () => {
     expect(elements.onlineIndicator()).toBeInTheDocument();
     expect(elements.callButton()).toBeInTheDocument();
   });
+
+  it("should calls correct event as click on buttons", () => {
+    const { elements, routines, spies } = createSut({
+      status: UserCardStatuses.Online,
+    });
+
+    routines.clickOn(elements.callButton()!);
+    expect(spies.onCallClickSpy).toHaveBeenCalledTimes(1);
+
+    routines.clickOn(elements.profileButton());
+    expect(spies.onProfileClickSpy).toHaveBeenCalledTimes(1);
+  });
 });
 
 function createSut(props?: Partial<UserCardProps>) {
-  const utils = render(<TestingUserCard {...props} />);
+  const onCallClickSpy = jest.fn();
+  const onProfileClickSpy = jest.fn();
+
+  const defaultProps = {
+    onCallClick: onCallClickSpy,
+    onProfileClick: onProfileClickSpy,
+    status: UserCardStatuses.Offline,
+    user: user,
+  };
+
+  const utils = render(<UserCard {...defaultProps} {...props} />);
 
   const image = utils.getByTestId("user-image") as HTMLImageElement;
   const onlineIndicator = () => utils.queryByTestId("online-indicator");
   const callButton = () => utils.queryByTestId("call-button");
+  const profileButton = () => utils.getByTestId("profile-button");
 
-  const elements = { image, onlineIndicator, callButton };
+  const elements = { image, onlineIndicator, callButton, profileButton };
   const routines = {
     rerenderToOnlineStatus,
+    clickOn,
   };
 
-  return { elements, routines, ...utils };
+  const spies = {
+    onCallClickSpy,
+    onProfileClickSpy,
+  };
+
+  return { elements, routines, spies, ...utils };
 
   function rerenderToOnlineStatus() {
     utils.rerender(
-      <TestingUserCard {...props} status={UserCardStatuses.Online} />
+      <UserCard {...defaultProps} {...props} status={UserCardStatuses.Online} />
     );
   }
-}
 
-function TestingUserCard(props?: Partial<UserCardProps>) {
-  return <UserCard status={UserCardStatuses.Offline} user={user} {...props} />;
+  function clickOn(element: HTMLElement) {
+    act(() => {
+      fireEvent.click(element);
+    });
+  }
 }

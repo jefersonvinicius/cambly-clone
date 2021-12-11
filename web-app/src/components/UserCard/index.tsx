@@ -21,9 +21,16 @@ export enum UserCardStatuses {
 export type UserCardProps = {
   user: User;
   status: UserCardStatuses;
+  onCallClick: () => void;
+  onProfileClick: () => void;
 };
 
-export default function UserCard({ user, status }: UserCardProps) {
+export default function UserCard({
+  user,
+  status,
+  onCallClick,
+  onProfileClick,
+}: UserCardProps) {
   return (
     <Container>
       <Header>
@@ -46,9 +53,17 @@ export default function UserCard({ user, status }: UserCardProps) {
         <BioText>{user.bio}</BioText>
       </div>
       <Footer>
-        <Button color="#ccc">Profile</Button>
+        <Button
+          onClick={() => onProfileClick()}
+          color="#ccc"
+          data-testid="profile-button"
+        >
+          Profile
+        </Button>
         {status === UserCardStatuses.Online && (
-          <CallButton data-testid="call-button">Call</CallButton>
+          <CallButton onClick={() => onCallClick()} data-testid="call-button">
+            Call
+          </CallButton>
         )}
       </Footer>
     </Container>
