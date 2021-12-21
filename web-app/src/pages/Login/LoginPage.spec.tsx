@@ -1,5 +1,5 @@
 import { act, fireEvent, render } from "@testing-library/react";
-import TestingRouter from "components/tests-helpers/TestingRouter";
+import TestingRouter from "__tests__/mocks/components/TestingRouter";
 import AuthContextProvider, {
   AuthStorage,
   useAuthContext,
@@ -7,22 +7,16 @@ import AuthContextProvider, {
 import { Route } from "react-router-dom";
 import { RoutesPath } from "routes";
 import { APIEndpoints } from "services/api";
-import {
-  createAxiosErrorWith,
-  createAxiosResponseWith,
-  sleep,
-} from "utils/tests";
+import { createAxiosErrorWith, sleep } from "utils/tests";
 import Login from ".";
 
 describe("LoginPage", () => {
   const userMock = { name: "Jeferson" };
 
   beforeEach(() => {
-    jest.spyOn(APIEndpoints, "logIn").mockResolvedValue(
-      createAxiosResponseWith({
-        data: { accessToken: "any", user: userMock },
-      })
-    );
+    jest
+      .spyOn(APIEndpoints, "logIn")
+      .mockResolvedValue({ accessToken: "any", user: userMock });
   });
 
   it("should render email and password inputs", () => {

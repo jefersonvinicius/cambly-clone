@@ -1,22 +1,19 @@
 import { render } from "@testing-library/react";
-import TestingRouter from "components/tests-helpers/TestingRouter";
+import TestingRouter from "__tests__/mocks/components/TestingRouter";
 import { AuthContextValue } from "contexts/AuthContext";
-import TestingAuthContext from "contexts/TestingAuthContext";
 import Main from "pages/Main";
 import { Route } from "react-router";
 import { RoutesPath } from "routes";
 import { APIEndpoints } from "services/api";
-import { createAxiosResponseWith } from "utils/tests";
+import TestingAuthContext from "__tests__/mocks/components/TestingAuthContext";
 
 describe("MainPage", () => {
   const userMock = { name: "Jeferson" };
 
   beforeEach(() => {
-    jest.spyOn(APIEndpoints, "logIn").mockResolvedValue(
-      createAxiosResponseWith({
-        data: { accessToken: "any", user: userMock },
-      })
-    );
+    jest
+      .spyOn(APIEndpoints, "logIn")
+      .mockResolvedValue({ accessToken: "any", user: userMock });
   });
 
   describe("when user is logged", () => {
@@ -48,6 +45,8 @@ function authContextWithUser() {
     user: {
       name: "Jeferson",
       email: "jeferson@gmail.com",
+      bio: "any",
+      image: "any.png",
     },
   };
 }

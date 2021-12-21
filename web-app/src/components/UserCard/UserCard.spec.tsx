@@ -1,4 +1,4 @@
-import { act, fireEvent, render } from "@testing-library/react";
+import { fireEvent, render } from "@testing-library/react";
 import { User } from "models/User";
 import UserCard, { UserCardProps, UserCardStatuses } from ".";
 
@@ -46,14 +46,14 @@ describe("UserCard", () => {
   });
 
   it("should calls correct event as click on buttons", () => {
-    const { elements, routines, spies } = createSut({
+    const { elements, spies } = createSut({
       status: UserCardStatuses.Online,
     });
 
-    routines.clickOn(elements.callButton()!);
+    fireEvent.click(elements.callButton()!);
     expect(spies.onCallClickSpy).toHaveBeenCalledTimes(1);
 
-    routines.clickOn(elements.profileButton());
+    fireEvent.click(elements.profileButton());
     expect(spies.onProfileClickSpy).toHaveBeenCalledTimes(1);
   });
 });
@@ -79,7 +79,6 @@ function createSut(props?: Partial<UserCardProps>) {
   const elements = { image, onlineIndicator, callButton, profileButton };
   const routines = {
     rerenderToOnlineStatus,
-    clickOn,
   };
 
   const spies = {
@@ -93,11 +92,5 @@ function createSut(props?: Partial<UserCardProps>) {
     utils.rerender(
       <UserCard {...defaultProps} {...props} status={UserCardStatuses.Online} />
     );
-  }
-
-  function clickOn(element: HTMLElement) {
-    act(() => {
-      fireEvent.click(element);
-    });
   }
 }

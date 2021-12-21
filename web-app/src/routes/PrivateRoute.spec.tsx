@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
-import TestingRouter from "components/tests-helpers/TestingRouter";
-import TestingAuthContext from "contexts/TestingAuthContext";
+import TestingRouter from "__tests__/mocks/components/TestingRouter";
+import TestingAuthContext from "__tests__/mocks/components/TestingAuthContext";
 import { Route } from "react-router";
 import { RoutesPath } from "routes";
 import PrivateRoute from "./PrivateRoute";

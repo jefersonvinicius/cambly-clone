@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { AuthContext, AuthContextValue } from "./AuthContext";
+import { AuthContext, AuthContextValue } from "../../../contexts/AuthContext";
 
 type Props = Partial<AuthContextValue> & {
   children: ReactNode;

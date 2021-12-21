@@ -30,7 +30,7 @@ export default function Login() {
 
     try {
       setError(null);
-      const { data } = await APIEndpoints.logIn(loginPayload);
+      const data = await APIEndpoints.logIn(loginPayload);
       auth.logIn(data);
       history.push(RoutesPath.StudentMain);
     } catch (error: any) {

@@ -5,8 +5,12 @@ export const api = axios.create({
 });
 
 export class APIEndpoints {
-  static logIn(data: LogInData) {
-    return api.post<LogInData, AxiosResponse<LogInResponse>>("/login", data);
+  static async logIn(data: LogInData): Promise<LogInResponse> {
+    const { data: responseData } = await api.post<
+      LogInData,
+      AxiosResponse<LogInResponse>
+    >("/login", data);
+    return responseData;
   }
 }
 
@@ -17,4 +21,5 @@ export type LogInData = {
 
 type LogInResponse = {
   accessToken: string;
+  user: any;
 };

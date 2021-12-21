@@ -70,5 +70,8 @@
   },
   "resolutions": {
     "babel-loader": "8.1.0"
+  },
+  "jest": {
+    "testMatch": ["**/?(*.)+(spec|test).[jt]s?(x)"]
   }
 }
