@@ -5,17 +5,8 @@ import Main from "pages/Main";
 import { Route } from "react-router";
 import { RoutesPath } from "routes";
 import TestingAuthContext from "__tests__/mocks/components/TestingAuthContext";
-import { AuthService } from "services/auth";
 
 describe("MainPage", () => {
-  const userMock = { name: "Jeferson" };
-
-  beforeEach(() => {
-    jest
-      .spyOn(AuthService, "logIn")
-      .mockResolvedValue({ accessToken: "any", user: userMock });
-  });
-
   describe("when user is logged", () => {
     it("should display user name", async () => {
       const { findByText } = createSut({

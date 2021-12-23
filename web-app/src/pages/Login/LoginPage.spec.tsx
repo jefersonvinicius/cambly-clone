@@ -8,7 +8,11 @@ import { Route } from "react-router-dom";
 import { RoutesPath } from "routes";
 import { createAxiosErrorWith, sleep } from "utils/tests";
 import Login from ".";
-import { AuthService } from "services/auth";
+import {
+  AccountNotFoundError,
+  AuthService,
+  InvalidCredentialsError,
+} from "services/auth";
 
 describe("LoginPage", () => {
   const userMock = { name: "Jeferson" };
@@ -28,7 +32,7 @@ describe("LoginPage", () => {
   it("should show message when account is not found", async () => {
     jest
       .spyOn(AuthService, "logIn")
-      .mockRejectedValue(createAxiosErrorWith({ statusCode: 404 }));
+      .mockRejectedValue(new AccountNotFoundError());
 
     const { getByTestId, findByText } = createSut();
 
@@ -52,7 +56,7 @@ describe("LoginPage", () => {
   it("should show message when password is wrong", async () => {
     jest
       .spyOn(AuthService, "logIn")
-      .mockRejectedValue(createAxiosErrorWith({ statusCode: 401 }));
+      .mockRejectedValue(new InvalidCredentialsError());
 
     const { getByTestId, findByText } = createSut();
 

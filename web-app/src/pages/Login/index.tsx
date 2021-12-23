@@ -3,7 +3,12 @@ import { useAuthContext } from "contexts/AuthContext";
 import React, { FormEvent, useState } from "react";
 import { useHistory } from "react-router";
 import { RoutesPath } from "routes";
-import { AuthService, LogInData } from "services/auth";
+import {
+  AccountNotFoundError,
+  AuthService,
+  InvalidCredentialsError,
+  LogInData,
+} from "services/auth";
 import Input from "../../components/Input";
 import {
   Container,
@@ -34,9 +39,9 @@ export default function Login() {
       auth.logIn(data);
       history.push(RoutesPath.StudentMain);
     } catch (error: any) {
-      if (error.response?.status === 404)
+      if (error instanceof AccountNotFoundError)
         setError("Nenhuma conta associada ao email informado!");
-      else if (error.response?.status === 401)
+      else if (error instanceof InvalidCredentialsError)
         setError("Credenciais incorretas!");
       else setError("Ocorreu um erro inesperado. Tente novamente mais tarde!");
     }
