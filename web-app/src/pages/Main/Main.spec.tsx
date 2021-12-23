@@ -4,15 +4,15 @@ import { AuthContextValue } from "contexts/AuthContext";
 import Main from "pages/Main";
 import { Route } from "react-router";
 import { RoutesPath } from "routes";
-import { APIEndpoints } from "services/api";
 import TestingAuthContext from "__tests__/mocks/components/TestingAuthContext";
+import { AuthService } from "services/auth";
 
 describe("MainPage", () => {
   const userMock = { name: "Jeferson" };
 
   beforeEach(() => {
     jest
-      .spyOn(APIEndpoints, "logIn")
+      .spyOn(AuthService, "logIn")
       .mockResolvedValue({ accessToken: "any", user: userMock });
   });
 

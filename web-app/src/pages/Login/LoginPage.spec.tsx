@@ -6,16 +6,16 @@ import AuthContextProvider, {
 } from "contexts/AuthContext";
 import { Route } from "react-router-dom";
 import { RoutesPath } from "routes";
-import { APIEndpoints } from "services/api";
 import { createAxiosErrorWith, sleep } from "utils/tests";
 import Login from ".";
+import { AuthService } from "services/auth";
 
 describe("LoginPage", () => {
   const userMock = { name: "Jeferson" };
 
   beforeEach(() => {
     jest
-      .spyOn(APIEndpoints, "logIn")
+      .spyOn(AuthService, "logIn")
       .mockResolvedValue({ accessToken: "any", user: userMock });
   });
 
@@ -27,7 +27,7 @@ describe("LoginPage", () => {
 
   it("should show message when account is not found", async () => {
     jest
-      .spyOn(APIEndpoints, "logIn")
+      .spyOn(AuthService, "logIn")
       .mockRejectedValue(createAxiosErrorWith({ statusCode: 404 }));
 
     const { getByTestId, findByText } = createSut();
@@ -51,7 +51,7 @@ describe("LoginPage", () => {
 
   it("should show message when password is wrong", async () => {
     jest
-      .spyOn(APIEndpoints, "logIn")
+      .spyOn(AuthService, "logIn")
       .mockRejectedValue(createAxiosErrorWith({ statusCode: 401 }));
 
     const { getByTestId, findByText } = createSut();
@@ -73,7 +73,7 @@ describe("LoginPage", () => {
 
   it("should show message when unexpected error is returned", async () => {
     jest
-      .spyOn(APIEndpoints, "logIn")
+      .spyOn(AuthService, "logIn")
       .mockRejectedValue(createAxiosErrorWith({ statusCode: 500 }));
 
     const { getByTestId, findByText } = createSut();

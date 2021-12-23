@@ -3,7 +3,7 @@ import { useAuthContext } from "contexts/AuthContext";
 import React, { FormEvent, useState } from "react";
 import { useHistory } from "react-router";
 import { RoutesPath } from "routes";
-import { APIEndpoints, LogInData } from "services/api";
+import { AuthService, LogInData } from "services/auth";
 import Input from "../../components/Input";
 import {
   Container,
@@ -30,7 +30,7 @@ export default function Login() {
 
     try {
       setError(null);
-      const data = await APIEndpoints.logIn(loginPayload);
+      const data = await AuthService.logIn(loginPayload);
       auth.logIn(data);
       history.push(RoutesPath.StudentMain);
     } catch (error: any) {
