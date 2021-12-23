@@ -1,6 +1,6 @@
 import { api } from "services/api";
 import { createAxiosErrorWith, createAxiosResponseWith } from "utils/tests";
-import { AccountNotFound, AuthService } from ".";
+import { AccountNotFoundError, AuthService, InvalidCredentialsError } from ".";
 
 describe("AuthService", () => {
   let axiosPostSpy = jest.spyOn(api, "post").mockImplementation();
@@ -23,10 +23,22 @@ describe("AuthService", () => {
       });
     });
 
-    it("should return AccountNotFound error when response is 404 http status code", async () => {
-      axiosPostSpy.mockRejectedValue(notFound());
+    it("should throws the AccountNotFoundError when response is 404 http status code", async () => {
+      axiosPostSpy.mockRejectedValue(notFoundResponse());
       const promise = AuthService.logIn(loginPayloadSample());
-      await expect(promise).rejects.toThrow(new AccountNotFound());
+      await expect(promise).rejects.toThrow(new AccountNotFoundError());
+    });
+
+    it("should throws the InvalidCredentialsError when response is 401 http status code", async () => {
+      axiosPostSpy.mockRejectedValue(unauthorizedResponse());
+      const promise = AuthService.logIn(loginPayloadSample());
+      await expect(promise).rejects.toThrow(new InvalidCredentialsError());
+    });
+
+    it("should throw a error when response throw a error", async () => {
+      axiosPostSpy.mockRejectedValue(new Error("Any error"));
+      const promise = AuthService.logIn(loginPayloadSample());
+      await expect(promise).rejects.toThrow(new Error("Any error"));
     });
   });
 });
@@ -37,9 +49,15 @@ function successResponseSample() {
   });
 }
 
-function notFound() {
+function notFoundResponse() {
   return createAxiosErrorWith({
     statusCode: 404,
+  });
+}
+
+function unauthorizedResponse() {
+  return createAxiosErrorWith({
+    statusCode: 401,
   });
 }
 

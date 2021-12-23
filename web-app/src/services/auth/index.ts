@@ -11,7 +11,9 @@ export class AuthService {
 
       return responseData;
     } catch (error: any) {
-      if (error.response?.status === 404) throw new AccountNotFound();
+      if (error.response?.status === 404) throw new AccountNotFoundError();
+      if (error.response?.status === 401) throw new InvalidCredentialsError();
+      throw error;
     }
   }
 }
@@ -26,8 +28,14 @@ type LogInResponse = {
   user: any;
 };
 
-export class AccountNotFound extends Error {
+export class AccountNotFoundError extends Error {
   constructor() {
     super("Account not found");
+  }
+}
+
+export class InvalidCredentialsError extends Error {
+  constructor() {
+    super("Credentials invalid");
   }
 }
