@@ -1,5 +1,5 @@
 import { api } from "services/api";
-import { createAxiosErrorWith, createAxiosResponseWith } from "utils/tests";
+import { createAxiosErrorWith, createAxiosResponseWith } from "__tests__/utils";
 import { AccountNotFoundError, AuthService, InvalidCredentialsError } from ".";
 
 describe("AuthService", () => {

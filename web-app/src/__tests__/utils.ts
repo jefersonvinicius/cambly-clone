@@ -38,18 +38,10 @@ export function sleep(ms: number) {
   });
 }
 
-type Data = {
-  pathname: string;
-  search: string;
-  hash: string;
-  state: null;
-};
-
-export function createRouterDomLocation(data: Partial<Data>) {
-  return {
-    pathname: data.pathname ?? "",
-    search: data.hash ?? "",
-    hash: data.hash ?? "",
-    state: data.state ?? null,
-  };
+export async function resolvedValueWithDelay<T>(
+  returnData: T,
+  ms = 200
+): Promise<T> {
+  await sleep(ms);
+  return returnData;
 }

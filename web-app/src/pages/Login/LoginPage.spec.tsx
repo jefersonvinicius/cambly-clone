@@ -6,7 +6,7 @@ import AuthContextProvider, {
 } from "contexts/AuthContext";
 import { Route } from "react-router-dom";
 import { RoutesPath } from "routes";
-import { createAxiosErrorWith, sleep } from "utils/tests";
+import { createAxiosErrorWith, sleep } from "__tests__/utils";
 import Login from ".";
 import {
   AccountNotFoundError,
