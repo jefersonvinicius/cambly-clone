@@ -21,28 +21,28 @@ describe("MainPage", () => {
   });
 
   it("should display user name correctly", async () => {
-    createSut();
+    renderSut();
     expect(await screen.findByText(/Welcome Jeferson/)).toBeInTheDocument();
   });
 
   it("should a display loading while is fetching the teachers", async () => {
     fetchTeachersAvailable.mockResolvedValue([]);
 
-    createSut();
+    renderSut();
     expect(screen.getByTestId("loading-indicator")).toBeInTheDocument();
   });
 
   it("should display the teachers available when logged user is student", async () => {
     fetchTeachersAvailable.mockResolvedValue(teachersSample());
 
-    createSut();
+    renderSut();
     expect(await screen.findAllByTestId("user-image")).toHaveLength(5);
   });
 
   it("should display empty message when has not teachers available", async () => {
     fetchTeachersAvailable.mockResolvedValue([]);
 
-    createSut();
+    renderSut();
     expect(
       await screen.findByText("No momento não tem nenhum professor disponível")
     ).toBeInTheDocument();
@@ -51,7 +51,7 @@ describe("MainPage", () => {
   it("should go to waiting room after of open to lesson", async () => {
     fetchTeachersAvailable.mockResolvedValue([]);
 
-    const { elements } = createSut();
+    const { elements } = renderSut();
     userEvent.click(await elements.openToLessonButton());
 
     expect(await screen.findByText("Please, wait...")).toBeInTheDocument();
@@ -62,7 +62,7 @@ type Props = {
   authCtxValue: Partial<AuthContextValue>;
 };
 
-function createSut(props?: Props) {
+function renderSut(props?: Props) {
   render(
     <TestingReactQueryClient>
       <TestingRouter initialEntries={[RoutesPath.Main]}>
