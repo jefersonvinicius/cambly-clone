@@ -118,7 +118,7 @@ describe("LoginPage", () => {
     expect(JSON.parse(sessionStorage.getItem("@user") ?? "")).toEqual(userMock);
   });
 
-  it("should navigate to student main page", async () => {
+  it("should navigate to main page", async () => {
     const { getByTestId, findByText } = createSut();
 
     const loginForm = getByTestId("login-form");
@@ -145,9 +145,9 @@ function createSut() {
 function LoginWithRouter() {
   return (
     <AuthContextProvider>
-      <TestingRouter initialEntries={[RoutesPath.StudentLogin]}>
-        <Route exact path={RoutesPath.StudentLogin} component={Login} />
-        <Route exact path={RoutesPath.StudentMain} component={DummyMainPage} />
+      <TestingRouter initialEntries={[RoutesPath.Login]}>
+        <Route exact path={RoutesPath.Login} component={Login} />
+        <Route exact path={RoutesPath.Main} component={DummyMainPage} />
       </TestingRouter>
     </AuthContextProvider>
   );

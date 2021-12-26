@@ -24,7 +24,7 @@ function createSut(props: { isLoggedIn: boolean }) {
         <PrivateRoute path="/any">
           <DummyPrivatePage />
         </PrivateRoute>
-        <Route path={RoutesPath.StudentLogin}>
+        <Route path={RoutesPath.Login}>
           <DummyLoginPage />
         </Route>
       </TestingRouter>

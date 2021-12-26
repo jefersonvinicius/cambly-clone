@@ -14,7 +14,7 @@ export default function PrivateRoute({ children, ...props }: RouteProps) {
         ) : (
           <Redirect
             to={{
-              pathname: RoutesPath.StudentLogin,
+              pathname: RoutesPath.Login,
               state: { from: location },
             }}
           />

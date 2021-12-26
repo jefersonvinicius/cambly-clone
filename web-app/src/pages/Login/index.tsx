@@ -37,7 +37,7 @@ export default function Login() {
       setError(null);
       const data = await AuthService.logIn(loginPayload);
       auth.logIn(data);
-      history.push(RoutesPath.StudentMain);
+      history.push(RoutesPath.Main);
     } catch (error: any) {
       if (error instanceof AccountNotFoundError)
         setError("Nenhuma conta associada ao email informado!");

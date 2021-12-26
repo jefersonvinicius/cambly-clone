@@ -1,4 +1,5 @@
 export enum RoutesPath {
-  StudentLogin = "/student/login",
-  StudentMain = "/student",
+  Login = "//login",
+  Main = "/",
+  WaitingRoom = "/waiting",
 }

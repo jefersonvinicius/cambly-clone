@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { AuthContextValue } from "contexts/AuthContext";
 import { UserTypes } from "models/User";
 import Main from "pages/Main";
@@ -46,6 +47,15 @@ describe("MainPage", () => {
       await screen.findByText("No momento não tem nenhum professor disponível")
     ).toBeInTheDocument();
   });
+
+  it("should go to waiting room after of open to lesson", async () => {
+    fetchTeachersAvailable.mockResolvedValue([]);
+
+    const { elements } = createSut();
+    userEvent.click(await elements.openToLessonButton());
+
+    expect(await screen.findByText("Please, wait...")).toBeInTheDocument();
+  });
 });
 
 type Props = {
@@ -53,15 +63,26 @@ type Props = {
 };
 
 function createSut(props?: Props) {
-  return render(
+  render(
     <TestingReactQueryClient>
-      <TestingRouter initialEntries={[RoutesPath.StudentMain]}>
+      <TestingRouter initialEntries={[RoutesPath.Main]}>
         <TestingAuthContext {...authContextWithUser()}>
-          <Route path={RoutesPath.StudentMain} component={Main} />
+          <Route path={RoutesPath.Main} component={Main} />
+          <Route path={RoutesPath.WaitingRoom} component={DummyWaitingRoom} />
         </TestingAuthContext>
       </TestingRouter>
     </TestingReactQueryClient>
   );
+
+  const elements = {
+    openToLessonButton: () => screen.findByTestId("open-to-lesson"),
+  };
+
+  return { elements };
+}
+
+function DummyWaitingRoom() {
+  return <span>Please, wait...</span>;
 }
 
 function teachersSample() {

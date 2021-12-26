@@ -6,13 +6,13 @@ import { RoutesPath } from "./RoutesPath";
 import PrivateRoute from "./PrivateRoute";
 
 const LogInRoute = (
-  <Route exact path={RoutesPath.StudentLogin}>
+  <Route exact path={RoutesPath.Login}>
     <Login />
   </Route>
 );
 
 const MainRoute = (
-  <PrivateRoute exact path={RoutesPath.StudentMain}>
+  <PrivateRoute exact path={RoutesPath.Main}>
     <Main />
   </PrivateRoute>
 );

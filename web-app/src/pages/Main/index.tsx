@@ -4,6 +4,7 @@ import React from "react";
 import { TeachersService } from "services/teachers";
 import UserCard, { UserCardStatuses } from "components/UserCard";
 import { Grid } from "./styles";
+import Header from "./Header";
 
 function useTeachersAvailable() {
   const { data, ...rest } = useQuery(
@@ -24,6 +25,7 @@ export default function Main() {
       {isLoading && <span data-testid="loading-indicator">Loading...</span>}
       {!isLoading && (
         <>
+          <Header />
           {teachers?.length === 0 ? (
             <span>No momento não tem nenhum professor disponível</span>
           ) : (
