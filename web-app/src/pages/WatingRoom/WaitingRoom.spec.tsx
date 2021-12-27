@@ -12,6 +12,10 @@ describe("<WaitingRoom />", () => {
     .spyOn(SocketServer, "connectTeacher")
     .mockImplementation();
 
+  let teacherOpenToLessonSpy = jest
+    .spyOn(SocketServer, "openTeacherToLesson")
+    .mockImplementation();
+
   it("should display a loading indicator while is waiting", () => {
     const { elements } = renderSut();
 
@@ -22,6 +26,7 @@ describe("<WaitingRoom />", () => {
     renderSut();
 
     expect(connectTeacherSpy).toHaveBeenCalledTimes(1);
+    expect(teacherOpenToLessonSpy).toHaveBeenCalledTimes(1);
   });
 });
 

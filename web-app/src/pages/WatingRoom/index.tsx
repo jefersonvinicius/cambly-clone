@@ -8,6 +8,7 @@ export default function WaitingRoom() {
 
   useEffect(() => {
     SocketServer.connectTeacher(user!);
+    SocketServer.openTeacherToLesson(user!);
   }, [user]);
 
   return (
