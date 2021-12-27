@@ -12,7 +12,6 @@ export class CheckAccessTokenMiddleware implements Middleware<AccessTokenData> {
     return decoded;
 
     function tokenOfHeader() {
-      console.log(request.headers);
       const header = String(request.headers?.['authorization']);
 
       const spaceIdx = header.indexOf(' ');

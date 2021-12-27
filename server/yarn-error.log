@@ -1,30 +1,30 @@
 Arguments: 
-  /opt/node-v14.15.5-linux-x64/bin/node /usr/share/yarn/bin/yarn.js ts-node -r tsconfig-paths/register src/index.ts
+  /home/jeferson/.nvm/versions/node/v16.13.1/bin/node /usr/share/yarn/bin/yarn.js ts-node -r tsconfig-paths/register src/index.ts
 
 PATH: 
-  /home/jeferson/Dev/studies/cambly-clone-study/server/node_modules/.bin:/tmp/yarn--1634686899550-0.2701122621670311:/home/jeferson/Dev/studies/cambly-clone-study/server/node_modules/.bin:/home/jeferson/.config/yarn/link/node_modules/.bin:/home/jeferson/.yarn/bin:/opt/node-v14.15.5-linux-x64/libexec/lib/node_modules/npm/bin/node-gyp-bin:/opt/node-v14.15.5-linux-x64/lib/node_modules/npm/bin/node-gyp-bin:/opt/node-v14.15.5-linux-x64/bin/node_modules/npm/bin/node-gyp-bin:/opt/node-v14.15.5-linux-x64/bin:/home/jeferson/.sdkman/candidates/kotlin/current/bin:/home/jeferson/Programs/google-cloud-sdk/bin:/opt/node-v14.15.5-linux-x64/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/jeferson/Android/Sdk/tools:/home/jeferson/Android/Sdk/platform-tools:/home/jeferson/Dev/goworkspace/:/home/jeferson/Dev/goworkspace/bin:/home/jeferson/Scripts:/usr/local/go/bin:/home/jeferson/Android/Sdk/tools:/home/jeferson/Android/Sdk/platform-tools:/home/jeferson/Dev/goworkspace/:/home/jeferson/Dev/goworkspace/bin:/home/jeferson/Scripts:/usr/local/go/bin
+  /home/jeferson/Dev/studies/cambly-clone-study/server/node_modules/.bin:/tmp/yarn--1640295190305-0.3491932709724954:/home/jeferson/Dev/studies/cambly-clone-study/server/node_modules/.bin:/home/jeferson/.config/yarn/link/node_modules/.bin:/home/jeferson/.yarn/bin:/home/jeferson/.nvm/versions/node/v16.13.1/libexec/lib/node_modules/npm/bin/node-gyp-bin:/home/jeferson/.nvm/versions/node/v16.13.1/lib/node_modules/npm/bin/node-gyp-bin:/home/jeferson/.nvm/versions/node/v16.13.1/bin/node_modules/npm/bin/node-gyp-bin:/home/jeferson/.nvm/versions/node/v16.13.1/bin:/home/jeferson/.sdkman/candidates/kotlin/current/bin:/home/jeferson/Programs/google-cloud-sdk/bin::/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/jeferson/Android/Sdk/tools:/home/jeferson/Android/Sdk/platform-tools:/home/jeferson/Dev/goworkspace/:/home/jeferson/Dev/goworkspace/bin:/home/jeferson/Scripts:/usr/local/go/bin
 
 Yarn version: 
   1.22.5
 
 Node version: 
-  14.15.5
+  16.13.1
 
 Platform: 
   linux x64
 
 Trace: 
   Error: EIO: i/o error, write
-      at writeSync (fs.js:711:3)
-      at SyncWriteStream._write (internal/fs/sync_write_stream.js:24:3)
-      at writeOrBuffer (internal/streams/writable.js:358:12)
-      at SyncWriteStream.Writable.write (internal/streams/writable.js:303:10)
+      at writeSync (node:fs:884:3)
+      at SyncWriteStream._write (node:internal/fs/sync_write_stream:25:3)
+      at writeOrBuffer (node:internal/streams/writable:389:12)
+      at _write (node:internal/streams/writable:330:10)
+      at SyncWriteStream.Writable.write (node:internal/streams/writable:334:10)
       at ConsoleReporter._log (/usr/share/yarn/lib/cli.js:96770:17)
       at ConsoleReporter.log (/usr/share/yarn/lib/cli.js:96758:10)
       at ConsoleReporter.command (/usr/share/yarn/lib/cli.js:96787:10)
       at /usr/share/yarn/lib/cli.js:34545:16
       at Generator.next (<anonymous>)
-      at step (/usr/share/yarn/lib/cli.js:310:30)
 
 npm manifest: 
   {
@@ -34,7 +34,8 @@ npm manifest:
     "license": "MIT",
     "scripts": {
       "serve:dev": "NODE_ENV=dev nodemon",
-      "test": "NODE_ENV=test jest",
+      "test": "NODE_ENV=test jest --runInBand",
+      "test:watch": "yarn test --watch",
       "typeorm": "ts-node ./node_modules/typeorm/cli.js"
     },
     "devDependencies": {

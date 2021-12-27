@@ -7,6 +7,7 @@ export class StudentViewOnlineTeachersUseCase implements UseCase<{}, Teacher[]> 
   constructor(private socketServer: SocketServer, private teacherRepository: TeacherRepository) {}
 
   async perform(params: {}): Promise<Teacher[]> {
+    console.log(this.socketServer.teachersAvailable);
     return this.socketServer.teachersAvailable.filter((teacher) => !teacher.isBusy);
   }
 }

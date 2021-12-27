@@ -4,7 +4,11 @@ import http from 'http';
 import { SocketServerIO } from './SocketIOEvents';
 
 export function createIOServer(httpServerParam: http.Server) {
-  const server = new Server(httpServerParam);
+  const server = new Server(httpServerParam, {
+    cors: {
+      origin: '*',
+    },
+  });
   return new SocketServerIO(server);
 }
 

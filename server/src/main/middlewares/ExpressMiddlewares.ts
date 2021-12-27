@@ -9,8 +9,6 @@ export class ExpressMiddlewares {
     const checkAccessToken = new CheckAccessTokenMiddleware();
     try {
       const decoded = await checkAccessToken.handle(HttpRequest.ofExpress(request));
-
-      console.log(decoded);
       next();
     } catch (error: any) {
       const httpResponse = HttpResponseUtils.createErrorResponse(error);
