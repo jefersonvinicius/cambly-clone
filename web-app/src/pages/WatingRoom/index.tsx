@@ -7,8 +7,9 @@ export default function WaitingRoom() {
   const { user } = useAuthContext();
 
   useEffect(() => {
-    SocketServer.connectTeacher(user!);
-    SocketServer.openTeacherToLesson(user!);
+    SocketServer.connectTeacher(user!).then(() => {
+      SocketServer.openTeacherToLesson(user!);
+    });
   }, [user]);
 
   return (
