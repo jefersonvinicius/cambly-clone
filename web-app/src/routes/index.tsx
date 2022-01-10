@@ -1,3 +1,4 @@
+import SetupLesson from "pages/SetupLesson";
 import WaitingRoom from "pages/WatingRoom";
 import React from "react";
 import { BrowserRouter, Switch } from "react-router-dom";
@@ -13,6 +14,9 @@ export default function Router() {
         {Routes.Main}
         <PrivateRoute exact path={RoutesPath.WaitingRoom}>
           <WaitingRoom />
+        </PrivateRoute>
+        <PrivateRoute exact path={RoutesPath.SetupLesson}>
+          <SetupLesson />
         </PrivateRoute>
       </Switch>
     </BrowserRouter>

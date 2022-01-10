@@ -27,7 +27,7 @@ export default function Main() {
         <>
           <Header />
           {teachers?.length === 0 ? (
-            <span>No momento não tem nenhum professor disponível</span>
+            <div>No momento não tem nenhum professor disponível</div>
           ) : (
             <Grid>
               {teachers?.map((teacher) => (
