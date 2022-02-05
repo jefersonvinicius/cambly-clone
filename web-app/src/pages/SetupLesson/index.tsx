@@ -1,5 +1,11 @@
 import Button from "components/Button";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   Video,
   VideoControlButton,
@@ -10,8 +16,15 @@ import {
 import { BsCameraVideoFill, BsFillCameraVideoOffFill } from "react-icons/bs";
 import { BiMicrophone, BiMicrophoneOff } from "react-icons/bi";
 
-function getWebcam() {
-  return navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+type UserStreamParams = {
+  video: boolean;
+  audio: boolean;
+};
+
+function getUserStream(params?: Partial<UserStreamParams>) {
+  const video = params?.video ?? true;
+  const audio = params?.audio ?? true;
+  return navigator.mediaDevices.getUserMedia({ video, audio });
 }
 
 function useVideoDevicesAvailable() {
@@ -27,77 +40,148 @@ function useVideoDevicesAvailable() {
 }
 
 function useStream() {
+  const [isStartingStream, setIsStartingStream] = useState(true);
   const [stream, setStream] = useState<MediaStream | null>(null);
 
   useEffect(() => {
-    getWebcam().then((result) => {
-      setStream(result);
+    getUserStream({ audio: false })
+      .then((result) => {
+        setStream(result);
+      })
+      .finally(() => {
+        setIsStartingStream(false);
+      });
+  }, []);
+
+  const isVideoActive = useMemo(() => {
+    // console.log(stream?.getVideoTracks());
+    return !!stream
+      ?.getVideoTracks()
+      .some((track) => track.readyState === "live");
+  }, [stream]);
+
+  const isAudioActive = useMemo(() => {
+    return !!stream
+      ?.getAudioTracks()
+      .some((track) => track.readyState === "live");
+  }, [stream]);
+
+  const stopVideoStream = useCallback(() => {
+    // setStream((draft) => {
+    console.log(stream?.getVideoTracks());
+    stream?.getVideoTracks().forEach((track) => {
+      track.enabled = false;
+      // stream.removeTrack(track);
+    });
+
+    console.log(stream?.getVideoTracks());
+
+    //   return draft?.clone() ?? null;
+    // });
+  }, [stream]);
+
+  const startVideoStream = useCallback(async () => {
+    // const streamResult = await getUserStream();
+    // setStream((draft) => {
+    stream?.getVideoTracks().forEach((track) => {
+      track.enabled = true;
+    });
+
+    // return draft?.clone() ?? null;
+    // });
+  }, [stream]);
+
+  const stopAudioStream = useCallback(() => {
+    setStream((draft) => {
+      draft?.getAudioTracks().forEach((track) => {
+        track.stop();
+        draft.removeTrack(track);
+      });
+
+      return draft?.clone() ?? null;
     });
   }, []);
 
-  return stream;
-}
+  const startAudioStream = useCallback(async () => {
+    const streamResult = await getUserStream();
+    setStream((draft) => {
+      streamResult.getAudioTracks().forEach((track) => {
+        draft?.addTrack(track);
+      });
 
-function stopTrack(track: MediaStreamTrack) {
-  track.stop();
+      return draft?.clone() ?? null;
+    });
+  }, []);
+
+  return {
+    stream,
+    isStartingStream,
+    startVideoStream,
+    stopVideoStream,
+    stopAudioStream,
+    startAudioStream,
+    isVideoActive,
+    isAudioActive,
+  };
 }
 
 export default function SetupLesson() {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [isCameraOff, setIsCameraOff] = useState(false);
-  const [isMicrophoneOff, setIsMicrophoneOff] = useState(false);
-  const [isReady, setIsReady] = useState(false);
+  // const [c, setC] = useState(0);
+  // const videoDevices = useVideoDevicesAvailable();
+  // const {
+  //   stream,
+  //   isVideoActive,
+  //   isAudioActive,
+  //   isStartingStream,
+  //   startVideoStream,
+  //   stopVideoStream,
+  //   startAudioStream,
+  //   stopAudioStream,
+  // } = useStream();
 
-  const videoDevices = useVideoDevicesAvailable();
-  const stream = useStream();
+  // async function handleToggleCameraOff() {
+  //   if (isVideoActive) {
+  //     stopVideoStream();
+  //   } else {
+  //     startVideoStream();
+  //   }
+  // }
 
-  useEffect(() => {
-    if (stream) {
-      const video = videoRef.current!;
-      video.srcObject = stream;
-      video.play();
-      setIsReady(true);
-    }
-  }, [stream]);
-
-  async function handleToggleCameraOff() {
-    if (isCameraOff) {
-      setIsCameraOff(false);
-      console.log(stream?.getTracks);
-    } else {
-      stream?.getVideoTracks().forEach(stopTrack);
-      setIsCameraOff(true);
-    }
-  }
-
-  function handleToggleAudio() {
-    if (isMicrophoneOff) {
-      setIsMicrophoneOff(false);
-      console.log(stream?.getTracks);
-    } else {
-      stream?.getAudioTracks().forEach(stopTrack);
-      setIsMicrophoneOff(true);
-    }
-  }
+  // function handleToggleAudio() {
+  //   if (isAudioActive) {
+  //     stopAudioStream();
+  //   } else {
+  //     startAudioStream();
+  //   }
+  // }
 
   return (
     <div>
       <VideoLessonContainer>
-        <Video ref={videoRef} />
-        {/* {isCameraOff && <VideoOffOverlay />} */}
-        <VideoControls>
+        {/* <Video
+          ref={(ref) => {
+            if (ref && !ref.srcObject) ref.srcObject = stream;
+          }}
+          autoPlay
+        /> */}
+        {/* {!isVideoActive && <VideoOffOverlay />} */}
+        {/* <VideoControls>
           <VideoControlButton onClick={handleToggleCameraOff}>
-            {isCameraOff ? <BsCameraVideoFill /> : <BsFillCameraVideoOffFill />}
+            {isVideoActive ? (
+              <BsFillCameraVideoOffFill />
+            ) : (
+              <BsCameraVideoFill />
+            )}
           </VideoControlButton>
           <VideoControlButton onClick={handleToggleAudio}>
-            {isMicrophoneOff ? <BiMicrophone /> : <BiMicrophoneOff />}
+            {isAudioActive ? <BiMicrophoneOff /> : <BiMicrophone />}
           </VideoControlButton>
-        </VideoControls>
+        </VideoControls> */}
       </VideoLessonContainer>
-      <Button disabled={!isReady}>Iniciar Lição</Button>
+      {/* <Button disabled={!isStartingStream}>Iniciar Lição</Button>
       <div>
         {videoDevices.map((d) => JSON.stringify(d, null, 2)).join("\n")}
-      </div>
+      </div> */}
     </div>
   );
 }
